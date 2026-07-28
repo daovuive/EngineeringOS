@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0",
+
+  "templateDirectory": "templates",
+
+  "templates": [
+    {
+      "id": "README",
+      "source": "README.md"
+    },
+
+    {
+      "id": "LICENSE",
+      "source": "LICENSE.txt"
+    },
+
+    {
+      "id": "GITIGNORE",
+      "source": "gitignore.txt"
+    },
+
+    {
+      "id": "ADR_README",
+      "source": "ADR.md"
+    },
+
+    {
+      "id": "EMPTY",
+      "source": null
+    }
+  ]
+}

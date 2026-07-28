@@ -1,96 +1,185 @@
+<#
+Engineering OS
+
+Project Initialization
+
+Responsibilities
+
+- Read configuration
+- Create folder structure
+- Create files from templates
+
+Business rules belong elsewhere.
+#>
+
 param(
-    [Parameter(Position = 0)]
-    [string]$Command = "help"
+    [string]$StructureConfig = "configs/project-structure.json",
+    [string]$TemplateConfig = "configs/templates.json"
 )
 
-$ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ScriptsDir = Join-Path $ScriptRoot "scripts"
+$ErrorActionPreference = "Stop"
 
-function Get-Platform {
+# ------------------------------------------------------------
+# Utilities
+# ------------------------------------------------------------
 
-    if ($IsWindows) { return "windows" }
-    if ($IsLinux)   { return "linux" }
-    if ($IsMacOS)   { return "macos" }
+function Load-Json {
 
-    # Fallback cho Windows PowerShell 5.1
-    if ($env:OS -eq "Windows_NT") {
-        return "windows"
+    param(
+        [string]$Path
+    )
+
+    if (!(Test-Path $Path)) {
+        throw "Configuration file not found: $Path"
     }
 
-    return "unknown"
+    return Get-Content $Path -Raw | ConvertFrom-Json
+
 }
 
-function Invoke-Init {
+function Ensure-Directory {
 
-    $platform = Get-Platform
+    param(
+        [string]$Path
+    )
 
-    switch ($platform) {
+    if (!(Test-Path $Path)) {
 
-        "windows" {
+        New-Item `
+            -ItemType Directory `
+            -Force `
+            -Path $Path | Out-Null
 
-            $script = Join-Path $ScriptsDir "init.windows.ps1"
+        Write-Host "[CREATE] Folder : $Path"
 
-            if (!(Test-Path $script)) {
-                throw "Cannot find $script"
-            }
+    }
+    else {
 
-            & $script
-        }
-
-        "linux" {
-
-            $script = Join-Path $ScriptsDir "init.linux.sh"
-
-            if (!(Test-Path $script)) {
-                throw "Cannot find $script"
-            }
-
-            bash $script
-        }
-
-        "macos" {
-
-            $script = Join-Path $ScriptsDir "init.linux.sh"
-
-            if (!(Test-Path $script)) {
-                throw "Cannot find $script"
-            }
-
-            bash $script
-        }
-
-        default {
-
-            throw "Unsupported operating system."
-
-        }
+        Write-Host "[ OK ]    Folder : $Path"
 
     }
 
 }
 
-switch ($Command.ToLower()) {
+function Ensure-ParentDirectory {
 
-    "init" {
+    param(
+        [string]$FilePath
+    )
 
-        Invoke-Init
+    $parent = Split-Path $FilePath -Parent
 
-    }
+    if (![string]::IsNullOrWhiteSpace($parent)) {
 
-    "help" {
-
-        Write-Host ""
-        Write-Host "Engineering OS CLI"
-        Write-Host ""
-        Write-Host "Commands:"
-        Write-Host "  init"
-
-    }
-
-    default {
-
-        Write-Host "Unknown command: $Command"
+        Ensure-Directory $parent
 
     }
 
 }
+
+function Find-Template {
+
+    param(
+        $Templates,
+        [string]$TemplateId
+    )
+
+    foreach($item in $Templates.templates){
+
+        if($item.id -eq $TemplateId){
+
+            return $item
+
+        }
+
+    }
+
+    return $null
+
+}
+
+# ------------------------------------------------------------
+# Load Configuration
+# ------------------------------------------------------------
+
+$structure = Load-Json $StructureConfig
+$templateConfig = Load-Json $TemplateConfig
+
+$templateRoot = $templateConfig.templateDirectory
+
+Write-Host ""
+Write-Host "======================================="
+Write-Host " Engineering OS Initialization"
+Write-Host "======================================="
+Write-Host ""
+
+# ------------------------------------------------------------
+# Create Folders
+# ------------------------------------------------------------
+
+foreach($folder in $structure.folders){
+
+    Ensure-Directory $folder.path
+
+}
+
+Write-Host ""
+
+# ------------------------------------------------------------
+# Create Files
+# ------------------------------------------------------------
+
+foreach($file in $structure.files){
+
+    if(Test-Path $file.path){
+
+        Write-Host "[ OK ]    File   : $($file.path)"
+        continue
+
+    }
+
+    Ensure-ParentDirectory $file.path
+
+    $template = Find-Template `
+                    -Templates $templateConfig `
+                    -TemplateId $file.template
+
+    if($null -eq $template){
+
+        throw "Unknown template: $($file.template)"
+
+    }
+
+    if($template.source){
+
+        $templateFile = Join-Path `
+                            $templateRoot `
+                            $template.source
+
+        if(!(Test-Path $templateFile)){
+
+            throw "Template not found: $templateFile"
+
+        }
+
+        Copy-Item `
+            $templateFile `
+            $file.path
+
+    }
+    else{
+
+        New-Item `
+            -ItemType File `
+            -Force `
+            -Path $file.path | Out-Null
+
+    }
+
+    Write-Host "[CREATE] File   : $($file.path)"
+
+}
+
+Write-Host ""
+Write-Host "Initialization completed successfully."
+Write-Host ""

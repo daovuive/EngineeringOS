@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0",
+
+  "defaultRuntime": "ollama",
+
+  "runtimes": [
+    {
+      "id": "ollama",
+      "enabled": true,
+      "host": "http://localhost:11434",
+      "timeout": 300,
+      "maxConcurrentRequests": 2
+    },
+
+    {
+      "id": "llamacpp",
+      "enabled": false
+    },
+
+    {
+      "id": "lmstudio",
+      "enabled": false
+    },
+
+    {
+      "id": "vllm",
+      "enabled": false
+    }
+  ],
+
+  "models": {
+    "chat": "qwen3:8b",
+    "reasoning": "qwen3:14b",
+    "coding": "qwen2.5-coder:14b",
+    "embedding": "nomic-embed-text"
+  },
+
+  "options": {
+    "temperature": 0.2,
+    "topP": 0.9,
+    "maxTokens": 4096,
+    "stream": true
+  }
+}

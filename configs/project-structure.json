@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0",
+
+  "project": {
+    "name": "EngineeringOS",
+    "version": "1.0.0",
+    "description": "Personal Engineering Knowledge Platform powered by Local AI"
+  },
+
+  "folders": [
+    {
+      "path": "ADR",
+      "description": "Architecture Decision Records"
+    },
+    {
+      "path": "docs",
+      "description": "Project Documentation"
+    },
+    {
+      "path": "templates",
+      "description": "Project Templates"
+    },
+    {
+      "path": "scripts",
+      "description": "Automation Scripts"
+    },
+    {
+      "path": "configs",
+      "description": "Configuration"
+    },
+    {
+      "path": "agents",
+      "description": "AI Agents"
+    },
+    {
+      "path": "runtime",
+      "description": "Local AI Runtime"
+    },
+    {
+      "path": "memory",
+      "description": "Persistent AI Memory"
+    },
+    {
+      "path": "logs",
+      "description": "Execution Logs"
+    },
+    {
+      "path": "tests",
+      "description": "Tests"
+    },
+    {
+      "path": "experiments",
+      "description": "Experiments"
+    },
+    {
+      "path": "prompts",
+      "description": "Prompt Library"
+    },
+    {
+      "path": "tools",
+      "description": "External Tools"
+    },
+
+    {
+      "path": "knowledge",
+      "description": "Engineering Knowledge Repository"
+    },
+
+    {
+      "path": "knowledge/architecture",
+      "description": "Architecture Knowledge"
+    },
+    {
+      "path": "knowledge/architecture/patterns",
+      "description": "Architecture Patterns"
+    },
+    {
+      "path": "knowledge/architecture/styles",
+      "description": "Architecture Styles"
+    },
+    {
+      "path": "knowledge/architecture/system-designs",
+      "description": "System Designs"
+    },
+    {
+      "path": "knowledge/architecture/reviews",
+      "description": "Architecture Reviews"
+    },
+
+    {
+      "path": "knowledge/standards",
+      "description": "Engineering Standards"
+    },
+    {
+      "path": "knowledge/standards/iSAQB",
+      "description": "iSAQB"
+    },
+    {
+      "path": "knowledge/standards/ISO26262",
+      "description": "ISO26262"
+    },
+    {
+      "path": "knowledge/standards/AUTOSAR",
+      "description": "AUTOSAR"
+    },
+    {
+      "path": "knowledge/standards/ASPICE",
+      "description": "ASPICE"
+    },
+
+    {
+      "path": "knowledge/software-engineering",
+      "description": "Software Engineering"
+    },
+    {
+      "path": "knowledge/automotive",
+      "description": "Automotive Engineering"
+    },
+    {
+      "path": "knowledge/management",
+      "description": "Requirement, Scrum and Stakeholder"
+    },
+
+    {
+      "path": "knowledge/personal",
+      "description": "Personal Engineering Knowledge"
+    },
+    {
+      "path": "knowledge/personal/lessons-learned",
+      "description": "Lessons Learned"
+    },
+    {
+      "path": "knowledge/personal/architecture-notes",
+      "description": "Architecture Notes"
+    },
+    {
+      "path": "knowledge/personal/checklists",
+      "description": "Engineering Checklists"
+    },
+    {
+      "path": "knowledge/personal/tradeoffs",
+      "description": "Architecture Trade-offs"
+    },
+
+    {
+      "path": "knowledge/projects",
+      "description": "Project Knowledge"
+    }
+  ],
+
+  "files": [
+    {
+      "path": "README.md",
+      "template": "README"
+    },
+    {
+      "path": ".gitignore",
+      "template": "GITIGNORE"
+    },
+    {
+      "path": "LICENSE",
+      "template": "LICENSE"
+    },
+    {
+      "path": "ADR/README.md",
+      "template": "ADR_README"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "docs/PRODUCT_BACKLOG.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "template": "EMPTY"
+    }
+  ]
+}

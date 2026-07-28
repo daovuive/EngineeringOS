@@ -1,109 +1,166 @@
 <#
-=====================================================
- Engineering OS CLI
- Version : 1.1
-=====================================================
+Engineering OS CLI
+
+Entry point of Engineering OS.
+
+Responsibilities:
+- Parse command line
+- Dispatch commands
+- Display help/version
+
+Business logic must be implemented inside scripts/.
 #>
 
 param(
     [Parameter(Position = 0)]
-    [string]$Command = "help"
+    [string]$Command = "help",
+
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$Arguments
 )
 
 $ErrorActionPreference = "Stop"
 
-$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Scripts = Join-Path $Root "scripts"
+$ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-function Banner {
+$Version = "1.0.0"
+
+# -------------------------------------------------------------
+# Banner
+# -------------------------------------------------------------
+
+function Show-Banner {
 
     Write-Host ""
-    Write-Host "==========================================" -ForegroundColor Cyan
-    Write-Host "        Engineering OS CLI v1.1"
-    Write-Host "==========================================" -ForegroundColor Cyan
+    Write-Host "==========================================="
+    Write-Host "           Engineering OS"
+    Write-Host "==========================================="
+    Write-Host "Version : $Version"
     Write-Host ""
+
 }
 
-function Help {
+# -------------------------------------------------------------
+# Invoke Script
+# -------------------------------------------------------------
 
-    Banner
+function Invoke-Command {
+
+    param(
+        [string]$Script
+    )
+
+    $scriptPath = Join-Path $ScriptRoot "scripts\$Script"
+
+    if (!(Test-Path $scriptPath)) {
+
+        throw "Command not implemented: $Script"
+
+    }
+
+    & $scriptPath @Arguments
+
+}
+
+# -------------------------------------------------------------
+# Help
+# -------------------------------------------------------------
+
+function Show-Help {
+
+    Show-Banner
 
     Write-Host "Usage"
-    Write-Host "-----"
-    Write-Host "  .\eng.ps1 init"
-    Write-Host "  .\eng.ps1 doctor"
-    Write-Host "  .\eng.ps1 setup"
-    Write-Host "  .\eng.ps1 run"
-    Write-Host "  .\eng.ps1 clean"
-    Write-Host "  .\eng.ps1 update"
-    Write-Host "  .\eng.ps1 help"
+    Write-Host ""
+    Write-Host "    ./eng.ps1 <command>"
+    Write-Host ""
+
+    Write-Host "Commands"
+    Write-Host ""
+    Write-Host "    init"
+    Write-Host "        Initialize project."
+    Write-Host ""
+
+    Write-Host "    validate"
+    Write-Host "        Validate project."
+    Write-Host ""
+
+    Write-Host "    sync"
+    Write-Host "        Synchronize project."
+    Write-Host ""
+
+    Write-Host "    config"
+    Write-Host "        Manage configuration."
+    Write-Host ""
+
+    Write-Host "    doctor"
+    Write-Host "        Check environment."
+    Write-Host ""
+
+    Write-Host "    version"
+    Write-Host "        Show version."
+    Write-Host ""
+
+    Write-Host "    help"
+    Write-Host "        Show help."
     Write-Host ""
 
 }
 
-function Invoke-EngineeringScript {
-
-    param([string]$Name)
-
-    if (!(Test-Path $Scripts)) {
-        Write-Host "scripts folder not found." -ForegroundColor Red
-        exit 1
-    }
-
-    $script = Join-Path $Scripts "$Name.ps1"
-
-    if (!(Test-Path $script)) {
-
-        Write-Host ""
-        Write-Host "Command '$Name' not found." -ForegroundColor Red
-        Write-Host ""
-
-        Help
-
-        exit 1
-    }
-
-    try {
-
-        & $script
-
-    }
-    catch {
-
-        Write-Host ""
-        Write-Host "==========================================" -ForegroundColor Red
-        Write-Host "Script Failed"
-        Write-Host "==========================================" -ForegroundColor Red
-        Write-Host $_.Exception.Message -ForegroundColor Yellow
-        Write-Host ""
-
-        exit 1
-
-    }
-
-}
+# -------------------------------------------------------------
+# Main
+# -------------------------------------------------------------
 
 switch ($Command.ToLower()) {
 
-    "init"   { Invoke-EngineeringScript "init" }
+    "init" {
 
-    "doctor" { Invoke-EngineeringScript "doctor" }
+        Invoke-Command "init.ps1"
 
-    "setup"  { Invoke-EngineeringScript "setup" }
+    }
 
-    "run"    { Invoke-EngineeringScript "run" }
+    "validate" {
 
-    "clean"  { Invoke-EngineeringScript "clean" }
+        Invoke-Command "validate.ps1"
 
-    "update" { Invoke-EngineeringScript "update" }
+    }
 
-    "help"   { Help }
+    "sync" {
+
+        Invoke-Command "sync.ps1"
+
+    }
+
+    "doctor" {
+
+        Invoke-Command "doctor.ps1"
+
+    }
+
+    "config" {
+
+        Invoke-Command "config.ps1"
+
+    }
+
+    "version" {
+
+        Show-Banner
+
+    }
+
+    "help" {
+
+        Show-Help
+
+    }
 
     default {
 
         Write-Host ""
-        Write-Host "Unknown command : $Command" -ForegroundColor Red
-        Help
+        Write-Host "Unknown command: $Command"
+        Write-Host ""
+        Show-Help
 
     }
 

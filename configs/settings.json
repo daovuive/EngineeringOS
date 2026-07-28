@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0",
+
+  "project": {
+    "language": "en",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+
+  "logging": {
+    "enabled": true,
+    "directory": "logs",
+    "level": "Information"
+  },
+
+  "knowledge": {
+    "root": "knowledge",
+    "autoIndex": false
+  },
+
+  "templates": {
+    "directory": "templates"
+  },
+
+  "runtime": {
+    "config": "configs/ai-runtime.json"
+  },
+
+  "memory": {
+    "directory": "memory"
+  },
+
+  "agents": {
+    "directory": "agents"
+  },
+
+  "prompts": {
+    "directory": "prompts"
+  }
+}

@@ -1,25 +1,36 @@
-__pycache__/
-
-*.pyc
-
-.venv/
-
-env/
-
-.vscode/
-
-.idea/
-
+# Logs
 logs/
-
-models/
-
-cache/
-
-*.db
-
-*.sqlite
-
 *.log
 
-node_modules/
+# PowerShell
+*.ps1xml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Temporary
+tmp/
+temp/
+
+# Local AI
+runtime/models/
+runtime/vector-db/
+runtime/cache/
+
+# Test output
+coverage/

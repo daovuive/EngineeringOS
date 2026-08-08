@@ -209,6 +209,22 @@ Changing AI runtime should not require changing the repository architecture.
 
 ---
 
+# CLI Runtime
+
+Engineering OS uses Python as the primary CLI and automation runtime.
+
+Common commands:
+
+```bash
+python eng.py init
+python eng.py sync
+python eng.py validate
+python eng.py doctor
+python eng.py config
+```
+
+---
+
 # High-Level Architecture
 
 ```

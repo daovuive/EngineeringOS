@@ -10,6 +10,15 @@
       "purpose": "Extract job requirements and compare them with a career plan.",
       "inputs": ["job description", "career plan"],
       "outputs": ["requirement summary", "capability gap analysis", "action plan"]
+    },
+    {
+      "id": "career-direction-review",
+      "path": "skills/career-direction-review/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Answer current career direction and path questions from canonical career sources.",
+      "inputs": ["career question"],
+      "outputs": ["current direction", "path trade-offs", "next actions", "evidence references"]
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0",
+  "skillsDirectory": "skills",
+  "skills": [
+    {
+      "id": "analyze-job-description",
+      "path": "skills/analyze-job-description/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Extract job requirements and compare them with a career plan.",
+      "inputs": ["job description", "career plan"],
+      "outputs": ["requirement summary", "capability gap analysis", "action plan"]
+    }
+  ]
+}

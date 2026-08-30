@@ -149,6 +149,7 @@ Engineering OS should provide:
 - Requirement Repository
 - Prompt Library
 - AI Agent Library
+- Reusable AI Skill Library
 - Local AI Runtime
 - Engineering Templates
 - Semantic Search
@@ -206,6 +207,18 @@ Supported runtimes may include:
 - vLLM
 
 Changing AI runtime should not require changing the repository architecture.
+
+---
+
+# AI Skills
+
+AI Skills are reusable workflows used by AI Agents. A skill defines how a
+capability is performed, its inputs and outputs, quality checks, and references
+to source knowledge. Skills contain workflow instructions; they do not duplicate
+knowledge documents, prompts, or agent definitions.
+
+Agents orchestrate skills. Skills use prompts, tools, memory and knowledge as
+needed. This separation allows the same skill to be reused by multiple agents.
 
 ---
 

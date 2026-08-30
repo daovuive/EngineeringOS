@@ -25,6 +25,16 @@
     },
 
     {
+      "id": "SKILLS_README",
+      "source": "SKILLS.md"
+    },
+
+    {
+      "id": "SKILL",
+      "source": "SKILL.md"
+    },
+
+    {
       "id": "EMPTY",
       "source": null
     }

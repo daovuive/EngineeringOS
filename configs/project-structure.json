@@ -17,6 +17,18 @@
       "description": "Project Documentation"
     },
     {
+      "path": "career",
+      "description": "Career Planning and Job Market References"
+    },
+    {
+      "path": "career/job-market",
+      "description": "Job Market References"
+    },
+    {
+      "path": "career/job-market/CMC_Global",
+      "description": "CMC Global Job Market References"
+    },
+    {
       "path": "templates",
       "description": "Project Templates"
     },
@@ -31,6 +43,14 @@
     {
       "path": "agents",
       "description": "AI Agents"
+    },
+    {
+      "path": "skills",
+      "description": "Reusable AI Skills and Workflows"
+    },
+    {
+      "path": "skills/analyze-job-description",
+      "description": "Reusable job description analysis skill"
     },
     {
       "path": "runtime",
@@ -164,6 +184,22 @@
     {
       "path": "ADR/README.md",
       "template": "ADR_README"
+    },
+    {
+      "path": "skills/README.md",
+      "template": "SKILLS_README"
+    },
+    {
+      "path": "skills/analyze-job-description/SKILL.md",
+      "template": "SKILL"
+    },
+    {
+      "path": "career/Career_Plan_v1.0.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "career/job-market/CMC_Global/Senior_Product_Owner_Autonomous_Mobility_Fleet_Management.md",
+      "template": "EMPTY"
     },
     {
       "path": "docs/ROADMAP.md",

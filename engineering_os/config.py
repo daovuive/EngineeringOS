@@ -7,9 +7,10 @@ from typing import Any
 
 
 DEFAULT_STRUCTURE_CONFIG = Path("configs/project-structure.json")
-DEFAULT_TEMPLATE_CONFIG = Path("configs/template.json")
+DEFAULT_TEMPLATE_CONFIG = Path("configs/templates.json")
 DEFAULT_SETTINGS_CONFIG = Path("configs/settings.json")
 DEFAULT_RUNTIME_CONFIG = Path("configs/ai-runtime.json")
+DEFAULT_SKILLS_CONFIG = Path("configs/skills.json")
 
 
 @dataclass(frozen=True)
@@ -54,3 +55,7 @@ def load_settings(paths: ProjectPaths) -> dict[str, Any]:
 
 def load_runtime_config(paths: ProjectPaths) -> dict[str, Any]:
     return load_json(paths.resolve(paths.runtime_config))
+
+
+def load_skills_config(paths: ProjectPaths) -> dict[str, Any]:
+    return load_json(paths.resolve(DEFAULT_SKILLS_CONFIG))

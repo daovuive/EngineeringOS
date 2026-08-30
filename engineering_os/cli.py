@@ -7,6 +7,7 @@ from engineering_os import __version__
 from engineering_os.config import (
     DEFAULT_STRUCTURE_CONFIG,
     DEFAULT_TEMPLATE_CONFIG,
+    load_skills_config,
     ProjectPaths,
     load_project_structure,
     load_runtime_config,
@@ -58,7 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
     config_parser.add_argument(
         "name",
         nargs="?",
-        choices=("settings", "runtime", "structure", "templates"),
+        choices=("settings", "runtime", "structure", "templates", "skills"),
         default="settings",
         help="Configuration section to display.",
     )
@@ -139,6 +140,7 @@ def command_config(paths: ProjectPaths, name: str) -> int:
         "runtime": load_runtime_config,
         "structure": load_project_structure,
         "templates": load_template_config,
+        "skills": load_skills_config,
     }
     print(json.dumps(loaders[name](paths), indent=2))
     return 0

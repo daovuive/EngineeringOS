@@ -25,6 +25,11 @@
     "config": "configs/ai-runtime.json"
   },
 
+  "skills": {
+    "directory": "skills",
+    "registry": "configs/skills.json"
+  },
+
   "memory": {
     "directory": "memory"
   },

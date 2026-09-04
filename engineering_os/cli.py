@@ -15,6 +15,19 @@ from engineering_os.config import (
     load_template_config,
 )
 from engineering_os.doctor import run_doctor
+from engineering_os.knowledge import (
+    KnowledgeIndexError,
+    build_index,
+    load_index,
+    save_index,
+    search_index,
+)
+from engineering_os.llm import (
+    LLMError,
+    build_pull_commands,
+    create_runtime,
+    get_default_runtime_definition,
+)
 from engineering_os.structure import ensure_structure, validate_structure
 
 
@@ -63,6 +76,39 @@ def build_parser() -> argparse.ArgumentParser:
         default="settings",
         help="Configuration section to display.",
     )
+
+    llm_parser = subparsers.add_parser("llm", help="Use local LLM runtime.")
+    llm_subparsers = llm_parser.add_subparsers(dest="llm_command")
+    llm_subparsers.add_parser("status", help="Check configured local LLM runtime.")
+    llm_subparsers.add_parser("pull-plan", help="Print Ollama model pull commands.")
+
+    chat_parser = llm_subparsers.add_parser(
+        "chat",
+        help="Send one prompt to the configured local LLM runtime.",
+    )
+    chat_parser.add_argument("prompt", help="Prompt text.")
+    chat_parser.add_argument(
+        "--role",
+        choices=("rag", "chat", "reasoning", "coding"),
+        default="chat",
+        help="Configured model role to use.",
+    )
+
+    embed_parser = llm_subparsers.add_parser("embed", help="Create an embedding vector.")
+    embed_parser.add_argument("text", help="Text to embed.")
+
+    knowledge_parser = subparsers.add_parser(
+        "knowledge",
+        help="Index and search knowledge.",
+    )
+    knowledge_subparsers = knowledge_parser.add_subparsers(dest="knowledge_command")
+    knowledge_subparsers.add_parser("index", help="Build the Markdown knowledge index.")
+    search_parser = knowledge_subparsers.add_parser(
+        "search",
+        help="Search indexed knowledge.",
+    )
+    search_parser.add_argument("query", help="Search query.")
+    search_parser.add_argument("--limit", type=int, default=5, help="Maximum results.")
 
     return parser
 
@@ -146,6 +192,77 @@ def command_config(paths: ProjectPaths, name: str) -> int:
     return 0
 
 
+def command_llm(paths: ProjectPaths, args: argparse.Namespace) -> int:
+    runtime_config = load_runtime_config(paths)
+    definition = get_default_runtime_definition(runtime_config)
+    runtime = create_runtime(runtime_config)
+
+    if args.llm_command == "status":
+        print(f"Runtime : {definition.endpoint.id}")
+        print(f"Host    : {definition.endpoint.host}")
+        print("")
+        print("Configured models")
+        print("-----------------")
+        for role, model in definition.models.items():
+            print(f"{role:10}: {model}")
+
+        print("")
+        try:
+            models = runtime.list_models()
+        except LLMError as error:
+            print(f"[WARN] {error}")
+            return 1
+
+        print("Available runtime models")
+        print("------------------------")
+        if models:
+            for model in models:
+                print(model)
+        else:
+            print("(none)")
+        return 0
+
+    if args.llm_command == "pull-plan":
+        for command in build_pull_commands(runtime_config):
+            print(command)
+        return 0
+
+    if args.llm_command == "chat":
+        print(runtime.generate(args.prompt, role=args.role))
+        return 0
+
+    if args.llm_command == "embed":
+        embedding = runtime.embed(args.text)
+        print(f"dimensions: {len(embedding)}")
+        print(embedding[:8])
+        return 0
+
+    raise LLMError("Missing LLM command. Use: status, pull-plan, chat, or embed.")
+
+
+def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
+    settings = load_settings(paths)
+    knowledge = settings.get("knowledge", {})
+    root = paths.resolve(knowledge.get("root", "knowledge"))
+    index_path = paths.resolve(knowledge.get("index", "runtime/index/knowledge.json"))
+    runtime = create_runtime(load_runtime_config(paths))
+
+    if args.knowledge_command == "index":
+        chunks = build_index(root, runtime)
+        save_index(index_path, chunks)
+        print(f"Indexed {len(chunks)} Markdown chunk(s) into {index_path.as_posix()}")
+        return 0
+
+    if args.knowledge_command == "search":
+        chunks = load_index(index_path)
+        for score, chunk in search_index(chunks, args.query, runtime, limit=args.limit):
+            print(f"{score:.4f}  {chunk.path}#{chunk.heading}")
+            print(f"        {chunk.text.splitlines()[0][:160]}")
+        return 0
+
+    raise KnowledgeIndexError("Missing knowledge command. Use: index or search.")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -164,9 +281,14 @@ def main(argv: list[str] | None = None) -> int:
                 paths.root,
                 load_project_structure(paths),
                 load_template_config(paths),
+                load_runtime_config(paths),
             )
         if command == "config":
             return command_config(paths, args.name)
+        if command == "llm":
+            return command_llm(paths, args)
+        if command == "knowledge":
+            return command_knowledge(paths, args)
         if command == "version":
             banner()
             return 0

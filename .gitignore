@@ -31,6 +31,7 @@ temp/
 runtime/models/
 runtime/vector-db/
 runtime/cache/
+runtime/index/
 
 # Test output
 coverage/

@@ -29,9 +29,10 @@
   ],
 
   "models": {
-    "chat": "qwen3:8b",
-    "reasoning": "qwen3:14b",
-    "coding": "qwen2.5-coder:14b",
+    "rag": "granite3.1-moe:3b",
+    "chat": "phi3.5:3.8b-mini-instruct-q4_K_M",
+    "reasoning": "phi3.5:3.8b-mini-instruct-q4_K_M",
+    "coding": "qwen2.5-coder:3b-instruct-q4_K_M",
     "embedding": "nomic-embed-text"
   },
 

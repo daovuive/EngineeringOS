@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import shutil
+import sys
 from pathlib import Path
 from typing import Any
 
+from engineering_os.llm import LLMError, create_runtime, get_default_runtime_definition
 from engineering_os.structure import validate_structure
 
 
@@ -11,6 +13,7 @@ def run_doctor(
     project_root: Path,
     structure: dict[str, Any],
     template_config: dict[str, Any],
+    runtime_config: dict[str, Any] | None = None,
 ) -> int:
     failed = 0
 
@@ -22,17 +25,46 @@ def run_doctor(
 
     print("System")
     print("------")
-    for command in ("python", "git"):
+    python_command = sys.executable or shutil.which("python") or shutil.which("python3")
+    if python_command:
+        print("[ OK ] python")
+    else:
+        print("[FAIL] python")
+        failed += 1
+
+    for command in ("git",):
         if shutil.which(command):
             print(f"[ OK ] {command}")
         else:
             print(f"[FAIL] {command}")
             failed += 1
 
-    if shutil.which("ollama"):
-        print("[ OK ] Ollama")
-    else:
-        print("[WARN] Ollama not installed")
+    if runtime_config is not None:
+        print("")
+        print("AI Runtime")
+        print("----------")
+        try:
+            definition = get_default_runtime_definition(runtime_config)
+            runtime = create_runtime(runtime_config)
+            print(f"[ OK ] default runtime : {definition.endpoint.id}")
+            print(f"[ OK ] host            : {definition.endpoint.host}")
+
+            ollama_executable = None
+            if definition.endpoint.id == "ollama":
+                ollama_executable = shutil.which("ollama")
+                if not ollama_executable:
+                    print("[INFO] Ollama executable not found on PATH")
+
+            try:
+                models = runtime.list_models()
+                print(f"[ OK ] runtime API     : {len(models)} model(s) available")
+                if definition.endpoint.id == "ollama" and not ollama_executable:
+                    print("[INFO] Ollama is reachable even though the executable is not on PATH")
+            except LLMError as error:
+                print(f"[WARN] runtime API     : {error}")
+        except LLMError as error:
+            print(f"[FAIL] AI runtime      : {error}")
+            failed += 1
 
     print("")
     print("Project Structure")

@@ -77,6 +77,12 @@ Current implemented commands:
 - `config`
 - `doctor`
 - `version`
+- `llm status`
+- `llm pull-plan`
+- `llm chat`
+- `llm embed`
+- `knowledge index`
+- `knowledge search`
 - `help`
 
 Business logic lives under `engineering_os/`.
@@ -108,9 +114,9 @@ Important configuration:
 Current runtime defaults:
 
 - Default runtime: `ollama`.
-- Chat model: `qwen3:8b`.
-- Reasoning model: `qwen3:14b`.
-- Coding model: `qwen2.5-coder:14b`.
+- RAG model: `granite3.1-moe:3b`.
+- Chat and reasoning model: `phi3.5:3.8b-mini-instruct-q4_K_M`.
+- Coding model: `qwen2.5-coder:3b-instruct-q4_K_M`.
 - Embedding model: `nomic-embed-text`.
 
 ## Roadmap Snapshot
@@ -126,16 +132,19 @@ Current runtime defaults:
 - Python is now the primary CLI runtime per ADR-0003.
 - All PowerShell scripts were removed to avoid maintaining duplicate CLI implementations.
 - The project now validates successfully through `python eng.py validate`.
+- Ollama is reachable at `http://localhost:11434` from the current Windows Python environment.
+- Markdown knowledge indexing and cosine-similarity search are implemented; the generated index is local under `runtime/index/`.
 
 ## Known Gaps To Address
 
-- The README describes semantic search, indexing, and RAG, but no implementation is visible yet.
+- Full RAG prompt assembly, vector-database integration and agent orchestration are not implemented yet.
 - Future work should keep all structure validation driven by `configs/project-structure.json`.
 - Ollama is optional in `doctor`; it is currently not installed or not on PATH in this machine.
 
 ## Recommended Next Implementation Order
 
-1. Define a document schema for knowledge entries, ADRs, lessons learned, prompts, and agent definitions.
-2. Add an indexing pipeline for Markdown first, then expand to PDF, DOCX, HTML, and source code.
+1. Define a document schema and metadata contract for indexed knowledge.
+2. Expand ingestion from Markdown to PDF, DOCX, HTML and source code.
 3. Add a local vector store abstraction that is independent from the AI runtime.
-4. Add concrete agent specs for requirement analysis, architecture review, code review, summarization, and Solution Architect workflows.
+4. Add RAG prompt assembly and source citations.
+5. Add concrete agent specs for requirement analysis, architecture review, code review, summarization, and Solution Architect workflows.

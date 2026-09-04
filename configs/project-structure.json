@@ -21,6 +21,10 @@
       "description": "Career Planning and Job Market References"
     },
     {
+      "path": "career/profile",
+      "description": "Canonical Professional Profile and CV Source Content"
+    },
+    {
       "path": "career/job-market",
       "description": "Job Market References"
     },
@@ -98,7 +102,6 @@
       "path": "knowledge/architecture/reviews",
       "description": "Architecture Reviews"
     },
-
     {
       "path": "knowledge/standards",
       "description": "Engineering Standards"
@@ -176,6 +179,26 @@
     {
       "path": "ADR/README.md",
       "template": "ADR_README"
+    },
+    {
+      "path": "career/README.md",
+      "template": "CAREER_README"
+    },
+    {
+      "path": "career/Career_Plan_v1.0.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "career/career-direction-sa-vs-fo.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "career/profile/Dao_Pham_CV_Content_for_AI_v4.md",
+      "template": "EMPTY"
+    },
+    {
+      "path": "career/profile/DaoPham_PO.pdf",
+      "template": "EMPTY"
     },
     {
       "path": "docs/ROADMAP.md",

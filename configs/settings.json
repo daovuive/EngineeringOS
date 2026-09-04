@@ -14,7 +14,8 @@
 
   "knowledge": {
     "root": "knowledge",
-    "autoIndex": false
+    "autoIndex": false,
+    "index": "runtime/index/knowledge.json"
   },
 
   "templates": {

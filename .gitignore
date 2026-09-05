@@ -1,5 +1,6 @@
 # Logs
-logs/
+logs/*
+!logs/README.md
 *.log
 
 # PowerShell
@@ -8,6 +9,7 @@ logs/
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
 .venv/
 venv/
 

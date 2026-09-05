@@ -1,44 +1,35 @@
 {
   "schemaVersion": "1.0",
-
   "templateDirectory": "templates",
-
   "templates": [
     {
       "id": "README",
-      "source": "README.md"
+      "source": "ROOT_README.md"
     },
-
     {
       "id": "LICENSE",
       "source": "LICENSE.md"
     },
-
     {
       "id": "GITIGNORE",
       "source": "gitignore.txt"
     },
-
     {
       "id": "ADR_README",
       "source": "ADR.md"
     },
-
     {
       "id": "SKILLS_README",
       "source": "SKILLS.md"
     },
-
     {
       "id": "SKILL",
       "source": "SKILL.md"
     },
-
     {
       "id": "CAREER_README",
       "source": "CAREER.md"
     },
-
     {
       "id": "EMPTY",
       "source": null

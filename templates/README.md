@@ -1,154 +1,21 @@
-# Engineering OS
+# templates
 
-> Personal Engineering Knowledge Platform powered by Local AI.
+[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
 
----
+## Mục đích và ranh giới
 
-# Vision
+Mẫu tạo artifact dùng chung cho project. configs/templates.json ánh xạ template ID sang file nguồn. Mẫu riêng của một skill nằm trong package của skill đó. README.md này là mục lục thư mục, không phải mẫu README gốc.
 
-Engineering OS is a Personal Engineering Knowledge Platform and AI Operating System.
+## Tài liệu và file hiện có
 
-Its purpose is to preserve engineering knowledge, architecture decisions, reusable engineering assets, and lessons learned throughout an engineering career.
+- [ADR.md](ADR.md).
+- [CAREER.md](CAREER.md).
+- [gitignore.txt](gitignore.txt).
+- [LICENSE.md](LICENSE.md).
+- [ROOT_README.md](ROOT_README.md).
+- [SKILL.md](SKILL.md).
+- [SKILLS.md](SKILLS.md).
 
-The platform continuously accumulates engineering knowledge to support the long-term growth of a Solution Architect.
+## Khi mở rộng
 
----
-
-# Mission
-
-Engineering OS enables engineers to:
-
-- Capture engineering knowledge
-- Preserve architecture decisions
-- Reuse engineering assets
-- Learn from previous projects
-- Accelerate engineering work using Local AI
-
----
-
-# Design Principles
-
-## Knowledge First
-
-Knowledge is the most valuable engineering asset.
-
-Everything should be searchable, reusable and continuously improved.
-
----
-
-## Architecture First
-
-Architecture decisions are more valuable than implementation details.
-
-Architecture knowledge should outlive frameworks and technologies.
-
----
-
-## Local AI First
-
-Engineering OS is designed to work primarily with Local AI.
-
-Benefits include:
-
-- Privacy
-- Offline capability
-- Vendor independence
-- Lower operating cost
-
----
-
-## Human in Control
-
-AI assists engineering work.
-
-Engineers make the final decisions.
-
----
-
-## Configuration as Data
-
-Project structure, templates and runtime configuration are stored as configuration files.
-
-Automation scripts and AI Agents read configuration instead of hard-coded logic.
-
----
-
-## Single Source of Truth
-
-Project structure is defined by:
-
-```
-configs/project-structure.json
-```
-
-Automation scripts and AI Agents should never hard-code repository structure.
-
----
-
-# Repository Structure
-
-```
-EngineeringOS
-│
-├── ADR
-├── agents
-├── configs
-├── docs
-├── experiments
-├── knowledge
-├── logs
-├── memory
-├── prompts
-├── runtime
-├── scripts
-├── templates
-├── tests
-└── tools
-```
-
----
-
-# Initialization
-
-Initialize the repository:
-
-```powershell
-./eng.ps1 init
-```
-
-Validate the repository:
-
-```powershell
-./eng.ps1 validate
-```
-
-Synchronize missing resources:
-
-```powershell
-./eng.ps1 sync
-```
-
-Check local environment:
-
-```powershell
-./eng.ps1 doctor
-```
-
----
-
-# Configuration
-
-The repository is configured using:
-
-```
-configs/project-structure.json
-configs/templates.json
-configs/settings.json
-configs/ai-runtime.json
-```
-
----
-
-# License
-
-See the LICENSE file for licensing information.
+Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.

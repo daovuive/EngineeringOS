@@ -1,35 +1,17 @@
-# Architecture Decision Records (ADR)
+# ADR
 
-This directory contains all Architecture Decision Records (ADR)
-for Engineering OS.
+[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Purpose
+## Mục đích và ranh giới
 
-ADRs document important architectural decisions made during the
-lifetime of the project.
+Quyết định kiến trúc của chính EngineeringOS. Mỗi ADR ghi context, options, decision, consequences và trạng thái Proposed / Accepted / Deprecated / Superseded. Dùng tên ADR-NNNN.md; không coi ghi chú học tập là quyết định đã được chấp nhận.
 
-Each ADR explains:
+## Tài liệu và file hiện có
 
-- Context
-- Decision
-- Alternatives
-- Consequences
+- [ADR-0001.md](ADR-0001.md).
+- [ADR-0002.md](ADR-0002.md).
+- [ADR-0003.md](ADR-0003.md).
 
-## Naming
+## Khi mở rộng
 
-ADR-0001.md
-
-ADR-0002.md
-
-ADR-0003.md
-
-...
-
-## Status
-
-An ADR may have one of the following states:
-
-- Proposed
-- Accepted
-- Deprecated
-- Superseded
+Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.

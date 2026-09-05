@@ -80,6 +80,8 @@ def run_doctor(
         print(f"[FAIL] Missing template : {template.as_posix()}")
     for template_id in result.unknown_templates:
         print(f"[FAIL] Unknown template : {template_id}")
+    for error in result.governance_errors:
+        print(f"[FAIL] Governance       : {error}")
 
     failed += result.error_count
 

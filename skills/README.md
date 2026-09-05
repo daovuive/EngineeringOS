@@ -1,31 +1,20 @@
-# AI Skills
+# skills
 
-Skills are reusable AI capability workflows. They are intentionally separate
-from agents:
+[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
 
-- An agent owns orchestration and role-specific behavior.
-- A skill owns one reusable capability.
-- A prompt owns reusable wording or prompt fragments.
-- A tool owns an integration or executable operation.
+## Mục đích và ranh giới
 
-## Skill Package Contract
+Nguồn chính cho workflow AI tái sử dụng. Mỗi skills/<skill-id>/SKILL.md có một ID kebab-case ổn định và một entry trong configs/skills.json. Agent điều phối, skill mô tả cách làm, knowledge/career cung cấp dữ liệu. Chỉ tạo references/templates/scripts khi cần.
 
-Each skill must have one canonical `SKILL.md` file. Optional supporting content
-belongs inside the same skill folder:
+## Thư mục con
 
-```text
-skills/<skill-id>/
-├── SKILL.md
-├── references/
-├── templates/
-└── scripts/
-```
+- [analyze-job-description](analyze-job-description/README.md): Package phân tích JD.
+- [career-direction-review](career-direction-review/README.md): Package đánh giá định hướng nghề nghiệp.
 
-Use these rules to keep the library extensible and avoid duplication:
+## Khi mở rộng
 
-1. Give every skill a stable kebab-case `id`.
-2. Keep workflow instructions in `SKILL.md`; do not copy them into agents.
-3. Reference knowledge, memory and prompts by path or ID instead of copying content.
-4. Keep domain-specific supporting files inside the skill package.
-5. Record each skill once in `configs/skills.json`.
-6. Make inputs, outputs, dependencies and quality checks explicit.
+Mỗi SKILL.md cần nêu input, output, workflow, nguồn phụ thuộc và quality checks.
+ID phải ổn định, dùng kebab-case. Supporting references, templates hoặc scripts
+chỉ thuộc package khi cần cho workflow đó; không sao chép nguồn career/knowledge.
+
+Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.

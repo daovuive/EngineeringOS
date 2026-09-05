@@ -1,12 +1,10 @@
 {
   "schemaVersion": "1.0",
-
   "project": {
     "name": "EngineeringOS",
     "version": "1.0.0",
     "description": "Personal Engineering Knowledge Platform powered by Local AI"
   },
-
   "folders": [
     {
       "path": "ADR",
@@ -76,12 +74,10 @@
       "path": "tools",
       "description": "External Tools"
     },
-
     {
       "path": "knowledge",
       "description": "Engineering Knowledge Repository"
     },
-
     {
       "path": "knowledge/architecture",
       "description": "Architecture Knowledge"
@@ -122,7 +118,6 @@
       "path": "knowledge/standards/ASPICE",
       "description": "ASPICE"
     },
-
     {
       "path": "knowledge/software-engineering",
       "description": "Software Engineering"
@@ -135,7 +130,6 @@
       "path": "knowledge/management",
       "description": "Requirement, Scrum and Stakeholder"
     },
-
     {
       "path": "knowledge/personal",
       "description": "Personal Engineering Knowledge"
@@ -156,13 +150,47 @@
       "path": "knowledge/personal/tradeoffs",
       "description": "Architecture Trade-offs"
     },
-
     {
       "path": "knowledge/projects",
       "description": "Project Knowledge"
+    },
+    {
+      "path": "docs/proposals",
+      "description": "Bản đề xuất đang chờ chủ project duyệt, kèm tác động và patch nếu cần"
+    },
+    {
+      "path": "engineering_os",
+      "description": "Mã Python của EngineeringOS: CLI, cấu hình, tạo/kiểm tra cấu trúc, runtime abstraction và tìm kiếm Markdown"
+    },
+    {
+      "path": "skills",
+      "description": "Nguồn chính cho workflow AI tái sử dụng"
+    },
+    {
+      "path": "skills/analyze-job-description",
+      "description": "Package phân tích JD"
+    },
+    {
+      "path": "skills/career-direction-review",
+      "description": "Package đánh giá định hướng nghề nghiệp"
+    },
+    {
+      "path": "knowledge/architect",
+      "description": "Chương trình học Architect cá nhân hiện có"
+    },
+    {
+      "path": "knowledge/architect/asr",
+      "description": "Ghi chú ASR trong chương trình Architect và các nghiên cứu thiết kế local AI hiện hữu"
+    },
+    {
+      "path": "knowledge/architect/books",
+      "description": "Sách, nguồn đọc và kế hoạch đọc liên quan chương trình Architect"
+    },
+    {
+      "path": "knowledge/architect/lessions",
+      "description": "Bài học, review, appendix và ghi chú gắn với chương trình Architect"
     }
   ],
-
   "files": [
     {
       "path": "README.md",
@@ -197,10 +225,6 @@
       "template": "EMPTY"
     },
     {
-      "path": "career/profile/DaoPham_PO.pdf",
-      "template": "EMPTY"
-    },
-    {
       "path": "docs/ROADMAP.md",
       "template": "EMPTY"
     },
@@ -220,5 +244,38 @@
       "path": "docs/DECISIONS.md",
       "template": "EMPTY"
     }
-  ]
+  ],
+  "governance": {
+    "readmeName": "README.md",
+    "protectedRootReadme": {
+      "path": "README.md",
+      "sha256": "defa86b4c66c8082629ed6001bc1e8de52635ea20515f82005ebc343f6ee40db"
+    },
+    "rootNavigationPendingApproval": false,
+    "ignoredDirectories": [
+      ".git",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".pytest_cache",
+      ".vscode",
+      ".idea",
+      "tmp",
+      "temp",
+      "coverage",
+      "logs",
+      "runtime/models",
+      "runtime/vector-db",
+      "runtime/cache",
+      "runtime/index"
+    ],
+    "allowedRootFiles": [
+      "README.md",
+      "AGENTS.md",
+      ".gitignore",
+      "LICENSE",
+      "eng.py",
+      "pyproject.toml"
+    ]
+  }
 }

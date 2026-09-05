@@ -1,28 +1,21 @@
-# Career Knowledge
+# career
 
-This folder contains the canonical career direction, career plan and market
-references. Use the documents below as sources; do not copy their content into
-this index.
+[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Canonical Sources
+## Mục đích và ranh giới
 
-- [Career Plan](Career_Plan_v1.0.md): long-term capability and milestone plan.
-- [Career Direction](career-direction-sa-vs-fo.md): current Solution Architect
-  versus Feature Owner decision and rationale.
-- [Professional Profile](profile/Dao_Pham_CV_Content_for_AI_v4.md): canonical,
-  evidence-based CV source content.
-- [CV PDF](profile/DaoPham_PO.pdf): original CV artifact supplied by the user.
-- [Job Market](job-market/): external role benchmarks.
+Định hướng nghề nghiệp, kế hoạch năng lực, hồ sơ thực tế và nguồn tham khảo thị trường. Đọc career-direction-sa-vs-fo.md trước khi tư vấn định hướng; dùng Career_Plan_v1.0.md cho mục tiêu. Kinh nghiệm phải đối chiếu profile, không suy ra từ mục tiêu học.
 
-## Query Routing
+## Thư mục con
 
-For questions about the current path, start with `career-direction-sa-vs-fo.md`
-and cross-check `Career_Plan_v1.0.md`. For questions about market fit, include a
-relevant document under `job-market/`.
+- [job-market](job-market/README.md): JD và bối cảnh tuyển dụng bên ngoài, phân theo công ty.
+- [profile](profile/README.md): Nguồn hồ sơ và CV do người dùng cung cấp.
 
-For CV positioning or claim validation, use the Professional Profile and its
-Truth / Claim Boundaries section as the source of truth.
+## Tài liệu và file hiện có
 
-Use the `career-direction-review` skill for direction, trade-off and next-action
-questions. Use `analyze-job-description` when the primary input is a job
-description.
+- [career-direction-sa-vs-fo.md](career-direction-sa-vs-fo.md).
+- [Career_Plan_v1.0.md](Career_Plan_v1.0.md).
+
+## Khi mở rộng
+
+Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.

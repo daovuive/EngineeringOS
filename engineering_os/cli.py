@@ -172,9 +172,11 @@ def command_validate(paths: ProjectPaths) -> int:
         print(f"[MISS] Template : {template.as_posix()}")
     for template_id in result.unknown_templates:
         print(f"[MISS] Template : {template_id}")
+    for error in result.governance_errors:
+        print(f"[FAIL] Governance: {error}")
 
     print("")
-    print("Validation failed.")
+    print(f"Validation failed: {result.error_count} problem(s).")
     return 1
 
 

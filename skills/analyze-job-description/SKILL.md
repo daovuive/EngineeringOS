@@ -32,8 +32,16 @@ candidate career plan. This skill is reusable across companies and roles.
 
 - Knowledge paths: the supplied job description and career plan.
 - Prompts: use a dedicated analysis prompt if one is registered.
-- Tools: document reader and optional semantic search.
-- Runtime capabilities: chat or reasoning model.
+- Tools: document reader and optional semantic search through the existing
+  EngineeringOS retrieval path (`eng.py knowledge search` or
+  `engineering_os.knowledge.search_index`).
+- Runtime capabilities: chat or reasoning model through the configured
+  EngineeringOS runtime (`eng.py llm chat` or `engineering_os.llm.create_runtime`).
+- Grounded answers: use the existing RAG path when generation needs source
+  citations (`eng.py knowledge ask` or `engineering_os.rag.answer_question`).
+
+Skills do not create provider clients, call provider endpoints directly, load
+model files, or define their own retrieval, embedding, or model configuration.
 
 ## Quality Checks
 

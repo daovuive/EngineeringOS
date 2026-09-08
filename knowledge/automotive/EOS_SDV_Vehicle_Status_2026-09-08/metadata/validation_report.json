@@ -1,0 +1,158 @@
+{
+  "as_of": "2026-09-08",
+  "project_id": "DAR-SDV-VS-001",
+  "source_file_count": 12,
+  "byte_identical_originals": 12,
+  "original_office_and_zip_container_integrity": "pass",
+  "excel_original_not_modified": true,
+  "excel_formulas_preserved": 258,
+  "cached_error_cells": [],
+  "expected_blank_formula_outputs": [
+    "Report!D15",
+    "Report!D16",
+    "Report!D17",
+    "Report!D18",
+    "Report!D19",
+    "Plan!J9",
+    "Plan!J10",
+    "Plan!J11",
+    "Plan!J12",
+    "Plan!J13",
+    "Plan!J14",
+    "Plan!J15",
+    "Plan!J16",
+    "Plan!J17",
+    "Plan!J20",
+    "Business Case!C12",
+    "Business Case!C16",
+    "Business Case!C17",
+    "Business Case!C18",
+    "Business Case!C19",
+    "Business Case!C33",
+    "Business Case!C34",
+    "Business Case!C35"
+  ],
+  "blank_formula_output_explanation": "15 date outputs with unset start date; 5 budget outputs with unset monetary inputs; 3 value outputs with unset comparable effort/evidence inputs.",
+  "default_budget_state": "NOT SET",
+  "default_value_state": "NOT QUANTIFIED",
+  "saved_start_date": null,
+  "scenario_consistency_checks": [
+    {
+      "scenario_row": 9,
+      "experienced": 1,
+      "junior": 1,
+      "calculated": [
+        8.0,
+        18.0,
+        20.0,
+        1440.0
+      ],
+      "saved_cached": [
+        8,
+        18,
+        20,
+        1440
+      ],
+      "matches": true
+    },
+    {
+      "scenario_row": 10,
+      "experienced": 1,
+      "junior": 1,
+      "calculated": [
+        8.0,
+        18.0,
+        20.0,
+        1440.0
+      ],
+      "saved_cached": [
+        8,
+        18,
+        20,
+        1440
+      ],
+      "matches": true
+    },
+    {
+      "scenario_row": 11,
+      "experienced": 2,
+      "junior": 1,
+      "calculated": [
+        7.0,
+        14.5,
+        16.5,
+        1740.0
+      ],
+      "saved_cached": [
+        7,
+        14.5,
+        16.5,
+        1740
+      ],
+      "matches": true
+    },
+    {
+      "scenario_row": 12,
+      "experienced": 3,
+      "junior": 1,
+      "calculated": [
+        7.0,
+        14.0,
+        16.0,
+        2240.0
+      ],
+      "saved_cached": [
+        7,
+        14,
+        16,
+        2240
+      ],
+      "matches": true
+    },
+    {
+      "scenario_row": 13,
+      "experienced": 2,
+      "junior": 0,
+      "calculated": [
+        7.5,
+        15.0,
+        17.0,
+        1200.0
+      ],
+      "saved_cached": [
+        7.5,
+        15,
+        17,
+        1200
+      ],
+      "matches": true
+    },
+    {
+      "scenario_row": 14,
+      "experienced": 1,
+      "junior": 2,
+      "calculated": [
+        12.0,
+        24.5,
+        26.5,
+        2940.0
+      ],
+      "saved_cached": [
+        12,
+        24.5,
+        26.5,
+        2940
+      ],
+      "matches": true
+    }
+  ],
+  "default_phase_durations_match_stated_model": true,
+  "decision_records": 40,
+  "default_current_ingestion_files": 5,
+  "new_docx_or_xlsx_authored": false,
+  "new_estimates_or_approvals_introduced": false,
+  "external_research_refreshed": false,
+  "eos_import_executed": false,
+  "transcript_type": "source-grounded summary, not raw export",
+  "rendering_note": "Original Word and Excel artifacts copied without edits; existing formatting and formulas left untouched. No new Office rendering is claimed."
+}

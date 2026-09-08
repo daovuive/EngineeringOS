@@ -43,6 +43,10 @@
       "description": "Configuration"
     },
     {
+      "path": "configs/ai",
+      "description": "Canonical AI provider, model, and runtime configuration"
+    },
+    {
       "path": "agents",
       "description": "AI Agents"
     },
@@ -249,9 +253,15 @@
     "readmeName": "README.md",
     "protectedRootReadme": {
       "path": "README.md",
-      "sha256": "defa86b4c66c8082629ed6001bc1e8de52635ea20515f82005ebc343f6ee40db"
+      "sha256": "9c7fb3b3ab191d45eeeff567863b414c06f2ffee63edfa147b7d187d67fdf089"
     },
     "rootNavigationPendingApproval": false,
+    "autoIndexedFiles": [
+      {
+        "directory": "ADR",
+        "pattern": "ADR-*.md"
+      }
+    ],
     "ignoredDirectories": [
       ".git",
       ".venv",
@@ -264,7 +274,6 @@
       "temp",
       "coverage",
       "logs",
-      "runtime/models",
       "runtime/vector-db",
       "runtime/cache",
       "runtime/index"

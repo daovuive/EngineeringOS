@@ -1,11 +1,11 @@
 # knowledge/architecture/reviews
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Review kiến trúc dùng cho học tập hoặc kiến thức dùng chung, có đối tượng, tiêu chí, bằng chứng và kết luận. Review riêng của một project nên lưu cạnh project đó và tham chiếu vào đây khi có bài học dùng lại.
+Architecture reviews for learning or shared knowledge, with a subject, criteria, evidence, and conclusions. Reviews specific to a project should be stored beside that project and referenced here when they yield reusable lessons.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

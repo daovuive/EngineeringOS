@@ -1,12 +1,12 @@
 # templates
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Mẫu tạo artifact dùng chung cho project. configs/templates.json ánh xạ template ID sang file nguồn. Mẫu riêng của một skill nằm trong package của skill đó. README.md này là mục lục thư mục, không phải mẫu README gốc.
+Templates for reusable project artifacts. configs/templates.json maps template IDs to source files. A skill-specific template belongs in that skill's package. This README.md is a directory index, not the root README template.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [ADR.md](ADR.md).
 - [CAREER.md](CAREER.md).
@@ -16,6 +16,6 @@ Mẫu tạo artifact dùng chung cho project. configs/templates.json ánh xạ t
 - [SKILL.md](SKILL.md).
 - [SKILLS.md](SKILLS.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

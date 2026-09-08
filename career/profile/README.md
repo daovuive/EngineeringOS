@@ -1,17 +1,17 @@
 # career/profile
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Nguồn hồ sơ và CV do người dùng cung cấp. Dao_Pham_CV_Content_for_AI_v4.md và Truth / Claim Boundaries là nguồn bằng chứng chính. Chỉ bổ sung kinh nghiệm có căn cứ; mục tiêu nghề nghiệp hoặc bài tập không phải kinh nghiệm làm việc.
+User-provided profile and CV sources. Dao_Pham_CV_Content_for_AI_v4.md and Truth / Claim Boundaries are the primary evidence sources. Add only supported experience; career goals and exercises are not work experience.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [Dao_Pham_CV_Content_for_AI_v4.md](Dao_Pham_CV_Content_for_AI_v4.md).
 
-Nguồn `DaoPham_PO.pdf` từng được tham chiếu nhưng không có trong checkout hiện tại. Không tạo PDF rỗng để thay thế; chỉ đăng ký lại khi có file gốc.
+The source `DaoPham_PO.pdf` was previously referenced but is not present in the current checkout. Do not create an empty PDF as a substitute; register it again only when the original file is available.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

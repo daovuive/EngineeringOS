@@ -1,20 +1,31 @@
 # configs
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Cấu hình dạng dữ liệu: manifest cấu trúc, schema, runtime, settings, template registry và skill registry. Manifest ghi các thư mục được quản lý; README giải thích ý nghĩa. Thay đổi phải đồng bộ schema và mục lục liên quan.
+Configuration as data: the structure manifest, schemas, runtime settings, template registry, and skill registry. The manifest records managed directories; this README explains their meaning. Changes must stay consistent with the schema and related indexes.
 
-## Tài liệu và file hiện có
+## Subdirectories
 
-- [ai-runtime.json](ai-runtime.json).
+- [ai](ai/README.md): Canonical AI provider, logical model, and runtime configuration.
+
+## Existing Documents and Files
+
 - [project-structure.json](project-structure.json).
 - [project-structure.schema.json](project-structure.schema.json).
 - [settings.json](settings.json).
 - [skills.json](skills.json).
 - [templates.json](templates.json).
 
-## Khi mở rộng
+`settings.json` owns knowledge indexing/retrieval policy. The
+`knowledge.retrieval` values define candidate filtering, the evidence
+confidence gate, and the existing over-fetch factor; they are kept separate
+from provider/model configuration under `configs/ai/`. The
+`knowledge.grounding` values define the conservative lexical claim-support
+contract applied after generation; unsupported and partial claims are not
+returned as EngineeringOS facts.
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+## Extension Rules
+
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

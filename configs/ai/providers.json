@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "providers": {
+    "ollama-local": {
+      "type": "ollama",
+      "endpoint": "http://localhost:11434",
+      "endpointEnv": "ENGINEERINGOS_OLLAMA_ENDPOINT",
+      "timeout": 300,
+      "maxConcurrentRequests": 2
+    }
+  }
+}

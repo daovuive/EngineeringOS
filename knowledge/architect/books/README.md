@@ -1,12 +1,12 @@
 # knowledge/architect/books
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Sách, nguồn đọc và kế hoạch đọc liên quan chương trình Architect. Giữ file nguồn và tên hiện có; không sao chép sách vào skill. Architecture-Learning-Plan.md là nhánh đọc sâu, không tự thay nhịp Architect Daily 15 phút/ngày.
+Books, reading sources, and reading plans related to the Architect program. Preserve source files and their existing names; do not copy books into skills. Architecture-Learning-Plan.md is a deep-reading branch and does not replace the 15-minute-per-day Architect rhythm.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [00-ScrumPass PSPO I Study Guide v1.0.pdf](00-ScrumPass%20PSPO%20I%20Study%20Guide%20v1.0.pdf).
 - [00-ScrumPass PSPO I Study Notes v1.0.pdf](00-ScrumPass%20PSPO%20I%20Study%20Notes%20v1.0.pdf).
@@ -21,6 +21,6 @@ Sách, nguồn đọc và kế hoạch đọc liên quan chương trình Archite
 - [ISO26262-Software-Compliance-Automotive.pdf](ISO26262-Software-Compliance-Automotive.pdf).
 - [Software Architecture with C++ - Adrian Ostrowski; Piotr Gaczkowski.epub](Software%20Architecture%20with%20C%2B%2B%20-%20Adrian%20Ostrowski%3B%20Piotr%20Gaczkowski.epub).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

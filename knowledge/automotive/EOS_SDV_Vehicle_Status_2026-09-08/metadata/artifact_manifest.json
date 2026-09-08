@@ -1,0 +1,142 @@
+{
+  "project_id": "DAR-SDV-VS-001",
+  "as_of": "2026-09-08",
+  "current_report_version": "1.2",
+  "management_approval_evidenced": false,
+  "scope": "All 12 supplied source/deliverable files visible in this thread; excludes intermediate QA images and platform/internal messages.",
+  "original_file_count": 12,
+  "artifacts": [
+    {
+      "source_id": "P1",
+      "relative_path": "source/SDV_Telematics_Vehicle_Status_AAOS_First_Plan_Revision_EN.md",
+      "original_filename": "SDV_Telematics_Vehicle_Status_AAOS_First_Plan_Revision_EN.md",
+      "thread_file_id": "file_000000008de0820ba7ed10529c18236c",
+      "status": "original_architecture_source_schedule_superseded",
+      "sha256": "666bef5f2b41bcece202adef34474b140d3772c913035a4cfe571d397457ebce",
+      "bytes": 20166,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P09D",
+      "relative_path": "history/v0_9/SDV_Vehicle_Status_AAOS_First_DAR_EN.docx",
+      "original_filename": "SDV_Vehicle_Status_AAOS_First_DAR_EN.docx",
+      "thread_file_id": "file_00000000706c81fd887a6909663211bd",
+      "status": "superseded_report",
+      "sha256": "fba8b92d11775779652a914b9eafbb29b8b21e19481624c88db9eaeabbfc3326",
+      "bytes": 73105,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P09",
+      "relative_path": "history/v0_9/SDV_Vehicle_Status_AAOS_First_DAR_EN.md",
+      "original_filename": "SDV_Vehicle_Status_AAOS_First_DAR_EN.md",
+      "thread_file_id": "file_000000007a60820bbf67f62acfb1fa89",
+      "status": "superseded_report",
+      "sha256": "31285cb0e88b3ad396759da5729e0e8aadd6c827a5eed6a42dfa95ad8c9026a8",
+      "bytes": 69871,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P10D",
+      "relative_path": "history/v1_0/SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.docx",
+      "original_filename": "SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.docx",
+      "thread_file_id": "file_00000000d87081fabdea2cea9a351357",
+      "status": "superseded_report_retained_design_reference",
+      "sha256": "81a593d0e094dca90456429bef0a013d73971cb13a2fc9874aea2866b4247b80",
+      "bytes": 86472,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P10",
+      "relative_path": "history/v1_0/SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.md",
+      "original_filename": "SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.md",
+      "thread_file_id": "file_00000000882081f8a25fcbcf5cf07233",
+      "status": "superseded_report_retained_design_reference",
+      "sha256": "73ee638fbca9cb4d74602fb595bf92d0f7ef4af3dc9de1b180111c2b7e1df6a3",
+      "bytes": 93012,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P11D",
+      "relative_path": "history/v1_1/SDV_Vehicle_Status_DAR_Short_EN.docx",
+      "original_filename": "SDV_Vehicle_Status_DAR_Short_EN.docx",
+      "thread_file_id": "file_00000000f61481f58b4ce4ecd3591184",
+      "status": "superseded_report",
+      "sha256": "125050431c92897edfc29624ce6cbf29f27647d6d6b4275242be90ecb4f1264e",
+      "bytes": 43756,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P11",
+      "relative_path": "history/v1_1/SDV_Vehicle_Status_DAR_Short_EN.md",
+      "original_filename": "SDV_Vehicle_Status_DAR_Short_EN.md",
+      "thread_file_id": "file_000000004828820b90ced37affcb56d7",
+      "status": "superseded_report",
+      "sha256": "0484226b05fe16fdb6734f56c3ed6350a658c790db8450c214dde93f3c170aa3",
+      "bytes": 11070,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "W11",
+      "relative_path": "history/v1_1/SDV_Vehicle_Status_Plan.xlsx",
+      "original_filename": "SDV_Vehicle_Status_Plan.xlsx",
+      "thread_file_id": "file_00000000f38c820ba6c1bb53f7b26cc7",
+      "status": "superseded_workbook",
+      "sha256": "dd6758b0770f3bb4e52e76b5ac892802aeddc3ede8f8f6b876758634962e852b",
+      "bytes": 29613,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "Z11",
+      "relative_path": "history/v1_1/SDV_Vehicle_Status_Short_DAR_Package.zip",
+      "original_filename": "SDV_Vehicle_Status_Short_DAR_Package.zip",
+      "thread_file_id": "file_00000000211c81fa822fb6778a391c45",
+      "status": "superseded_package_contains_duplicate_v1_1_artifacts",
+      "sha256": "9f34db8644167aca87fef03998ea560db250d3c82db247fdf172d96af1077872",
+      "bytes": 74237,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P12D",
+      "relative_path": "current/SDV_Vehicle_Status_Approval_Report_EN.docx",
+      "original_filename": "SDV_Vehicle_Status_Approval_Report_EN.docx",
+      "thread_file_id": "file_0000000075688230863232e0a24fe5de",
+      "status": "current_approval_report_pending_approval",
+      "sha256": "23e7bd511a6a1b0b9b675862347b6e8cfa40addac02fa1f4df26592191d8530b",
+      "bytes": 45007,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "P12",
+      "relative_path": "current/SDV_Vehicle_Status_Approval_Report_EN.md",
+      "original_filename": "SDV_Vehicle_Status_Approval_Report_EN.md",
+      "thread_file_id": "file_000000002f8481fd915c3554a9d9009f",
+      "status": "current_approval_report_pending_approval",
+      "sha256": "d335cfb9e17d8a73214c90c2894bd5b530e32b50944d621f8e59bbb07a9d1092",
+      "bytes": 13562,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    },
+    {
+      "source_id": "W12",
+      "relative_path": "current/SDV_Vehicle_Status_Dynamic_Plan.xlsx",
+      "original_filename": "SDV_Vehicle_Status_Dynamic_Plan.xlsx",
+      "thread_file_id": "file_00000000553081faad57c8a90dc59238",
+      "status": "current_dynamic_planning_model_not_actuals",
+      "sha256": "3783214abdc7eee61c7be2613df06b865bc8114c14d4d86ae60151836233c3d6",
+      "bytes": 34802,
+      "copied_byte_for_byte": true,
+      "management_approval_evidenced": false
+    }
+  ]
+}

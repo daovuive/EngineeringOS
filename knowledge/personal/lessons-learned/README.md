@@ -1,11 +1,11 @@
 # knowledge/personal/lessons-learned
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Bài học từ trải nghiệm đã xảy ra: context, kết quả, nguyên nhân, điều rút ra và nguồn. Phân biệt giả thuyết với điều đã kiểm chứng; lesson của chương trình học thuộc architect/lessions/.
+Lessons from events that occurred: context, outcomes, causes, takeaways, and sources. Distinguish hypotheses from verified findings; learning-program lessons belong in architect/lessions/.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

@@ -1,11 +1,16 @@
 # prompts
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Prompt hoặc đoạn prompt dùng lại. Skill quy định quy trình, prompt quy định cách diễn đạt đầu vào cho model. Nội dung kiến thức và kinh nghiệm được tham chiếu từ nguồn chính, không sao chép thành prompt.
+Reusable prompts or prompt fragments. A skill defines a workflow; a prompt defines how input is expressed for a model. Knowledge and experience content must be referenced from primary sources, not copied into prompts.
 
-## Khi mở rộng
+## Existing Documents and Files
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+- [EngineeringOS_Local_AI_End_to_End_Practice.md](EngineeringOS_Local_AI_End_to_End_Practice.md).
+- [Resume_Local_AI_Practice.md](Resume_Local_AI_Practice.md).
+
+## Extension Rules
+
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

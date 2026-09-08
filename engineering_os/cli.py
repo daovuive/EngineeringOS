@@ -21,12 +21,20 @@ from engineering_os.knowledge import (
     load_index,
     save_index,
     search_index,
+    select_retrieval_chunks,
 )
 from engineering_os.llm import (
     LLMError,
     build_pull_commands,
     create_runtime,
+    get_embedding_contract,
     get_default_runtime_definition,
+)
+from engineering_os.rag import (
+    GroundingPolicy,
+    RetrievalPolicy,
+    answer_question,
+    render_response,
 )
 from engineering_os.structure import ensure_structure, validate_structure
 
@@ -109,6 +117,34 @@ def build_parser() -> argparse.ArgumentParser:
     )
     search_parser.add_argument("query", help="Search query.")
     search_parser.add_argument("--limit", type=int, default=5, help="Maximum results.")
+    search_parser.add_argument(
+        "--include-memory",
+        action="store_true",
+        help="Include fresh project memory as contextual retrieval results.",
+    )
+    ask_parser = knowledge_subparsers.add_parser(
+        "ask",
+        help="Answer a question using retrieved knowledge and the configured RAG model.",
+    )
+    ask_parser.add_argument("query", help="Question to answer.")
+    ask_parser.add_argument("--limit", type=int, default=3, help="Maximum context chunks.")
+    ask_parser.add_argument(
+        "--min-score",
+        type=float,
+        default=None,
+        help="Override the configured minimum score for a retrieved candidate.",
+    )
+    ask_parser.add_argument(
+        "--confidence-threshold",
+        type=float,
+        default=None,
+        help="Override the configured top-candidate confidence gate.",
+    )
+    ask_parser.add_argument(
+        "--include-memory",
+        action="store_true",
+        help="Include fresh project memory as contextual RAG input.",
+    )
 
     return parser
 
@@ -200,13 +236,14 @@ def command_llm(paths: ProjectPaths, args: argparse.Namespace) -> int:
     runtime = create_runtime(runtime_config)
 
     if args.llm_command == "status":
-        print(f"Runtime : {definition.endpoint.id}")
-        print(f"Host    : {definition.endpoint.host}")
+        print(f"Provider: {definition.provider.id}")
+        print(f"Type    : {definition.provider.type}")
+        print(f"Endpoint: {definition.provider.host}")
         print("")
         print("Configured models")
         print("-----------------")
-        for role, model in definition.models.items():
-            print(f"{role:10}: {model}")
+        for role, binding in definition.models.items():
+            print(f"{role:10}: {binding.model}")
 
         print("")
         try:
@@ -247,19 +284,70 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
     knowledge = settings.get("knowledge", {})
     root = paths.resolve(knowledge.get("root", "knowledge"))
     index_path = paths.resolve(knowledge.get("index", "runtime/index/knowledge.json"))
-    runtime = create_runtime(load_runtime_config(paths))
+    memory = settings.get("memory", {})
+    memory_root = paths.resolve(memory.get("directory", "memory"))
+    memory_retrieval = memory.get("retrieval", {})
+    memory_max_age_days = memory_retrieval.get("maxAgeDays", 90)
+    if not isinstance(memory_max_age_days, int) or isinstance(memory_max_age_days, bool):
+        raise KnowledgeIndexError("memory.retrieval.maxAgeDays must be an integer.")
+    runtime_config = load_runtime_config(paths)
+    runtime = create_runtime(runtime_config)
+    embedding_contract = get_embedding_contract(runtime_config)
+    retrieval_policy = RetrievalPolicy.from_settings(settings)
+    grounding_policy = GroundingPolicy.from_settings(settings)
 
     if args.knowledge_command == "index":
         chunks = build_index(root, runtime)
-        save_index(index_path, chunks)
+        if memory_root != root:
+            chunks.extend(
+                build_index(
+                    memory_root,
+                    runtime,
+                    source_type="memory",
+                    path_root=paths.root,
+                )
+            )
+        save_index(index_path, chunks, embedding_contract=embedding_contract)
         print(f"Indexed {len(chunks)} Markdown chunk(s) into {index_path.as_posix()}")
         return 0
 
     if args.knowledge_command == "search":
-        chunks = load_index(index_path)
+        chunks = load_index(index_path, embedding_contract=embedding_contract)
+        chunks = select_retrieval_chunks(
+            chunks,
+            include_memory=args.include_memory,
+            memory_max_age_days=memory_max_age_days,
+        )
         for score, chunk in search_index(chunks, args.query, runtime, limit=args.limit):
             print(f"{score:.4f}  {chunk.path}#{chunk.heading}")
             print(f"        {chunk.text.splitlines()[0][:160]}")
+        return 0
+
+    if args.knowledge_command == "ask":
+        chunks = load_index(index_path, embedding_contract=embedding_contract)
+        response = answer_question(
+            chunks,
+            args.query,
+            runtime,
+            runtime,
+            top_k=args.limit,
+            min_relevance=(
+                retrieval_policy.candidate_min_score
+                if args.min_score is None
+                else args.min_score
+            ),
+            confidence_threshold=(
+                retrieval_policy.confidence_threshold
+                if args.confidence_threshold is None
+                else args.confidence_threshold
+            ),
+            overfetch_factor=retrieval_policy.overfetch_factor,
+            role="rag",
+            grounding_policy=grounding_policy,
+            include_memory=args.include_memory,
+            memory_max_age_days=memory_max_age_days,
+        )
+        print(render_response(response))
         return 0
 
     raise KnowledgeIndexError("Missing knowledge command. Use: index or search.")

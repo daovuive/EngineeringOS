@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
@@ -9,6 +10,9 @@ from urllib.request import Request, urlopen
 
 class LLMError(RuntimeError):
     """Raised when a local LLM runtime cannot satisfy a request."""
+
+
+EMBEDDING_CONTRACT_VERSION = "1.0"
 
 
 class LLMRuntime(Protocol):
@@ -25,8 +29,9 @@ class LLMRuntime(Protocol):
 
 
 @dataclass(frozen=True)
-class RuntimeEndpoint:
+class ProviderDefinition:
     id: str
+    type: str
     host: str
     timeout: int
     max_concurrent_requests: int | None = None
@@ -52,28 +57,25 @@ class RuntimeOptions:
             stream=_optional_bool(options, "stream") or False,
         )
 
-    def to_ollama_options(self) -> dict[str, Any]:
-        mapped: dict[str, Any] = {}
-        if self.temperature is not None:
-            mapped["temperature"] = self.temperature
-        if self.top_p is not None:
-            mapped["top_p"] = self.top_p
-        if self.max_tokens is not None:
-            mapped["num_predict"] = self.max_tokens
-        return mapped
+
+@dataclass(frozen=True)
+class ModelBinding:
+    provider: str
+    model: str
+    dimensions: int | None = None
 
 
 @dataclass(frozen=True)
 class RuntimeDefinition:
-    endpoint: RuntimeEndpoint
-    models: dict[str, str]
+    provider: ProviderDefinition
+    models: dict[str, ModelBinding]
     options: RuntimeOptions
 
     def model_for(self, role: str) -> str:
-        model = self.models.get(role)
-        if not isinstance(model, str) or not model:
+        binding = self.models.get(role)
+        if binding is None:
             raise LLMError(f"Model role '{role}' is not configured.")
-        return model
+        return binding.model
 
 
 class OllamaRuntime:
@@ -83,9 +85,9 @@ class OllamaRuntime:
         *,
         http_client: OllamaHttpClient | None = None,
     ) -> None:
-        self.id = definition.endpoint.id
+        self.id = definition.provider.id
         self.definition = definition
-        self._http = http_client or OllamaHttpClient(definition.endpoint)
+        self._http = http_client or OllamaHttpClient(definition.provider)
 
     def list_models(self) -> list[str]:
         payload = self._http.request_json("GET", "/api/tags")
@@ -105,7 +107,7 @@ class OllamaRuntime:
             "prompt": prompt,
             "stream": self.definition.options.stream,
         }
-        options = self.definition.options.to_ollama_options()
+        options = _to_ollama_options(self.definition.options)
         if options:
             payload["options"] = options
 
@@ -133,13 +135,23 @@ class OllamaRuntime:
             and embeddings
             and isinstance(embeddings[0], list)
         ):
-            return _coerce_embedding(embeddings[0])
+            return self._validate_embedding_dimensions(_coerce_embedding(embeddings[0]))
 
         embedding = payload.get("embedding")
         if isinstance(embedding, list):
-            return _coerce_embedding(embedding)
+            return self._validate_embedding_dimensions(_coerce_embedding(embedding))
 
         raise LLMError("Ollama response did not include an embedding vector.")
+
+    def _validate_embedding_dimensions(self, embedding: list[float]) -> list[float]:
+        expected = self.definition.models.get("embedding")
+        if expected is not None and expected.dimensions is not None:
+            if len(embedding) != expected.dimensions:
+                raise LLMError(
+                    "Embedding dimensions do not match configuration: "
+                    f"expected {expected.dimensions}, got {len(embedding)}."
+                )
+        return embedding
 
     def _generate_stream(self, payload: dict[str, Any]) -> str:
         output = []
@@ -151,8 +163,8 @@ class OllamaRuntime:
 
 
 class OllamaHttpClient:
-    def __init__(self, endpoint: RuntimeEndpoint) -> None:
-        self.endpoint = endpoint
+    def __init__(self, provider: ProviderDefinition) -> None:
+        self.provider = provider
 
     def request_json(
         self,
@@ -204,110 +216,169 @@ class OllamaHttpClient:
             headers["Content-Type"] = "application/json"
 
         request = Request(
-            f"{self.endpoint.host}{path}",
+            f"{self.provider.host}{path}",
             data=body,
             headers=headers,
             method=method,
         )
 
         try:
-            with urlopen(request, timeout=self.endpoint.timeout) as response:
+            with urlopen(request, timeout=self.provider.timeout) as response:
                 return response.read().decode("utf-8")
         except HTTPError as error:
             raise LLMError(f"Ollama request failed with HTTP {error.code}.") from error
         except URLError as error:
             raise LLMError(
-                f"Cannot connect to Ollama at {self.endpoint.host}: {error.reason}"
+                f"Cannot connect to Ollama at {self.provider.host}: {error.reason}"
             ) from error
         except TimeoutError as error:
-            raise LLMError(f"Ollama request timed out after {self.endpoint.timeout}s.") from error
+            raise LLMError(f"Ollama request timed out after {self.provider.timeout}s.") from error
 
 
 def create_runtime(config: dict[str, Any]) -> LLMRuntime:
     definition = get_default_runtime_definition(config)
-    if definition.endpoint.id == "ollama":
+    if definition.provider.type == "ollama":
         return OllamaRuntime(definition)
     raise LLMError(
-        f"Runtime '{definition.endpoint.id}' is configured but no adapter is implemented."
+        f"Provider '{definition.provider.id}' is configured but no adapter is implemented."
     )
 
 
 def get_default_runtime_definition(config: dict[str, Any]) -> RuntimeDefinition:
-    endpoint = get_default_runtime(config)
+    provider = get_default_provider(config)
     models = config.get("models", {})
     if not isinstance(models, dict):
-        raise LLMError("Runtime config 'models' must be an object.")
+        raise LLMError("AI config 'models' must be an object.")
 
-    normalized_models = {}
-    for role, model in models.items():
-        if isinstance(role, str) and isinstance(model, str) and model:
-            normalized_models[role] = model
+    normalized_models: dict[str, ModelBinding] = {}
+    for role, binding in models.items():
+        if not isinstance(role, str) or not isinstance(binding, dict):
+            continue
+        binding_provider = binding.get("provider", provider.id)
+        model = binding.get("model")
+        if not isinstance(binding_provider, str) or not binding_provider:
+            raise LLMError(f"Model role '{role}' does not define a provider.")
+        if binding_provider != provider.id:
+            raise LLMError(
+                f"Model role '{role}' is bound to provider '{binding_provider}', "
+                f"but default provider is '{provider.id}'."
+            )
+        if not isinstance(model, str) or not model:
+            raise LLMError(f"Model role '{role}' does not define a model.")
+        dimensions = binding.get("dimensions")
+        if dimensions is not None and (
+            not isinstance(dimensions, int)
+            or isinstance(dimensions, bool)
+            or dimensions < 1
+        ):
+            raise LLMError(
+                f"Model role '{role}' dimensions must be a positive integer."
+            )
+        normalized_models[role] = ModelBinding(binding_provider, model, dimensions)
 
     return RuntimeDefinition(
-        endpoint=endpoint,
+        provider=provider,
         models=normalized_models,
         options=RuntimeOptions.from_config(config),
     )
 
 
-def get_default_runtime(config: dict[str, Any]) -> RuntimeEndpoint:
-    runtime_id = config.get("defaultRuntime")
-    runtimes = config.get("runtimes", [])
-    if not isinstance(runtime_id, str) or not runtime_id:
-        raise LLMError("Runtime config must define 'defaultRuntime'.")
-    if not isinstance(runtimes, list):
-        raise LLMError("Runtime config 'runtimes' must be an array.")
+def get_default_provider(config: dict[str, Any]) -> ProviderDefinition:
+    provider_id = config.get("defaultProvider")
+    providers = config.get("providers", {})
+    if not isinstance(provider_id, str) or not provider_id:
+        raise LLMError("AI config must define 'defaultProvider'.")
+    if not isinstance(providers, dict):
+        raise LLMError("AI config 'providers' must be an object.")
 
-    for runtime in runtimes:
-        if not isinstance(runtime, dict):
-            continue
-        if runtime.get("id") == runtime_id and runtime.get("enabled", False):
-            host = runtime.get("host")
-            if not isinstance(host, str) or not host:
-                raise LLMError(f"Runtime '{runtime_id}' does not define a host.")
+    provider = providers.get(provider_id)
+    if not isinstance(provider, dict):
+        raise LLMError(f"Default provider '{provider_id}' is not configured.")
 
-            timeout = runtime.get("timeout", 300)
-            if not isinstance(timeout, int):
-                raise LLMError(f"Runtime '{runtime_id}' timeout must be an integer.")
+    provider_type = provider.get("type")
+    if not isinstance(provider_type, str) or not provider_type:
+        raise LLMError(f"Provider '{provider_id}' does not define a type.")
 
-            max_concurrent_requests = runtime.get("maxConcurrentRequests")
-            if max_concurrent_requests is not None and not isinstance(
-                max_concurrent_requests,
-                int,
-            ):
-                raise LLMError(
-                    f"Runtime '{runtime_id}' maxConcurrentRequests must be an integer."
-                )
+    host = provider.get("endpoint")
+    if not isinstance(host, str) or not host:
+        raise LLMError(f"Provider '{provider_id}' does not define an endpoint.")
 
-            # This layer is synchronous and creates one request per CLI call. Higher-level
-            # RAG/agent orchestration should enforce this when it introduces concurrency.
-            return RuntimeEndpoint(
-                id=runtime_id,
-                host=host.rstrip("/"),
-                timeout=timeout,
-                max_concurrent_requests=max_concurrent_requests,
-            )
+    endpoint_env = provider.get("endpointEnv")
+    if endpoint_env is not None:
+        if not isinstance(endpoint_env, str) or not endpoint_env:
+            raise LLMError(f"Provider '{provider_id}' endpointEnv must be a string.")
+        host = os.environ.get(endpoint_env, host)
+        if not isinstance(host, str) or not host:
+            raise LLMError(f"Provider '{provider_id}' endpoint must not be empty.")
 
-    raise LLMError(f"Default runtime '{runtime_id}' is not enabled or not configured.")
+    timeout = provider.get("timeout", 300)
+    if not isinstance(timeout, int):
+        raise LLMError(f"Provider '{provider_id}' timeout must be an integer.")
+
+    max_concurrent_requests = provider.get("maxConcurrentRequests")
+    if max_concurrent_requests is not None and not isinstance(
+        max_concurrent_requests,
+        int,
+    ):
+        raise LLMError(
+            f"Provider '{provider_id}' maxConcurrentRequests must be an integer."
+        )
+
+    # This layer is synchronous and creates one request per CLI call. Higher-level
+    # RAG/agent orchestration should enforce this when it introduces concurrency.
+    return ProviderDefinition(
+        id=provider_id,
+        type=provider_type,
+        host=host.rstrip("/"),
+        timeout=timeout,
+        max_concurrent_requests=max_concurrent_requests,
+    )
 
 
 def get_model(config: dict[str, Any], role: str) -> str:
     return get_default_runtime_definition(config).model_for(role)
 
 
+def get_embedding_contract(config: dict[str, Any]) -> dict[str, Any]:
+    definition = get_default_runtime_definition(config)
+    binding = definition.models.get("embedding")
+    if binding is None:
+        raise LLMError("AI config must define an embedding model.")
+    if binding.dimensions is None:
+        raise LLMError("Embedding model configuration must define dimensions.")
+
+    return {
+        "contractVersion": EMBEDDING_CONTRACT_VERSION,
+        "provider": binding.provider,
+        "model": binding.model,
+        "dimensions": binding.dimensions,
+    }
+
+
 def build_pull_commands(config: dict[str, Any]) -> list[str]:
     definition = get_default_runtime_definition(config)
-    if definition.endpoint.id != "ollama":
+    if definition.provider.type != "ollama":
         raise LLMError("Pull commands are currently available only for Ollama.")
 
     commands = []
     seen = set()
-    for model in definition.models.values():
-        if model in seen:
+    for binding in definition.models.values():
+        if binding.model in seen:
             continue
-        commands.append(f"ollama pull {model}")
-        seen.add(model)
+        commands.append(f"ollama pull {binding.model}")
+        seen.add(binding.model)
     return commands
+
+
+def _to_ollama_options(options: RuntimeOptions) -> dict[str, Any]:
+    mapped: dict[str, Any] = {}
+    if options.temperature is not None:
+        mapped["temperature"] = options.temperature
+    if options.top_p is not None:
+        mapped["top_p"] = options.top_p
+    if options.max_tokens is not None:
+        mapped["num_predict"] = options.max_tokens
+    return mapped
 
 
 def _optional_number(options: dict[str, Any], key: str) -> float | None:

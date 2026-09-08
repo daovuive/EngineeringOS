@@ -1,20 +1,20 @@
 # skills
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Nguồn chính cho workflow AI tái sử dụng. Mỗi skills/<skill-id>/SKILL.md có một ID kebab-case ổn định và một entry trong configs/skills.json. Agent điều phối, skill mô tả cách làm, knowledge/career cung cấp dữ liệu. Chỉ tạo references/templates/scripts khi cần.
+Primary source for reusable AI workflows. Each skills/<skill-id>/SKILL.md has a stable kebab-case ID and an entry in configs/skills.json. Agents coordinate, skills describe the method, and knowledge/career provide data. Create references/templates/scripts only when needed.
 
-## Thư mục con
+## Subdirectories
 
-- [analyze-job-description](analyze-job-description/README.md): Package phân tích JD.
-- [career-direction-review](career-direction-review/README.md): Package đánh giá định hướng nghề nghiệp.
+- [analyze-job-description](analyze-job-description/README.md): Job-description analysis package.
+- [career-direction-review](career-direction-review/README.md): Career-direction review package.
 
-## Khi mở rộng
+## Extension Rules
 
-Mỗi SKILL.md cần nêu input, output, workflow, nguồn phụ thuộc và quality checks.
-ID phải ổn định, dùng kebab-case. Supporting references, templates hoặc scripts
-chỉ thuộc package khi cần cho workflow đó; không sao chép nguồn career/knowledge.
+Each SKILL.md must state inputs, outputs, workflow, dependencies, and quality checks.
+IDs must be stable and use kebab-case. Supporting references, templates, or scripts
+belong to a package only when needed for its workflow; do not copy career/knowledge sources.
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

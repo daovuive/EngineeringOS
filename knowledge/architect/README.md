@@ -1,21 +1,21 @@
 # knowledge/architect
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Chương trình học Architect cá nhân hiện có. Architect_Daily_Program_Roadmap.md là lộ trình; lessions/Learning_Progress.md ghi tiến độ; books/ chứa nguồn đọc; asr/ chứa ghi chú ASR hiện hữu. Không tạo roadmap cạnh tranh mà không giải thích quan hệ với lộ trình chính.
+Existing personal Architect learning program. Architect_Daily_Program_Roadmap.md is the roadmap; lessions/Learning_Progress.md records progress; books/ contains reading sources; and asr/ contains existing ASR notes. Do not create a competing roadmap without explaining its relationship to the primary roadmap.
 
-## Thư mục con
+## Subdirectories
 
-- [asr](asr/README.md): Ghi chú ASR trong chương trình Architect và các nghiên cứu thiết kế local AI hiện hữu.
-- [books](books/README.md): Sách, nguồn đọc và kế hoạch đọc liên quan chương trình Architect.
-- [lessions](lessions/README.md): Bài học, review, appendix và ghi chú gắn với chương trình Architect.
+- [asr](asr/README.md): ASR notes in the Architect program and existing local-AI design studies.
+- [books](books/README.md): Books, reading sources, and reading plans related to the Architect program.
+- [lessions](lessions/README.md): Lessons, reviews, appendices, and notes associated with the Architect program.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [Architect_Daily_Program_Roadmap.md](Architect_Daily_Program_Roadmap.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

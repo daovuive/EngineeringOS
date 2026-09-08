@@ -1,0 +1,495 @@
+{
+  "project_id": "DAR-SDV-VS-001",
+  "as_of": "2026-09-08",
+  "schema_note": "Portable archive schema only; not an asserted native EOS schema.",
+  "records": [
+    {
+      "id": "D01",
+      "status": "USER_REQUIREMENT",
+      "topic": "Purpose",
+      "statement": "Prepare a request for management approval, not an implementation-completion report.",
+      "rationale_or_limit": "The user needs a report for the boss; no signed approval appears in the thread.",
+      "sources": [
+        "U1",
+        "U4",
+        "P12:1,5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D02",
+      "status": "USER_REQUIREMENT",
+      "topic": "Communication",
+      "statement": "Keep the approval narrative in English, short and understandable to a non-technical manager.",
+      "rationale_or_limit": "Explain the main idea, practical effectiveness, advantages, disadvantages and examples.",
+      "sources": [
+        "U1",
+        "U3",
+        "U4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D03",
+      "status": "USER_REQUIREMENT",
+      "topic": "Deliverables",
+      "statement": "Provide the same approval narrative in .md and .docx, with a separate dynamic Excel plan.",
+      "rationale_or_limit": "Excel owns changing assumptions; the narrative owns the stable idea and approval criteria.",
+      "sources": [
+        "U3",
+        "U4",
+        "P12:5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D04",
+      "status": "RETAINED_PROPOSAL",
+      "topic": "Selected idea",
+      "statement": "Keep Option C: Hardware-Agnostic Telematics Hub, limited to reusable Vehicle Status.",
+      "rationale_or_limit": "No switch to another Automotive idea and no universal gateway expansion.",
+      "sources": [
+        "P1:11",
+        "U3",
+        "U4",
+        "P12:1"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D05",
+      "status": "SOURCE_BASELINE",
+      "topic": "Runtime",
+      "statement": "Use the existing AAOS PoC as the starting implementation and primary runtime baseline.",
+      "rationale_or_limit": "Its existence is not proof of buildability, clean architecture or portability.",
+      "sources": [
+        "P1:1-3",
+        "P12:1"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D06",
+      "status": "SOURCE_BASELINE",
+      "topic": "Host runner",
+      "statement": "Use a lightweight deterministic runner executing the same core for tests and CI only.",
+      "rationale_or_limit": "No separate Linux product deployment and no duplicate reimplementation of the core.",
+      "sources": [
+        "P1:1,4,10",
+        "P12:4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D07",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Dependency boundary",
+      "statement": "Keep Android, OEM vocabulary, cloud SDK/payload and storage implementation types outside the core.",
+      "rationale_or_limit": "Project-owned contracts separate shared behavior from integration details.",
+      "sources": [
+        "P1:3-4",
+        "P10:5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D08",
+      "status": "SOURCE_BASELINE",
+      "topic": "Core changes",
+      "statement": "Permit recovery/refactoring changes, then freeze behavior and govern exceptional post-freeze changes.",
+      "rationale_or_limit": "A zero-change requirement does not prohibit the initial extraction; later changes require review and regression evidence.",
+      "sources": [
+        "P1:3.3-3.4",
+        "P10:18-19"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D09",
+      "status": "SOURCE_BASELINE",
+      "topic": "Vehicle replacement",
+      "statement": "Demonstrate A and B mappings, with B allowed to be deterministic/injected or controlled.",
+      "rationale_or_limit": "No second live OEM integration is assumed in the pilot.",
+      "sources": [
+        "P1:5.1",
+        "P12:4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D10",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Meaning",
+      "statement": "Preserve units, quality, timestamps and semantic basis; reject unsupported equivalence.",
+      "rationale_or_limit": "Missing is not zero; a unit conversion is not a license to equate different battery-charge definitions.",
+      "sources": [
+        "P1:5.1",
+        "P10:6",
+        "P12:2-3"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D11",
+      "status": "SOURCE_BASELINE",
+      "topic": "Backend connections",
+      "statement": "Use MQTT/TLS as the primary connection and HTTPS/TLS as the replacement.",
+      "rationale_or_limit": "Preserve data, publish decisions, IDs and outcome meaning; do not invent equivalent subscription capabilities.",
+      "sources": [
+        "P1:5.2",
+        "P10:8"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D12",
+      "status": "RETAINED_SCOPE_LIMIT",
+      "topic": "Cloud claim",
+      "statement": "A shared controlled backend with two protocols proves protocol substitution only.",
+      "rationale_or_limit": "Independent cloud-vendor portability needs a separately evidenced integration.",
+      "sources": [
+        "P10:8,12",
+        "P12:2"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D13",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Status identity",
+      "statement": "Generate one immutable status identity and retain its envelope and ID through queueing and retry.",
+      "rationale_or_limit": "Retry is not a new publish trigger; protocol packet IDs are not application status IDs.",
+      "sources": [
+        "P10:6-9"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D14",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Receipts",
+      "statement": "Separate transport acceptance from the declared receiver application-confirmation step.",
+      "rationale_or_limit": "Do not delete a retained record as delivered before the approved receipt condition.",
+      "sources": [
+        "P10:8-9",
+        "P11:3"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D15",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Offline recovery",
+      "statement": "Use bounded durable retention, declared overflow/expiry and observable retries, losses and duplicates.",
+      "rationale_or_limit": "No unlimited storage, zero-loss or exactly-once transport claim.",
+      "sources": [
+        "P1:8,11",
+        "P10:9",
+        "P12:4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D16",
+      "status": "RETAINED_SCOPE_LIMIT",
+      "topic": "Vehicle safety boundary",
+      "statement": "Read vehicle status only; expose no actuator/write path for this capability.",
+      "rationale_or_limit": "This internal pilot is not approval for vehicle control.",
+      "sources": [
+        "P1:8,11",
+        "P10:10",
+        "P12:4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D17",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Controlled settings",
+      "statement": "Allow only TELEMETRY_PROFILE_UPDATE, with authorization, target, freshness, replay, schema and range checks.",
+      "rationale_or_limit": "Apply valid changes atomically; keep remote configuration disabled until the required checks pass.",
+      "sources": [
+        "P10:7,10",
+        "P12:4-5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D18",
+      "status": "PROPOSED_NOT_APPROVED",
+      "topic": "Reporting triggers",
+      "statement": "Periodic, material-change and first-valid-snapshot are the proposed three triggers.",
+      "rationale_or_limit": "The source required three triggers without fully defining them; these must be reconciled or approved at Gate B.",
+      "sources": [
+        "P1:7-8",
+        "P10:7",
+        "P11:3"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D19",
+      "status": "PROPOSED_NOT_APPROVED",
+      "topic": "Technical limits",
+      "statement": "Retain numerical schema, queue, freshness, profile and command limits as proposed starting values only.",
+      "rationale_or_limit": "No operating measurements or approved production sizing substantiate these defaults.",
+      "sources": [
+        "P10:6-10"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D20",
+      "status": "RETAINED_TECHNICAL_PROPOSAL",
+      "topic": "Six test groups",
+      "statement": "Retain S1-S6 operational definitions for meaning, policy, replacement, recovery, security and integrated reuse.",
+      "rationale_or_limit": "Definitions require approval; the thread contains no actual test-pass evidence.",
+      "sources": [
+        "P10:17-19",
+        "P12:5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D21",
+      "status": "RETAINED_PROPOSAL",
+      "topic": "Funding gate",
+      "statement": "Request recovery funding first; use Gate A to continue, reduce scope or stop.",
+      "rationale_or_limit": "Do not automatically release full-project funding.",
+      "sources": [
+        "P12:1,5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D22",
+      "status": "RETAINED_SCOPE_LIMIT",
+      "topic": "Reduced demo",
+      "statement": "A reduced demo shows mapping A to core to MQTT/TLS to receiver receipt.",
+      "rationale_or_limit": "It is not full reuse acceptance; remote settings remain off and crash durability is not claimed before S4.",
+      "sources": [
+        "P10:14",
+        "P11:1",
+        "P12:5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D23",
+      "status": "RETAINED_SCOPE_LIMIT",
+      "topic": "Next platform",
+      "statement": "Keep AAOS SDV design readiness separate from actual target runtime validation.",
+      "rationale_or_limit": "A porting design, host result or source assumption cannot establish runtime support.",
+      "sources": [
+        "P1:6-8",
+        "P10:22",
+        "P12:4-5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D24",
+      "status": "RETAINED_SCOPE_LIMIT",
+      "topic": "Production exclusions",
+      "statement": "Exclude production certification, independent assurance, production PKI/HSM guarantees and untested platform support.",
+      "rationale_or_limit": "Internal checks by the implementation team are not independent security assurance.",
+      "sources": [
+        "P1:11",
+        "P10:19,22",
+        "P12:4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D25",
+      "status": "USER_REQUIREMENT",
+      "topic": "Resource changes",
+      "statement": "Make total developers and junior count editable; derive experienced count and update the forecast.",
+      "rationale_or_limit": "The prior fixed two-person constraint is now the default scenario, not a permanent headcount lock.",
+      "sources": [
+        "U2",
+        "U3",
+        "U4",
+        "W12:Inputs!C5:C7"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D26",
+      "status": "RETAINED_PLANNING_ASSUMPTION",
+      "topic": "Role-aware capacity",
+      "statement": "Model mentoring and junior ramp-up; reserve critical technical decisions for experienced developers.",
+      "rationale_or_limit": "Junior capacity cannot be substituted blindly for experienced critical work; no hidden specialist team is assumed.",
+      "sources": [
+        "P10:20-20B",
+        "W12:Inputs,Guide"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D27",
+      "status": "RETAINED_PLANNING_ASSUMPTION",
+      "topic": "Scheduling method",
+      "statement": "Use sequential phases, contributor/critical-role caps, minimum duration, waits and upward rounding.",
+      "rationale_or_limit": "Additional staff do not automatically produce a proportional schedule reduction.",
+      "sources": [
+        "W12:Plan,Guide"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D28",
+      "status": "MODEL_SNAPSHOT_NOT_COMMITMENT",
+      "topic": "Current default forecast",
+      "statement": "At the saved 1 experienced + 1 junior defaults, forecast recovery W2, core W5, demo W8, pilot W18, reserve W20.",
+      "rationale_or_limit": "The old 8-week full-MVP plan is superseded; dates and approvals remain unset.",
+      "sources": [
+        "W12:Report,Inputs",
+        "H01"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D29",
+      "status": "RETAINED_REPORTING_RULE",
+      "topic": "Effort units",
+      "statement": "Distinguish 828 planned expert/support work hours from 1,440 default allocated staffed hours.",
+      "rationale_or_limit": "Do not label either as actual completed work or directly compare accepted-work hours with an old nominal staffing estimate.",
+      "sources": [
+        "W12:Plan!C20:D20,Report!C27",
+        "P10:20"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D30",
+      "status": "RETAINED_REPORTING_RULE",
+      "topic": "Cost",
+      "statement": "Leave unentered money inputs as NOT SET; price only explicit rates and costs.",
+      "rationale_or_limit": "Blank does not mean free. Full cost includes recovery once; reserve is additional and needs release.",
+      "sources": [
+        "W12:Business Case!C5:C19"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D31",
+      "status": "RETAINED_REPORTING_RULE",
+      "topic": "Value",
+      "statement": "Leave reuse value NOT QUANTIFIED until comparable effort, incremental setup, maintenance, adoption and evidence are entered.",
+      "rationale_or_limit": "Forecast effort savings are not realized cash savings, ROI or revenue.",
+      "sources": [
+        "P12:3",
+        "W12:Business Case!C25:C35"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D32",
+      "status": "ILLUSTRATION_ONLY",
+      "topic": "Break-even",
+      "statement": "The report illustrates 80 h without reuse, 40 h with reuse, 160 extra setup h and 40 maintenance h: break-even at 5 later integrations.",
+      "rationale_or_limit": "These figures are not live business-case inputs, measured savings or project estimates.",
+      "sources": [
+        "P12:3",
+        "W12:Business Case!A37"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D33",
+      "status": "RETAINED_PROPOSAL",
+      "topic": "Consumer and effectiveness",
+      "statement": "Require a named consuming team, comparable work measurement and a reproducible handover.",
+      "rationale_or_limit": "A successful upload and a reuse percentage alone do not establish practical return.",
+      "sources": [
+        "P12:3"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D34",
+      "status": "RETAINED_ALTERNATIVE_NOT_SELECTED",
+      "topic": "Portfolio options",
+      "statement": "Keep I2-I7 as considered alternatives, not concurrent projects.",
+      "rationale_or_limit": "I2 can be a better early-value choice; the user retained I1 for this approval request.",
+      "sources": [
+        "P10:2A-3A",
+        "P12:2",
+        "U3-U4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D35",
+      "status": "RETAINED_EXECUTION_PROPOSAL",
+      "topic": "Execution options",
+      "statement": "Prefer E3 AAOS-first controlled extraction after selecting I1.",
+      "rationale_or_limit": "E1 is demo-speed comparator; E2 adds Linux scope; E4 depends on actual SDV target access and fit.",
+      "sources": [
+        "P10:2-3",
+        "P11:2"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D36",
+      "status": "RETAINED_PROPOSAL",
+      "topic": "Build versus reuse",
+      "statement": "Check existing platform/library overlap and avoid rebuilding a broker, simulator or generic platform unnecessarily.",
+      "rationale_or_limit": "Existing ecosystem context in older files is historical reference, not newly verified in this export.",
+      "sources": [
+        "P10:2D",
+        "P12:2,4"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D37",
+      "status": "RETAINED_WORKFLOW",
+      "topic": "Dynamic versus static",
+      "statement": "Excel recalculates resources and management outputs; Markdown and Word do not rewrite themselves.",
+      "rationale_or_limit": "Preserve a dated approved workbook when a decision actually occurs.",
+      "sources": [
+        "U3-U4",
+        "P12:5",
+        "W12:Guide"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D38",
+      "status": "RETAINED_MODEL_LIMIT",
+      "topic": "Forecast limits",
+      "statement": "The workbook models one team from the start, not actual progress, joining dates or a holiday calendar.",
+      "rationale_or_limit": "Changing a forecast is not a hiring decision, test pass or approval; rebaseline an in-flight project explicitly.",
+      "sources": [
+        "W12:Guide,Scenarios"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D39",
+      "status": "RETAINED_PROPOSAL",
+      "topic": "Replanning",
+      "statement": "Re-estimate after recovery and when critical work, access, availability or actual throughput diverges.",
+      "rationale_or_limit": "Reduce optional scope, release authorized reserve or change the schedule; do not weaken full-acceptance evidence silently.",
+      "sources": [
+        "P10:21",
+        "P12:4-5"
+      ],
+      "management_approval_evidenced": false
+    },
+    {
+      "id": "D40",
+      "status": "USER_REQUIREMENT",
+      "topic": "EOS archive",
+      "statement": "Preserve the thread ideas, decisions and every available source/report version for EOS.",
+      "rationale_or_limit": "Keep current sources separate from superseded history; copying a package is not proof of EOS ingestion.",
+      "sources": [
+        "U5"
+      ],
+      "management_approval_evidenced": false
+    }
+  ]
+}

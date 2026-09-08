@@ -1,15 +1,15 @@
 # skills/career-direction-review
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Package đánh giá định hướng nghề nghiệp. SKILL.md là workflow chính; nguồn chính thuộc career/. Không biến đề xuất trong câu trả lời thành quyết định nghề nghiệp đã được chủ project chấp nhận.
+Career-direction review package. SKILL.md is the primary workflow; primary sources belong in career/. Do not turn a response proposal into a career decision accepted by the project owner.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [SKILL.md](SKILL.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

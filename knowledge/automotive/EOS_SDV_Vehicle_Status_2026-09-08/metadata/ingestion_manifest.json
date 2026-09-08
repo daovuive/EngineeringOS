@@ -1,0 +1,34 @@
+{
+  "schema": "portable_context_archive_manifest_v1",
+  "native_eos_schema_verified": false,
+  "project_id": "DAR-SDV-VS-001",
+  "as_of": "2026-09-08",
+  "ingestion_executed": false,
+  "recommended_current_markdown_files": [
+    "current/00_EOS_CONTEXT.md",
+    "current/01_DECISION_REGISTER.md",
+    "current/SDV_Vehicle_Status_Approval_Report_EN.md",
+    "current/02_DYNAMIC_PLAN_SNAPSHOT.md",
+    "current/03_TECHNICAL_ACCEPTANCE_REFERENCE.md"
+  ],
+  "default_index_exclusions": [
+    "history/**",
+    "source/**",
+    "metadata/**",
+    "**/*.docx",
+    "**/*.xlsx",
+    "**/*.zip"
+  ],
+  "authority": {
+    "approval_narrative": "current/SDV_Vehicle_Status_Approval_Report_EN.md",
+    "dynamic_plan": "current/SDV_Vehicle_Status_Dynamic_Plan.xlsx"
+  },
+  "status_rules": [
+    "Proposal is not approval.",
+    "Forecast is not actual progress.",
+    "Illustration is not measured value.",
+    "Port design is not runtime support.",
+    "Historical schedule is not a current commitment."
+  ],
+  "refresh_rule": "After updating and saving Excel, regenerate the static snapshot and replace the previous indexed snapshot using the actual EOS ingestion workflow."
+}

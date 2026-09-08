@@ -9,7 +9,7 @@ from typing import Any
 DEFAULT_STRUCTURE_CONFIG = Path("configs/project-structure.json")
 DEFAULT_TEMPLATE_CONFIG = Path("configs/templates.json")
 DEFAULT_SETTINGS_CONFIG = Path("configs/settings.json")
-DEFAULT_RUNTIME_CONFIG = Path("configs/ai-runtime.json")
+DEFAULT_AI_CONFIG_DIR = Path("configs/ai")
 DEFAULT_SKILLS_CONFIG = Path("configs/skills.json")
 
 
@@ -19,7 +19,7 @@ class ProjectPaths:
     structure_config: Path = DEFAULT_STRUCTURE_CONFIG
     template_config: Path = DEFAULT_TEMPLATE_CONFIG
     settings_config: Path = DEFAULT_SETTINGS_CONFIG
-    runtime_config: Path = DEFAULT_RUNTIME_CONFIG
+    ai_config_dir: Path = DEFAULT_AI_CONFIG_DIR
 
     def resolve(self, path: str | Path) -> Path:
         candidate = Path(path)
@@ -54,7 +54,18 @@ def load_settings(paths: ProjectPaths) -> dict[str, Any]:
 
 
 def load_runtime_config(paths: ProjectPaths) -> dict[str, Any]:
-    return load_json(paths.resolve(paths.runtime_config))
+    ai_root = paths.resolve(paths.ai_config_dir)
+    providers = load_json(ai_root / "providers.json")
+    models = load_json(ai_root / "models.json")
+    runtime = load_json(ai_root / "runtime.json")
+
+    return {
+        "schemaVersion": runtime.get("schemaVersion", "1.0"),
+        "defaultProvider": runtime.get("defaultProvider"),
+        "providers": providers.get("providers", {}),
+        "models": models.get("models", {}),
+        "options": runtime.get("options", {}),
+    }
 
 
 def load_skills_config(paths: ProjectPaths) -> dict[str, Any]:

@@ -1,15 +1,15 @@
 # career/job-market/CMC_Global
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-JD và ghi chú thị trường của CMC Global. Tên file mô tả vai trò. Kết quả phân tích phải tham chiếu JD gốc và hồ sơ người dùng; không sửa yêu cầu của JD để khớp hồ sơ.
+CMC Global job descriptions and market notes. File names describe the role. Analysis must reference the original job description and the user's profile; do not alter job requirements to fit the profile.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [Senior_Product_Owner_Autonomous_Mobility_Fleet_Management.md](Senior_Product_Owner_Autonomous_Mobility_Fleet_Management.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

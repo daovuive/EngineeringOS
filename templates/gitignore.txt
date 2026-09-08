@@ -28,7 +28,6 @@ tmp/
 temp/
 
 # Local AI
-runtime/models/
 runtime/vector-db/
 runtime/cache/
 

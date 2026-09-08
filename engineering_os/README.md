@@ -1,22 +1,23 @@
 # engineering_os
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Mã Python của EngineeringOS: CLI, cấu hình, tạo/kiểm tra cấu trúc, runtime abstraction và tìm kiếm Markdown. eng.py ở gốc chỉ là entrypoint. API runtime đi qua LLMRuntime/create_runtime; không đưa workflow học tập hoặc dữ liệu model vào module code.
+EngineeringOS Python implementation: CLI, configuration, structure creation/validation, runtime abstraction, and Markdown search. The root eng.py is only an entry point. The runtime API goes through LLMRuntime/create_runtime; learning workflows and model data do not belong in the code module.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [__init__.py](__init__.py).
 - [cli.py](cli.py).
 - [config.py](config.py).
 - [doctor.py](doctor.py).
 - [knowledge.py](knowledge.py).
+- [rag.py](rag.py).
 - [llm.py](llm.py).
 - [structure.py](structure.py).
 - [templates.py](templates.py).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

@@ -1,0 +1,3872 @@
+{
+  "project_id": "DAR-SDV-VS-001",
+  "as_of": "2026-09-08",
+  "source_path": "current/SDV_Vehicle_Status_Dynamic_Plan.xlsx",
+  "source_sha256": "3783214abdc7eee61c7be2613df06b865bc8114c14d4d86ae60151836233c3d6",
+  "kind": "read_only_export_of_saved_values_and_formulas",
+  "calculation_note": "Cached values read from the supplied workbook; original workbook not recalculated or changed in this archive. Expected empty dates/cost/value outputs retained.",
+  "sheets": [
+    {
+      "name": "Report",
+      "state": "visible",
+      "merged_ranges": [
+        "A24:B24",
+        "A15:B15",
+        "D19:E19",
+        "A6:B6",
+        "A32:H33",
+        "F7:H8",
+        "A16:B16",
+        "C24:H25",
+        "C27:E27",
+        "A29:H30",
+        "F27:H27",
+        "A10:H11",
+        "A18:B18",
+        "A27:B27",
+        "D17:E17",
+        "A3:H3",
+        "D16:E16",
+        "A21:H21",
+        "C22:H23",
+        "A14:B14",
+        "A17:B17",
+        "D18:E18",
+        "A1:H2",
+        "A22:B22",
+        "C6:E6",
+        "A35:B35",
+        "A4:H4",
+        "F6:H6",
+        "D15:E15",
+        "A7:B8",
+        "A19:B19",
+        "D14:E14",
+        "A13:H13",
+        "C35:H35",
+        "C7:E8"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Vehicle Status | approval summary",
+          "number_format": "General",
+          "input_or_text": "Vehicle Status | approval summary"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "AAOS-first reuse pilot  /  DAR-SDV-VS-001 v1.2  /  recovery approval requested",
+          "number_format": "General",
+          "input_or_text": "AAOS-first reuse pilot  /  DAR-SDV-VS-001 v1.2  /  recovery approval requested"
+        },
+        {
+          "cell": "A4",
+          "saved_value": "Inputs changes resources. Report updates automatically. Business Case adds optional costs and effort payback.",
+          "number_format": "General",
+          "input_or_text": "Inputs changes resources. Report updates automatically. Business Case adds optional costs and effort payback."
+        },
+        {
+          "cell": "A6",
+          "saved_value": "REDUCED DEMO / WEEK",
+          "number_format": "General",
+          "input_or_text": "REDUCED DEMO / WEEK"
+        },
+        {
+          "cell": "C6",
+          "saved_value": "FULL PILOT / WEEK",
+          "number_format": "General",
+          "input_or_text": "FULL PILOT / WEEK"
+        },
+        {
+          "cell": "F6",
+          "saved_value": "WITH RESERVE / WEEK",
+          "number_format": "General",
+          "input_or_text": "WITH RESERVE / WEEK"
+        },
+        {
+          "cell": "A7",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"BLOCKED\",Plan!I13),\"\")"
+        },
+        {
+          "cell": "C7",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"BLOCKED\",Plan!I17),\"\")"
+        },
+        {
+          "cell": "F7",
+          "saved_value": 20,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"BLOCKED\",Plan!I17+Inputs!C22),\"\")"
+        },
+        {
+          "cell": "A10",
+          "saved_value": "Selected team: 2 developers (1 experienced + 1 junior). Estimated delivery work: 828 hours, including review and tests. This is planned work, not completed work.",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"Forecast blocked. Correct Inputs / Plan first.\",\"Selected team: \"&Inputs!C5&\" developers (\"&Inputs!C7&\" experienced + \"&Inputs!C6&\" junior). Estimated delivery work: \"&TEXT((Plan!C20+Plan!D20)*Inputs!C24,\"0\")&\" hours, including review and tests. This is planned work, not completed work.\"),\"\")"
+        },
+        {
+          "cell": "A13",
+          "saved_value": "FORECAST CHECKPOINTS",
+          "number_format": "General",
+          "input_or_text": "FORECAST CHECKPOINTS"
+        },
+        {
+          "cell": "A14",
+          "saved_value": "Checkpoint",
+          "number_format": "General",
+          "input_or_text": "Checkpoint"
+        },
+        {
+          "cell": "C14",
+          "saved_value": "End week",
+          "number_format": "General",
+          "input_or_text": "End week"
+        },
+        {
+          "cell": "D14",
+          "saved_value": "Finish date*",
+          "number_format": "General",
+          "input_or_text": "Finish date*"
+        },
+        {
+          "cell": "F14",
+          "saved_value": "Target week",
+          "number_format": "General",
+          "input_or_text": "Target week"
+        },
+        {
+          "cell": "G14",
+          "saved_value": "Variance",
+          "number_format": "General",
+          "input_or_text": "Variance"
+        },
+        {
+          "cell": "H14",
+          "saved_value": "Schedule",
+          "number_format": "General",
+          "input_or_text": "Schedule"
+        },
+        {
+          "cell": "A15",
+          "saved_value": "Review / Gate A",
+          "number_format": "General",
+          "input_or_text": "Review / Gate A"
+        },
+        {
+          "cell": "C15",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I9),\"\")"
+        },
+        {
+          "cell": "D15",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(C15=\"\",Inputs!C19=\"\"),\"\",Inputs!C19+ROUNDUP(C15*Inputs!C25,0)-1),\"\")"
+        },
+        {
+          "cell": "F15",
+          "saved_value": "-",
+          "number_format": "0.0",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "G15",
+          "saved_value": "-",
+          "number_format": "+0.0;-0.0;\"On target\"",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "H15",
+          "saved_value": "Forecast",
+          "number_format": "General",
+          "input_or_text": "Forecast"
+        },
+        {
+          "cell": "A16",
+          "saved_value": "Shared rules / Gate B",
+          "number_format": "General",
+          "input_or_text": "Shared rules / Gate B"
+        },
+        {
+          "cell": "C16",
+          "saved_value": 5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I11),\"\")"
+        },
+        {
+          "cell": "D16",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(C16=\"\",Inputs!C19=\"\"),\"\",Inputs!C19+ROUNDUP(C16*Inputs!C25,0)-1),\"\")"
+        },
+        {
+          "cell": "F16",
+          "saved_value": "-",
+          "number_format": "0.0",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "G16",
+          "saved_value": "-",
+          "number_format": "+0.0;-0.0;\"On target\"",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "H16",
+          "saved_value": "Forecast",
+          "number_format": "General",
+          "input_or_text": "Forecast"
+        },
+        {
+          "cell": "A17",
+          "saved_value": "Reduced demo",
+          "number_format": "General",
+          "input_or_text": "Reduced demo"
+        },
+        {
+          "cell": "C17",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I13),\"\")"
+        },
+        {
+          "cell": "D17",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(C17=\"\",Inputs!C19=\"\"),\"\",Inputs!C19+ROUNDUP(C17*Inputs!C25,0)-1),\"\")"
+        },
+        {
+          "cell": "F17",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(Inputs!C20,\"\")"
+        },
+        {
+          "cell": "G17",
+          "saved_value": 0,
+          "number_format": "+0.0;-0.0;\"On target\"",
+          "formula": "=IFERROR(IF(C17=\"\",\"\",C17-F17),\"\")"
+        },
+        {
+          "cell": "H17",
+          "saved_value": "WITHIN",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(C17=\"\",\"BLOCKED\",IF(C17>F17,\"LATE\",\"WITHIN\")),\"\")"
+        },
+        {
+          "cell": "A18",
+          "saved_value": "Full pilot / Gate C",
+          "number_format": "General",
+          "input_or_text": "Full pilot / Gate C"
+        },
+        {
+          "cell": "C18",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I17),\"\")"
+        },
+        {
+          "cell": "D18",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(C18=\"\",Inputs!C19=\"\"),\"\",Inputs!C19+ROUNDUP(C18*Inputs!C25,0)-1),\"\")"
+        },
+        {
+          "cell": "F18",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(Inputs!C21,\"\")"
+        },
+        {
+          "cell": "G18",
+          "saved_value": 0,
+          "number_format": "+0.0;-0.0;\"On target\"",
+          "formula": "=IFERROR(IF(C18=\"\",\"\",C18-F18),\"\")"
+        },
+        {
+          "cell": "H18",
+          "saved_value": "WITHIN",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(C18=\"\",\"BLOCKED\",IF(C18>F18,\"LATE\",\"WITHIN\")),\"\")"
+        },
+        {
+          "cell": "A19",
+          "saved_value": "With reserve",
+          "number_format": "General",
+          "input_or_text": "With reserve"
+        },
+        {
+          "cell": "C19",
+          "saved_value": 20,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I17+Inputs!C22),\"\")"
+        },
+        {
+          "cell": "D19",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(C19=\"\",Inputs!C19=\"\"),\"\",Inputs!C19+ROUNDUP(C19*Inputs!C25,0)-1),\"\")"
+        },
+        {
+          "cell": "F19",
+          "saved_value": "-",
+          "number_format": "0.0",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "G19",
+          "saved_value": "-",
+          "number_format": "+0.0;-0.0;\"On target\"",
+          "input_or_text": "-"
+        },
+        {
+          "cell": "H19",
+          "saved_value": "Forecast",
+          "number_format": "General",
+          "input_or_text": "Forecast"
+        },
+        {
+          "cell": "A21",
+          "saved_value": "SCOPE AND DECISION",
+          "number_format": "General",
+          "input_or_text": "SCOPE AND DECISION"
+        },
+        {
+          "cell": "A22",
+          "saved_value": "Reduced demo",
+          "number_format": "General",
+          "input_or_text": "Reduced demo"
+        },
+        {
+          "cell": "C22",
+          "saved_value": "One mapping -> shared rules -> first backend connection -> receiver receipt. No full-reuse or completed crash-recovery claim. Remote settings remain off.",
+          "number_format": "General",
+          "input_or_text": "One mapping -> shared rules -> first backend connection -> receiver receipt. No full-reuse or completed crash-recovery claim. Remote settings remain off."
+        },
+        {
+          "cell": "A24",
+          "saved_value": "Full pilot",
+          "number_format": "General",
+          "input_or_text": "Full pilot"
+        },
+        {
+          "cell": "C24",
+          "saved_value": "Two mappings and connection methods; restart-safe buffering; authorized reporting settings; six test groups; next-platform design only. Not production approval.",
+          "number_format": "General",
+          "input_or_text": "Two mappings and connection methods; restart-safe buffering; authorized reporting settings; six test groups; next-platform design only. Not production approval."
+        },
+        {
+          "cell": "A27",
+          "saved_value": "Allocated hours",
+          "number_format": "General",
+          "input_or_text": "Allocated hours"
+        },
+        {
+          "cell": "C27",
+          "saved_value": 1440,
+          "number_format": "#,##0\" allocated hours\"",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",Plan!I17*Inputs!C31),\"\")"
+        },
+        {
+          "cell": "F27",
+          "saved_value": 1600,
+          "number_format": "#,##0\" h incl. reserve\"",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"\",(Plan!I17+Inputs!C22)*Inputs!C31),\"\")"
+        },
+        {
+          "cell": "A29",
+          "saved_value": "Approve recovery only: 2.0 elapsed weeks and 160 allocated hours. Money cap not set; enter rates/costs in Business Case. Re-estimate and confirm a consuming team at Gate A before funding the build.",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(Plan!I20=\"\",\"Decision: correct blocked assumptions first.\",\"Approve recovery only: \"&TEXT(Plan!I9,\"0.0\")&\" elapsed weeks and \"&TEXT(Plan!I9*Inputs!C31,\"0\")&\" allocated hours. \"&IF(ISNUMBER('Business Case'!C16),\"Estimated cost: \"&TEXT('Business Case'!C16,\"#,##0.00\")&\" \"&'Business Case'!C5&\". \",\"Money cap not set; enter rates/costs in Business Case. \")&\"Re-estimate and confirm a consuming team at Gate A before funding the build.\"),\"\")"
+        },
+        {
+          "cell": "A32",
+          "saved_value": "Forecast only, not approval or passed tests. *Dates stay blank until Inputs!C19 is set. Calendar weeks are approximate. Benefits remain unproven; use Business Case for explicit assumptions, not claimed savings.",
+          "number_format": "General",
+          "input_or_text": "Forecast only, not approval or passed tests. *Dates stay blank until Inputs!C19 is set. Calendar weeks are approximate. Benefits remain unproven; use Business Case for explicit assumptions, not claimed savings."
+        },
+        {
+          "cell": "A35",
+          "saved_value": "Model check",
+          "number_format": "General",
+          "input_or_text": "Model check"
+        },
+        {
+          "cell": "C35",
+          "saved_value": "OK - formulas consistent; estimates require approval",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!C32<>\"OK\",COUNT(Plan!I9:I17)<>9,COUNTIF(Plan!T9:T17,\"BLOCKED\")>0),\"BLOCKED - review Inputs / Plan\",IF(ABS(Scenarios!F9-Plan!I17)>0.000001,\"ERROR - scenario mismatch\",\"OK - formulas consistent; estimates require approval\")),\"\")"
+        }
+      ]
+    },
+    {
+      "name": "Inputs",
+      "state": "visible",
+      "merged_ranges": [
+        "E12:F12",
+        "E24:F24",
+        "E5:F5",
+        "E23:F23",
+        "A18:F18",
+        "E14:F14",
+        "A34:F35",
+        "A26:F26",
+        "A3:F3",
+        "E17:F17",
+        "E8:F8",
+        "E20:F20",
+        "E29:F29",
+        "E10:F10",
+        "E19:F19",
+        "A1:F2",
+        "E28:F28",
+        "E13:F13",
+        "A4:F4",
+        "E9:F9",
+        "E31:F31",
+        "E6:F6",
+        "E30:F30",
+        "E15:F15",
+        "E27:F27",
+        "A11:F11",
+        "E16:F16",
+        "E32:F32",
+        "E7:F7",
+        "E25:F25",
+        "E22:F22",
+        "E21:F21"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Change the team, not the report",
+          "number_format": "General",
+          "input_or_text": "Change the team, not the report"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "Start here: C5 = total developers; C6 = juniors. Blue inputs change the forecast, not the selected idea.",
+          "number_format": "General",
+          "input_or_text": "Start here: C5 = total developers; C6 = juniors. Blue inputs change the forecast, not the selected idea."
+        },
+        {
+          "cell": "A4",
+          "saved_value": "1  TEAM",
+          "number_format": "General",
+          "input_or_text": "1  TEAM"
+        },
+        {
+          "cell": "A5",
+          "saved_value": "Total developers",
+          "number_format": "General",
+          "input_or_text": "Total developers"
+        },
+        {
+          "cell": "C5",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E5",
+          "saved_value": "Changing 2 to 3 adds one experienced developer unless the junior count also changes.",
+          "number_format": "General",
+          "input_or_text": "Changing 2 to 3 adds one experienced developer unless the junior count also changes."
+        },
+        {
+          "cell": "A6",
+          "saved_value": "Intern / fresher count",
+          "number_format": "General",
+          "input_or_text": "Intern / fresher count"
+        },
+        {
+          "cell": "C6",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E6",
+          "saved_value": "Must be smaller than total developers. At least one experienced developer is required.",
+          "number_format": "General",
+          "input_or_text": "Must be smaller than total developers. At least one experienced developer is required."
+        },
+        {
+          "cell": "A7",
+          "saved_value": "Experienced developer count",
+          "number_format": "General",
+          "input_or_text": "Experienced developer count"
+        },
+        {
+          "cell": "C7",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(C5-C6,\"\")"
+        },
+        {
+          "cell": "E7",
+          "saved_value": "Total minus intern/fresher count. Assumes suitable AAOS/core skills.",
+          "number_format": "General",
+          "input_or_text": "Total minus intern/fresher count. Assumes suitable AAOS/core skills."
+        },
+        {
+          "cell": "A8",
+          "saved_value": "Paid hours per person / week",
+          "number_format": "General",
+          "input_or_text": "Paid hours per person / week"
+        },
+        {
+          "cell": "C8",
+          "saved_value": 40,
+          "number_format": "General",
+          "input_or_text": 40,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E8",
+          "saved_value": "Nominal time; not all time becomes accepted delivery work.",
+          "number_format": "General",
+          "input_or_text": "Nominal time; not all time becomes accepted delivery work."
+        },
+        {
+          "cell": "A9",
+          "saved_value": "Experienced allocation",
+          "number_format": "General",
+          "input_or_text": "Experienced allocation"
+        },
+        {
+          "cell": "C9",
+          "saved_value": 1,
+          "number_format": "0%",
+          "input_or_text": 1,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E9",
+          "saved_value": "Share of working time assigned to this project.",
+          "number_format": "General",
+          "input_or_text": "Share of working time assigned to this project."
+        },
+        {
+          "cell": "A10",
+          "saved_value": "Junior allocation",
+          "number_format": "General",
+          "input_or_text": "Junior allocation"
+        },
+        {
+          "cell": "C10",
+          "saved_value": 1,
+          "number_format": "0%",
+          "input_or_text": 1,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E10",
+          "saved_value": "Set below 100% for part-time internship or other assignments.",
+          "number_format": "General",
+          "input_or_text": "Set below 100% for part-time internship or other assignments."
+        },
+        {
+          "cell": "A11",
+          "saved_value": "2  USABLE CAPACITY",
+          "number_format": "General",
+          "input_or_text": "2  USABLE CAPACITY"
+        },
+        {
+          "cell": "A12",
+          "saved_value": "Experienced usable time before mentoring",
+          "number_format": "General",
+          "input_or_text": "Experienced usable time before mentoring"
+        },
+        {
+          "cell": "C12",
+          "saved_value": 0.85,
+          "number_format": "0%",
+          "input_or_text": 0.85,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E12",
+          "saved_value": "Planning assumption: 85% of allocated time, before mentoring. Review after recovery; not a productivity benchmark.",
+          "number_format": "General",
+          "input_or_text": "Planning assumption: 85% of allocated time, before mentoring. Review after recovery; not a productivity benchmark."
+        },
+        {
+          "cell": "A13",
+          "saved_value": "Junior accepted work rate, after recovery",
+          "number_format": "General",
+          "input_or_text": "Junior accepted work rate, after recovery"
+        },
+        {
+          "cell": "C13",
+          "saved_value": 0.6,
+          "number_format": "0%",
+          "input_or_text": 0.6,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E13",
+          "saved_value": "60% of allocated time; includes tests and evidence accepted after review.",
+          "number_format": "General",
+          "input_or_text": "60% of allocated time; includes tests and evidence accepted after review."
+        },
+        {
+          "cell": "A14",
+          "saved_value": "Junior accepted work rate, during recovery",
+          "number_format": "General",
+          "input_or_text": "Junior accepted work rate, during recovery"
+        },
+        {
+          "cell": "C14",
+          "saved_value": 0.3,
+          "number_format": "0%",
+          "input_or_text": 0.3,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E14",
+          "saved_value": "Lower rate applies to the whole recovery phase, not a fixed number of weeks.",
+          "number_format": "General",
+          "input_or_text": "Lower rate applies to the whole recovery phase, not a fixed number of weeks."
+        },
+        {
+          "cell": "A15",
+          "saved_value": "Mentoring hours per allocated junior / week",
+          "number_format": "General",
+          "input_or_text": "Mentoring hours per allocated junior / week"
+        },
+        {
+          "cell": "C15",
+          "saved_value": 6,
+          "number_format": "0.0",
+          "input_or_text": 6,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E15",
+          "saved_value": "Deducted once from the experienced pool; ordinary PR review stays inside work estimates.",
+          "number_format": "General",
+          "input_or_text": "Deducted once from the experienced pool; ordinary PR review stays inside work estimates."
+        },
+        {
+          "cell": "A16",
+          "saved_value": "Maximum experienced contributors per phase",
+          "number_format": "General",
+          "input_or_text": "Maximum experienced contributors per phase"
+        },
+        {
+          "cell": "C16",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E16",
+          "saved_value": "Caps useful parallel work. More staff do not automatically remove sequence or review limits.",
+          "number_format": "General",
+          "input_or_text": "Caps useful parallel work. More staff do not automatically remove sequence or review limits."
+        },
+        {
+          "cell": "A17",
+          "saved_value": "Maximum junior contributors per phase",
+          "number_format": "General",
+          "input_or_text": "Maximum junior contributors per phase"
+        },
+        {
+          "cell": "C17",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E17",
+          "saved_value": "Caps parallel support work. These contributor caps are proposed controls.",
+          "number_format": "General",
+          "input_or_text": "Caps parallel support work. These contributor caps are proposed controls."
+        },
+        {
+          "cell": "A18",
+          "saved_value": "3  CALENDAR AND FORECAST",
+          "number_format": "General",
+          "input_or_text": "3  CALENDAR AND FORECAST"
+        },
+        {
+          "cell": "A19",
+          "saved_value": "Planning start date",
+          "number_format": "General",
+          "input_or_text": "Planning start date"
+        },
+        {
+          "cell": "E19",
+          "saved_value": "Leave blank until an approved start is agreed. Weeks still calculate; dates remain blank.",
+          "number_format": "General",
+          "input_or_text": "Leave blank until an approved start is agreed. Weeks still calculate; dates remain blank."
+        },
+        {
+          "cell": "A20",
+          "saved_value": "Desired reduced-demo week",
+          "number_format": "General",
+          "input_or_text": "Desired reduced-demo week"
+        },
+        {
+          "cell": "C20",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "input_or_text": 8,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E20",
+          "saved_value": "A comparison target, not a formula override or promise.",
+          "number_format": "General",
+          "input_or_text": "A comparison target, not a formula override or promise."
+        },
+        {
+          "cell": "A21",
+          "saved_value": "Desired full-MVP week",
+          "number_format": "General",
+          "input_or_text": "Desired full-MVP week"
+        },
+        {
+          "cell": "C21",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "input_or_text": 18,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E21",
+          "saved_value": "A comparison target, not a formula override or promise.",
+          "number_format": "General",
+          "input_or_text": "A comparison target, not a formula override or promise."
+        },
+        {
+          "cell": "A22",
+          "saved_value": "Sponsor-controlled reserve (weeks)",
+          "number_format": "General",
+          "input_or_text": "Sponsor-controlled reserve (weeks)"
+        },
+        {
+          "cell": "C22",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "input_or_text": 2,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E22",
+          "saved_value": "Added after the base forecast. Does not buy extra features.",
+          "number_format": "General",
+          "input_or_text": "Added after the base forecast. Does not buy extra features."
+        },
+        {
+          "cell": "A23",
+          "saved_value": "Schedule rounding step (weeks)",
+          "number_format": "General",
+          "input_or_text": "Schedule rounding step (weeks)"
+        },
+        {
+          "cell": "C23",
+          "saved_value": 0.5,
+          "number_format": "0.0",
+          "input_or_text": 0.5,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E23",
+          "saved_value": "Rounds each phase upward. Use 0.5 or 1 week.",
+          "number_format": "General",
+          "input_or_text": "Rounds each phase upward. Use 0.5 or 1 week."
+        },
+        {
+          "cell": "A24",
+          "saved_value": "Work estimate multiplier",
+          "number_format": "General",
+          "input_or_text": "Work estimate multiplier"
+        },
+        {
+          "cell": "C24",
+          "saved_value": 1,
+          "number_format": "0.00\"x\"",
+          "input_or_text": 1,
+          "comment": "Source: SDV_Vehicle_Status_Plan.xlsx v1.1 and DAR v1.0. Proposed planning assumption; confirm staffing, skills and actual availability at Gate A. Not a productivity benchmark."
+        },
+        {
+          "cell": "E24",
+          "saved_value": "1.00 = source workload. 1.20 models 20% more work; does not change scope.",
+          "number_format": "General",
+          "input_or_text": "1.00 = source workload. 1.20 models 20% more work; does not change scope."
+        },
+        {
+          "cell": "A25",
+          "saved_value": "Calendar days per elapsed week",
+          "number_format": "General",
+          "input_or_text": "Calendar days per elapsed week"
+        },
+        {
+          "cell": "C25",
+          "saved_value": 7,
+          "number_format": "General",
+          "input_or_text": 7
+        },
+        {
+          "cell": "E25",
+          "saved_value": "Calendar dates are approximate elapsed-week dates, not a holiday-aware workday schedule.",
+          "number_format": "General",
+          "input_or_text": "Calendar dates are approximate elapsed-week dates, not a holiday-aware workday schedule."
+        },
+        {
+          "cell": "A26",
+          "saved_value": "4  CALCULATED CAPACITY",
+          "number_format": "General",
+          "input_or_text": "4  CALCULATED CAPACITY"
+        },
+        {
+          "cell": "A27",
+          "saved_value": "Experienced pool: delivery hours / week",
+          "number_format": "General",
+          "input_or_text": "Experienced pool: delivery hours / week"
+        },
+        {
+          "cell": "C27",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MAX(0,C7*C8*C9*C12-C6*C10*C15),\"\")"
+        },
+        {
+          "cell": "E27",
+          "saved_value": "Before the per-phase contributor and senior-critical caps.",
+          "number_format": "General",
+          "input_or_text": "Before the per-phase contributor and senior-critical caps."
+        },
+        {
+          "cell": "A28",
+          "saved_value": "Experienced: delivery hours per person",
+          "number_format": "General",
+          "input_or_text": "Experienced: delivery hours per person"
+        },
+        {
+          "cell": "C28",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(C7>0,C27/C7,0),\"\")"
+        },
+        {
+          "cell": "E28",
+          "saved_value": "Mentoring is shared across the experienced pool.",
+          "number_format": "General",
+          "input_or_text": "Mentoring is shared across the experienced pool."
+        },
+        {
+          "cell": "A29",
+          "saved_value": "Junior: hours per person after recovery",
+          "number_format": "General",
+          "input_or_text": "Junior: hours per person after recovery"
+        },
+        {
+          "cell": "C29",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(C8*C10*C13,\"\")"
+        },
+        {
+          "cell": "E29",
+          "saved_value": "Used for phases P2-P9.",
+          "number_format": "General",
+          "input_or_text": "Used for phases P2-P9."
+        },
+        {
+          "cell": "A30",
+          "saved_value": "Junior: hours per person during recovery",
+          "number_format": "General",
+          "input_or_text": "Junior: hours per person during recovery"
+        },
+        {
+          "cell": "C30",
+          "saved_value": 12,
+          "number_format": "0.0",
+          "formula": "=IFERROR(C8*C10*C14,\"\")"
+        },
+        {
+          "cell": "E30",
+          "saved_value": "Used for phase P1 only.",
+          "number_format": "General",
+          "input_or_text": "Used for phase P1 only."
+        },
+        {
+          "cell": "A31",
+          "saved_value": "Nominal allocated team hours / week",
+          "number_format": "General",
+          "input_or_text": "Nominal allocated team hours / week"
+        },
+        {
+          "cell": "C31",
+          "saved_value": 80,
+          "number_format": "0.0",
+          "formula": "=IFERROR(C8*(C7*C9+C6*C10),\"\")"
+        },
+        {
+          "cell": "E31",
+          "saved_value": "Staffed/allocated hours, not accepted work. Used for the staffing envelope.",
+          "number_format": "General",
+          "input_or_text": "Staffed/allocated hours, not accepted work. Used for the staffing envelope."
+        },
+        {
+          "cell": "A32",
+          "saved_value": "Input validation",
+          "number_format": "General",
+          "input_or_text": "Input validation"
+        },
+        {
+          "cell": "C32",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(C5)),NOT(ISNUMBER(C6)),NOT(ISNUMBER(C8)),NOT(ISNUMBER(C9)),NOT(ISNUMBER(C10)),NOT(ISNUMBER(C12)),NOT(ISNUMBER(C13)),NOT(ISNUMBER(C14)),NOT(ISNUMBER(C15)),NOT(ISNUMBER(C16)),NOT(ISNUMBER(C17)),NOT(ISNUMBER(C20)),NOT(ISNUMBER(C21)),NOT(ISNUMBER(C22)),NOT(ISNUMBER(C23)),NOT(ISNUMBER(C24)),NOT(ISNUMBER(C25)),C5<1,C5<>INT(C5),C6<0,C6<>INT(C6),C6>=C5,C8<=0,C9<=0,C9>1,C10<0,C10>1,C12<=0,C12>1,C13<0,C13>1,C14<0,C14>1,C15<0,C16<1,C16<>INT(C16),C17<0,C17<>INT(C17),AND(C19<>\"\",OR(NOT(ISNUMBER(C19)),C19<1,C19<>INT(C19))),C20<=0,C21<C20,C22<0,AND(C23<>0.5,C23<>1),C24<=0,C25<>7,C27<=0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "E32",
+          "saved_value": "BLOCKED means invalid or missing capacity/estimate inputs. An unset start date does not block week forecasts.",
+          "number_format": "General",
+          "input_or_text": "BLOCKED means invalid or missing capacity/estimate inputs. An unset start date does not block week forecasts."
+        },
+        {
+          "cell": "A34",
+          "saved_value": "No overtime, new production backend, independent security reviewer or completed AAOS SDV runtime port is assumed. Role changes alter the forecast, not the approved scope.",
+          "number_format": "General",
+          "input_or_text": "No overtime, new production backend, independent security reviewer or completed AAOS SDV runtime port is assumed. Role changes alter the forecast, not the approved scope."
+        }
+      ]
+    },
+    {
+      "name": "Plan",
+      "state": "visible",
+      "merged_ranges": [
+        "A28:L29",
+        "A1:L2",
+        "A5:L6",
+        "A22:L23",
+        "A3:L3",
+        "A25:L26"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Delivery plan | agreed scope, variable team",
+          "number_format": "General",
+          "input_or_text": "Delivery plan | agreed scope, variable team"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "Change blue estimates only after review. Phases run in order; limited parallel work is allowed within a phase.",
+          "number_format": "General",
+          "input_or_text": "Change blue estimates only after review. Phases run in order; limited parallel work is allowed within a phase."
+        },
+        {
+          "cell": "A5",
+          "saved_value": "Forecast only. Pass evidence must be reviewed at the gate; a calculated finish date never means that a test passed. Expert = experienced developer. Support = work a junior can do under review.",
+          "number_format": "General",
+          "input_or_text": "Forecast only. Pass evidence must be reviewed at the gate; a calculated finish date never means that a test passed. Expert = experienced developer. Support = work a junior can do under review."
+        },
+        {
+          "cell": "A8",
+          "saved_value": "ID",
+          "number_format": "General",
+          "input_or_text": "ID"
+        },
+        {
+          "cell": "B8",
+          "saved_value": "Phase",
+          "number_format": "General",
+          "input_or_text": "Phase"
+        },
+        {
+          "cell": "C8",
+          "saved_value": "Expert-only\nwork (h)",
+          "number_format": "General",
+          "input_or_text": "Expert-only\nwork (h)"
+        },
+        {
+          "cell": "D8",
+          "saved_value": "Support\nwork (h)",
+          "number_format": "General",
+          "input_or_text": "Support\nwork (h)"
+        },
+        {
+          "cell": "E8",
+          "saved_value": "Minimum\nweeks",
+          "number_format": "General",
+          "input_or_text": "Minimum\nweeks"
+        },
+        {
+          "cell": "F8",
+          "saved_value": "Expert lead\nslots",
+          "number_format": "General",
+          "input_or_text": "Expert lead\nslots"
+        },
+        {
+          "cell": "G8",
+          "saved_value": "Waiting\nweeks",
+          "number_format": "General",
+          "input_or_text": "Waiting\nweeks"
+        },
+        {
+          "cell": "H8",
+          "saved_value": "Duration\nweeks",
+          "number_format": "General",
+          "input_or_text": "Duration\nweeks"
+        },
+        {
+          "cell": "I8",
+          "saved_value": "Finish\nweek",
+          "number_format": "General",
+          "input_or_text": "Finish\nweek"
+        },
+        {
+          "cell": "J8",
+          "saved_value": "Finish date",
+          "number_format": "General",
+          "input_or_text": "Finish date"
+        },
+        {
+          "cell": "K8",
+          "saved_value": "Checkpoint",
+          "number_format": "General",
+          "input_or_text": "Checkpoint"
+        },
+        {
+          "cell": "L8",
+          "saved_value": "Required evidence",
+          "number_format": "General",
+          "input_or_text": "Required evidence"
+        },
+        {
+          "cell": "N8",
+          "saved_value": "Junior pool h/w",
+          "number_format": "General",
+          "input_or_text": "Junior pool h/w"
+        },
+        {
+          "cell": "O8",
+          "saved_value": "Expert critical h/w",
+          "number_format": "General",
+          "input_or_text": "Expert critical h/w"
+        },
+        {
+          "cell": "P8",
+          "saved_value": "Expert total h/w",
+          "number_format": "General",
+          "input_or_text": "Expert total h/w"
+        },
+        {
+          "cell": "Q8",
+          "saved_value": "Combined h/w",
+          "number_format": "General",
+          "input_or_text": "Combined h/w"
+        },
+        {
+          "cell": "R8",
+          "saved_value": "Raw duration",
+          "number_format": "General",
+          "input_or_text": "Raw duration"
+        },
+        {
+          "cell": "S8",
+          "saved_value": "Start offset weeks",
+          "number_format": "General",
+          "input_or_text": "Start offset weeks"
+        },
+        {
+          "cell": "T8",
+          "saved_value": "Phase input check",
+          "number_format": "General",
+          "input_or_text": "Phase input check"
+        },
+        {
+          "cell": "A9",
+          "saved_value": "P1",
+          "number_format": "General",
+          "input_or_text": "P1"
+        },
+        {
+          "cell": "B9",
+          "saved_value": "Review current AAOS prototype",
+          "number_format": "General",
+          "input_or_text": "Review current AAOS prototype"
+        },
+        {
+          "cell": "C9",
+          "saved_value": 56,
+          "number_format": "General",
+          "input_or_text": 56,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D9",
+          "saved_value": 24,
+          "number_format": "General",
+          "input_or_text": 24,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E9",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F9",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G9",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H9",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R9)),\"\",ROUNDUP(R9/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I9",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H9)),NOT(ISNUMBER(S9))),\"\",S9+H9),\"\")"
+        },
+        {
+          "cell": "J9",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I9=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I9*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K9",
+          "saved_value": "Gate A",
+          "number_format": "General",
+          "input_or_text": "Gate A"
+        },
+        {
+          "cell": "L9",
+          "saved_value": "Reproduce build and access; identify dependencies, consumer, risks and revised estimate.",
+          "number_format": "General",
+          "input_or_text": "Reproduce build and access; identify dependencies, consumer, risks and revised estimate."
+        },
+        {
+          "cell": "N9",
+          "saved_value": 12,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O9",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F9)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P9",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q9",
+          "saved_value": 40,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N9+P9,\"\")"
+        },
+        {
+          "cell": "R9",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T9<>\"OK\"),\"\",MAX(E9,C9*Inputs!$C$24/O9,(C9+D9)*Inputs!$C$24/Q9)),\"\")"
+        },
+        {
+          "cell": "S9",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T9<>\"OK\"),\"\",G9),\"\")"
+        },
+        {
+          "cell": "T9",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C9:G9)<>5,C9<0,D9<0,E9<0,F9<1,F9<>INT(F9),G9<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A10",
+          "saved_value": "P2",
+          "number_format": "General",
+          "input_or_text": "P2"
+        },
+        {
+          "cell": "B10",
+          "saved_value": "Define common reporting rules",
+          "number_format": "General",
+          "input_or_text": "Define common reporting rules"
+        },
+        {
+          "cell": "C10",
+          "saved_value": 56,
+          "number_format": "General",
+          "input_or_text": 56,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D10",
+          "saved_value": 48,
+          "number_format": "General",
+          "input_or_text": 48,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E10",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F10",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G10",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H10",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R10)),\"\",ROUNDUP(R10/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I10",
+          "saved_value": 4,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H10)),NOT(ISNUMBER(S10))),\"\",S10+H10),\"\")"
+        },
+        {
+          "cell": "J10",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I10=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I10*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K10",
+          "saved_value": "Core foundation",
+          "number_format": "General",
+          "input_or_text": "Core foundation"
+        },
+        {
+          "cell": "L10",
+          "saved_value": "Agree data meanings, reporting triggers and connection boundaries; prepare repeatable inputs.",
+          "number_format": "General",
+          "input_or_text": "Agree data meanings, reporting triggers and connection boundaries; prepare repeatable inputs."
+        },
+        {
+          "cell": "N10",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O10",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F10)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P10",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q10",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N10+P10,\"\")"
+        },
+        {
+          "cell": "R10",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T10<>\"OK\"),\"\",MAX(E10,C10*Inputs!$C$24/O10,(C10+D10)*Inputs!$C$24/Q10)),\"\")"
+        },
+        {
+          "cell": "S10",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T10<>\"OK\",I9=\"\"),\"\",I9+G10),\"\")"
+        },
+        {
+          "cell": "T10",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C10:G10)<>5,C10<0,D10<0,E10<0,F10<1,F10<>INT(F10),G10<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A11",
+          "saved_value": "P3",
+          "number_format": "General",
+          "input_or_text": "P3"
+        },
+        {
+          "cell": "B11",
+          "saved_value": "Verify the shared rules",
+          "number_format": "General",
+          "input_or_text": "Verify the shared rules"
+        },
+        {
+          "cell": "C11",
+          "saved_value": 28,
+          "number_format": "General",
+          "input_or_text": 28,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D11",
+          "saved_value": 24,
+          "number_format": "General",
+          "input_or_text": 24,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E11",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F11",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G11",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H11",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R11)),\"\",ROUNDUP(R11/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I11",
+          "saved_value": 5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H11)),NOT(ISNUMBER(S11))),\"\",S11+H11),\"\")"
+        },
+        {
+          "cell": "J11",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I11=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I11*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K11",
+          "saved_value": "Gate B",
+          "number_format": "General",
+          "input_or_text": "Gate B"
+        },
+        {
+          "cell": "L11",
+          "saved_value": "S1-S2 pass; the shared rules build without Android or backend-specific code.",
+          "number_format": "General",
+          "input_or_text": "S1-S2 pass; the shared rules build without Android or backend-specific code."
+        },
+        {
+          "cell": "N11",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O11",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F11)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P11",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q11",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N11+P11,\"\")"
+        },
+        {
+          "cell": "R11",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T11<>\"OK\"),\"\",MAX(E11,C11*Inputs!$C$24/O11,(C11+D11)*Inputs!$C$24/Q11)),\"\")"
+        },
+        {
+          "cell": "S11",
+          "saved_value": 4,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T11<>\"OK\",I10=\"\"),\"\",I10+G11),\"\")"
+        },
+        {
+          "cell": "T11",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C11:G11)<>5,C11<0,D11<0,E11<0,F11<1,F11<>INT(F11),G11<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A12",
+          "saved_value": "P4",
+          "number_format": "General",
+          "input_or_text": "P4"
+        },
+        {
+          "cell": "B12",
+          "saved_value": "Connect AAOS vehicle data",
+          "number_format": "General",
+          "input_or_text": "Connect AAOS vehicle data"
+        },
+        {
+          "cell": "C12",
+          "saved_value": 28,
+          "number_format": "General",
+          "input_or_text": 28,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D12",
+          "saved_value": 24,
+          "number_format": "General",
+          "input_or_text": 24,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E12",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F12",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G12",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H12",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R12)),\"\",ROUNDUP(R12/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I12",
+          "saved_value": 6,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H12)),NOT(ISNUMBER(S12))),\"\",S12+H12),\"\")"
+        },
+        {
+          "cell": "J12",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I12=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I12*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K12",
+          "saved_value": "AAOS integration",
+          "number_format": "General",
+          "input_or_text": "AAOS integration"
+        },
+        {
+          "cell": "L12",
+          "saved_value": "Vehicle reads, lifecycle, permissions and mapping A use the same shared rules.",
+          "number_format": "General",
+          "input_or_text": "Vehicle reads, lifecycle, permissions and mapping A use the same shared rules."
+        },
+        {
+          "cell": "N12",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O12",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F12)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P12",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q12",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N12+P12,\"\")"
+        },
+        {
+          "cell": "R12",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T12<>\"OK\"),\"\",MAX(E12,C12*Inputs!$C$24/O12,(C12+D12)*Inputs!$C$24/Q12)),\"\")"
+        },
+        {
+          "cell": "S12",
+          "saved_value": 5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T12<>\"OK\",I11=\"\"),\"\",I11+G12),\"\")"
+        },
+        {
+          "cell": "T12",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C12:G12)<>5,C12<0,D12<0,E12<0,F12<1,F12<>INT(F12),G12<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A13",
+          "saved_value": "P5",
+          "number_format": "General",
+          "input_or_text": "P5"
+        },
+        {
+          "cell": "B13",
+          "saved_value": "Demo first backend path",
+          "number_format": "General",
+          "input_or_text": "Demo first backend path"
+        },
+        {
+          "cell": "C13",
+          "saved_value": 56,
+          "number_format": "General",
+          "input_or_text": 56,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D13",
+          "saved_value": 36,
+          "number_format": "General",
+          "input_or_text": 36,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E13",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F13",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G13",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H13",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R13)),\"\",ROUNDUP(R13/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I13",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H13)),NOT(ISNUMBER(S13))),\"\",S13+H13),\"\")"
+        },
+        {
+          "cell": "J13",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I13=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I13*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K13",
+          "saved_value": "Reduced demo",
+          "number_format": "General",
+          "input_or_text": "Reduced demo"
+        },
+        {
+          "cell": "L13",
+          "saved_value": "Mapping A -> shared rules -> MQTT/TLS -> receiver receipt. Remote settings stay off.",
+          "number_format": "General",
+          "input_or_text": "Mapping A -> shared rules -> MQTT/TLS -> receiver receipt. Remote settings stay off."
+        },
+        {
+          "cell": "N13",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O13",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F13)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P13",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q13",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N13+P13,\"\")"
+        },
+        {
+          "cell": "R13",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T13<>\"OK\"),\"\",MAX(E13,C13*Inputs!$C$24/O13,(C13+D13)*Inputs!$C$24/Q13)),\"\")"
+        },
+        {
+          "cell": "S13",
+          "saved_value": 6,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T13<>\"OK\",I12=\"\"),\"\",I12+G13),\"\")"
+        },
+        {
+          "cell": "T13",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C13:G13)<>5,C13<0,D13<0,E13<0,F13<1,F13<>INT(F13),G13<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A14",
+          "saved_value": "P6",
+          "number_format": "General",
+          "input_or_text": "P6"
+        },
+        {
+          "cell": "B14",
+          "saved_value": "Test replacement connection",
+          "number_format": "General",
+          "input_or_text": "Test replacement connection"
+        },
+        {
+          "cell": "C14",
+          "saved_value": 56,
+          "number_format": "General",
+          "input_or_text": 56,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D14",
+          "saved_value": 40,
+          "number_format": "General",
+          "input_or_text": 40,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E14",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F14",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G14",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H14",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R14)),\"\",ROUNDUP(R14/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I14",
+          "saved_value": 10,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H14)),NOT(ISNUMBER(S14))),\"\",S14+H14),\"\")"
+        },
+        {
+          "cell": "J14",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I14=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I14*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K14",
+          "saved_value": "S3",
+          "number_format": "General",
+          "input_or_text": "S3"
+        },
+        {
+          "cell": "L14",
+          "saved_value": "S3: MQTT/HTTPS keep report meaning, IDs, decisions and equivalent receiver confirmation.",
+          "number_format": "General",
+          "input_or_text": "S3: MQTT/HTTPS keep report meaning, IDs, decisions and equivalent receiver confirmation."
+        },
+        {
+          "cell": "N14",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O14",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F14)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P14",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q14",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N14+P14,\"\")"
+        },
+        {
+          "cell": "R14",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T14<>\"OK\"),\"\",MAX(E14,C14*Inputs!$C$24/O14,(C14+D14)*Inputs!$C$24/Q14)),\"\")"
+        },
+        {
+          "cell": "S14",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T14<>\"OK\",I13=\"\"),\"\",I13+G14),\"\")"
+        },
+        {
+          "cell": "T14",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C14:G14)<>5,C14<0,D14<0,E14<0,F14<1,F14<>INT(F14),G14<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A15",
+          "saved_value": "P7",
+          "number_format": "General",
+          "input_or_text": "P7"
+        },
+        {
+          "cell": "B15",
+          "saved_value": "Test outage and restart",
+          "number_format": "General",
+          "input_or_text": "Test outage and restart"
+        },
+        {
+          "cell": "C15",
+          "saved_value": 84,
+          "number_format": "General",
+          "input_or_text": 84,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D15",
+          "saved_value": 56,
+          "number_format": "General",
+          "input_or_text": 56,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E15",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F15",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G15",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H15",
+          "saved_value": 3,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R15)),\"\",ROUNDUP(R15/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I15",
+          "saved_value": 13,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H15)),NOT(ISNUMBER(S15))),\"\",S15+H15),\"\")"
+        },
+        {
+          "cell": "J15",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I15=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I15*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K15",
+          "saved_value": "S4",
+          "number_format": "General",
+          "input_or_text": "S4"
+        },
+        {
+          "cell": "L15",
+          "saved_value": "S4: bounded restart-safe queue, retries, expiry and visible losses/duplicates.",
+          "number_format": "General",
+          "input_or_text": "S4: bounded restart-safe queue, retries, expiry and visible losses/duplicates."
+        },
+        {
+          "cell": "N15",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O15",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F15)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P15",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q15",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N15+P15,\"\")"
+        },
+        {
+          "cell": "R15",
+          "saved_value": 3,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T15<>\"OK\"),\"\",MAX(E15,C15*Inputs!$C$24/O15,(C15+D15)*Inputs!$C$24/Q15)),\"\")"
+        },
+        {
+          "cell": "S15",
+          "saved_value": 10,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T15<>\"OK\",I14=\"\"),\"\",I14+G15),\"\")"
+        },
+        {
+          "cell": "T15",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C15:G15)<>5,C15<0,D15<0,E15<0,F15<1,F15<>INT(F15),G15<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A16",
+          "saved_value": "P8",
+          "number_format": "General",
+          "input_or_text": "P8"
+        },
+        {
+          "cell": "B16",
+          "saved_value": "Protect reporting settings",
+          "number_format": "General",
+          "input_or_text": "Protect reporting settings"
+        },
+        {
+          "cell": "C16",
+          "saved_value": 48,
+          "number_format": "General",
+          "input_or_text": 48,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D16",
+          "saved_value": 30,
+          "number_format": "General",
+          "input_or_text": 30,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E16",
+          "saved_value": 1,
+          "number_format": "0.0",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F16",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G16",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H16",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R16)),\"\",ROUNDUP(R16/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I16",
+          "saved_value": 15,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H16)),NOT(ISNUMBER(S16))),\"\",S16+H16),\"\")"
+        },
+        {
+          "cell": "J16",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I16=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I16*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K16",
+          "saved_value": "S5",
+          "number_format": "General",
+          "input_or_text": "S5"
+        },
+        {
+          "cell": "L16",
+          "saved_value": "S5: only authorized reporting changes; reject bad/replayed input and vehicle-control requests.",
+          "number_format": "General",
+          "input_or_text": "S5: only authorized reporting changes; reject bad/replayed input and vehicle-control requests."
+        },
+        {
+          "cell": "N16",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O16",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P16",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q16",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N16+P16,\"\")"
+        },
+        {
+          "cell": "R16",
+          "saved_value": 1.7142857142857142,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T16<>\"OK\"),\"\",MAX(E16,C16*Inputs!$C$24/O16,(C16+D16)*Inputs!$C$24/Q16)),\"\")"
+        },
+        {
+          "cell": "S16",
+          "saved_value": 13,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T16<>\"OK\",I15=\"\"),\"\",I15+G16),\"\")"
+        },
+        {
+          "cell": "T16",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C16:G16)<>5,C16<0,D16<0,E16<0,F16<1,F16<>INT(F16),G16<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "A17",
+          "saved_value": "P9",
+          "number_format": "General",
+          "input_or_text": "P9"
+        },
+        {
+          "cell": "B17",
+          "saved_value": "Validate reuse and hand over",
+          "number_format": "General",
+          "input_or_text": "Validate reuse and hand over"
+        },
+        {
+          "cell": "C17",
+          "saved_value": 64,
+          "number_format": "General",
+          "input_or_text": 64,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "D17",
+          "saved_value": 70,
+          "number_format": "General",
+          "input_or_text": 70,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "E17",
+          "saved_value": 2,
+          "number_format": "0.0",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "F17",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "G17",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "input_or_text": 0,
+          "comment": "Source: prior SDV_Vehicle_Status_Plan.xlsx, reconciled to DAR v1.0 sections 20/20B. Editable planning assumption, not a measurement. Work hours include review and tests; change scope only by approval."
+        },
+        {
+          "cell": "H17",
+          "saved_value": 3,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(NOT(ISNUMBER(R17)),\"\",ROUNDUP(R17/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "I17",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(H17)),NOT(ISNUMBER(S17))),\"\",S17+H17),\"\")"
+        },
+        {
+          "cell": "J17",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I17=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I17*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "K17",
+          "saved_value": "Gate C / D-Design",
+          "number_format": "General",
+          "input_or_text": "Gate C / D-Design"
+        },
+        {
+          "cell": "L17",
+          "saved_value": "S1-S6 across A/B and both paths; fixed baseline, runbook and substantiated next-platform design.",
+          "number_format": "General",
+          "input_or_text": "S1-S6 across A/B and both paths; fixed baseline, runbook and substantiated next-platform design."
+        },
+        {
+          "cell": "N17",
+          "saved_value": 24,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$6,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "O17",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16,F17)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "P17",
+          "saved_value": 28,
+          "number_format": "0.0",
+          "formula": "=IFERROR(MIN(Inputs!$C$7,Inputs!$C$16)*Inputs!$C$28,\"\")"
+        },
+        {
+          "cell": "Q17",
+          "saved_value": 52,
+          "number_format": "0.0",
+          "formula": "=IFERROR(N17+P17,\"\")"
+        },
+        {
+          "cell": "R17",
+          "saved_value": 2.576923076923077,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T17<>\"OK\"),\"\",MAX(E17,C17*Inputs!$C$24/O17,(C17+D17)*Inputs!$C$24/Q17)),\"\")"
+        },
+        {
+          "cell": "S17",
+          "saved_value": 15,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",T17<>\"OK\",I16=\"\"),\"\",I16+G17),\"\")"
+        },
+        {
+          "cell": "T17",
+          "saved_value": "OK",
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(COUNT(C17:G17)<>5,C17<0,D17<0,E17<0,F17<1,F17<>INT(F17),G17<0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "B20",
+          "saved_value": "BASE TOTAL",
+          "number_format": "General",
+          "input_or_text": "BASE TOTAL"
+        },
+        {
+          "cell": "C20",
+          "saved_value": 476,
+          "number_format": "0.0",
+          "formula": "=IFERROR(SUM(C9:C17),\"\")"
+        },
+        {
+          "cell": "D20",
+          "saved_value": 352,
+          "number_format": "0.0",
+          "formula": "=IFERROR(SUM(D9:D17),\"\")"
+        },
+        {
+          "cell": "G20",
+          "saved_value": 0,
+          "number_format": "0.0",
+          "formula": "=IFERROR(SUM(G9:G17),\"\")"
+        },
+        {
+          "cell": "H20",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(SUM(H9:H17),\"\")"
+        },
+        {
+          "cell": "I20",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(OR(Inputs!C32<>\"OK\",COUNT(I9:I17)<>9),\"\",I17),\"\")"
+        },
+        {
+          "cell": "J20",
+          "saved_value": null,
+          "number_format": "dd mmm yyyy",
+          "formula": "=IFERROR(IF(OR(I20=\"\",Inputs!$C$19=\"\"),\"\",Inputs!$C$19+ROUNDUP(I20*Inputs!$C$25,0)-1),\"\")"
+        },
+        {
+          "cell": "A22",
+          "saved_value": "Work is not the same as staffed time. Default estimates total 828 accepted-work hours; nominal staffing includes mentoring, learning, coordination and capacity that cannot always be used on the critical path.",
+          "number_format": "General",
+          "input_or_text": "Work is not the same as staffed time. Default estimates total 828 accepted-work hours; nominal staffing includes mentoring, learning, coordination and capacity that cannot always be used on the critical path."
+        },
+        {
+          "cell": "A25",
+          "saved_value": "Phase duration = round up the largest of: minimum weeks, expert-only work / expert lead capacity, or all work / combined capacity. Waits are then added. Expert capacity can cover support work without being counted twice.",
+          "number_format": "General",
+          "input_or_text": "Phase duration = round up the largest of: minimum weeks, expert-only work / expert lead capacity, or all work / combined capacity. Waits are then added. Expert capacity can cover support work without being counted twice."
+        },
+        {
+          "cell": "A28",
+          "saved_value": "Forecast is not a test result. The target design is separate from an actual AAOS SDV runtime port. Production use and independent assurance are not included.",
+          "number_format": "General",
+          "input_or_text": "Forecast is not a test result. The target design is separate from an actual AAOS SDV runtime port. Production use and independent assurance are not included."
+        }
+      ]
+    },
+    {
+      "name": "Scenarios",
+      "state": "visible",
+      "merged_ranges": [
+        "A5:I6",
+        "A18:I19",
+        "A17:I17",
+        "A1:I2",
+        "A21:I22",
+        "A3:I3",
+        "A24:I25"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Compare teams | same pilot scope",
+          "number_format": "General",
+          "input_or_text": "Compare teams | same pilot scope"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "The scope and work estimates stay the same. Scenarios use all other current Inputs and Plan assumptions.",
+          "number_format": "General",
+          "input_or_text": "The scope and work estimates stay the same. Scenarios use all other current Inputs and Plan assumptions."
+        },
+        {
+          "cell": "A5",
+          "saved_value": "The first row follows Inputs. Other rows are editable examples, not staffing recommendations. A larger junior team can increase the senior mentoring load and delay expert-critical work.",
+          "number_format": "General",
+          "input_or_text": "The first row follows Inputs. Other rows are editable examples, not staffing recommendations. A larger junior team can increase the senior mentoring load and delay expert-critical work."
+        },
+        {
+          "cell": "A8",
+          "saved_value": "Scenario",
+          "number_format": "General",
+          "input_or_text": "Scenario"
+        },
+        {
+          "cell": "B8",
+          "saved_value": "Experienced",
+          "number_format": "General",
+          "input_or_text": "Experienced"
+        },
+        {
+          "cell": "C8",
+          "saved_value": "Junior",
+          "number_format": "General",
+          "input_or_text": "Junior"
+        },
+        {
+          "cell": "D8",
+          "saved_value": "Total",
+          "number_format": "General",
+          "input_or_text": "Total"
+        },
+        {
+          "cell": "E8",
+          "saved_value": "Demo\nweek",
+          "number_format": "General",
+          "input_or_text": "Demo\nweek"
+        },
+        {
+          "cell": "F8",
+          "saved_value": "Full pilot\nweek",
+          "number_format": "General",
+          "input_or_text": "Full pilot\nweek"
+        },
+        {
+          "cell": "G8",
+          "saved_value": "With reserve\nweek",
+          "number_format": "General",
+          "input_or_text": "With reserve\nweek"
+        },
+        {
+          "cell": "H8",
+          "saved_value": "Nominal\nallocated hours",
+          "number_format": "General",
+          "input_or_text": "Nominal\nallocated hours"
+        },
+        {
+          "cell": "I8",
+          "saved_value": "Interpretation",
+          "number_format": "General",
+          "input_or_text": "Interpretation"
+        },
+        {
+          "cell": "A9",
+          "saved_value": "Current inputs",
+          "number_format": "General",
+          "input_or_text": "Current inputs"
+        },
+        {
+          "cell": "B9",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(Inputs!C7,\"\")"
+        },
+        {
+          "cell": "C9",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(Inputs!C6,\"\")"
+        },
+        {
+          "cell": "D9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(B9+C9,\"\")"
+        },
+        {
+          "cell": "E9",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",SUM(O9:S9)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F9",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",SUM(O9:W9)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G9",
+          "saved_value": 20,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F9=\"\",\"\",F9+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H9",
+          "saved_value": 1440,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F9=\"\",\"\",F9*Inputs!$C$8*(B9*Inputs!$C$9+C9*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I9",
+          "saved_value": "Live forecast for the selected team.",
+          "number_format": "General",
+          "input_or_text": "Live forecast for the selected team."
+        },
+        {
+          "cell": "J9",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B9<1,B9<>INT(B9),C9<0,C9<>INT(C9),K9<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K9",
+          "saved_value": 28,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B9*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C9*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L9",
+          "saved_value": 28,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B9>0,K9/B9,0),\"\")"
+        },
+        {
+          "cell": "M9",
+          "saved_value": 24,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C9,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N9",
+          "saved_value": 12,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C9,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$9)*L9),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+N9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$10)*L9),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q9",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$11)*L9),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R9",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$12)*L9),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$13)*L9),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$14)*L9),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U9",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$15)*L9),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V9",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$16)*L9),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W9",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J9<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B9,Inputs!$C$16,Plan!$F$17)*L9),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B9,Inputs!$C$16)*L9+M9))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A10",
+          "saved_value": "2 developers",
+          "number_format": "General",
+          "formula": "=IFERROR(D10&\" developers\",\"\")"
+        },
+        {
+          "cell": "B10",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1
+        },
+        {
+          "cell": "C10",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1
+        },
+        {
+          "cell": "D10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(B10+C10,\"\")"
+        },
+        {
+          "cell": "E10",
+          "saved_value": 8,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",SUM(O10:S10)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F10",
+          "saved_value": 18,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",SUM(O10:W10)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G10",
+          "saved_value": 20,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F10=\"\",\"\",F10+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H10",
+          "saved_value": 1440,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F10=\"\",\"\",F10*Inputs!$C$8*(B10*Inputs!$C$9+C10*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I10",
+          "saved_value": "Editable comparison; role mix is shown in columns B-C.",
+          "number_format": "General",
+          "input_or_text": "Editable comparison; role mix is shown in columns B-C."
+        },
+        {
+          "cell": "J10",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B10<1,B10<>INT(B10),C10<0,C10<>INT(C10),K10<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K10",
+          "saved_value": 28,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B10*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C10*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L10",
+          "saved_value": 28,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B10>0,K10/B10,0),\"\")"
+        },
+        {
+          "cell": "M10",
+          "saved_value": 24,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C10,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N10",
+          "saved_value": 12,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C10,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$9)*L10),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+N10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$10)*L10),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q10",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$11)*L10),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R10",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$12)*L10),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$13)*L10),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$14)*L10),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U10",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$15)*L10),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V10",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$16)*L10),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W10",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J10<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B10,Inputs!$C$16,Plan!$F$17)*L10),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B10,Inputs!$C$16)*L10+M10))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A11",
+          "saved_value": "3 developers",
+          "number_format": "General",
+          "formula": "=IFERROR(D11&\" developers\",\"\")"
+        },
+        {
+          "cell": "B11",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2
+        },
+        {
+          "cell": "C11",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1
+        },
+        {
+          "cell": "D11",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(B11+C11,\"\")"
+        },
+        {
+          "cell": "E11",
+          "saved_value": 7,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",SUM(O11:S11)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F11",
+          "saved_value": 14.5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",SUM(O11:W11)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G11",
+          "saved_value": 16.5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F11=\"\",\"\",F11+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H11",
+          "saved_value": 1740,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F11=\"\",\"\",F11*Inputs!$C$8*(B11*Inputs!$C$9+C11*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I11",
+          "saved_value": "Expert lead capacity and support work both constrain the forecast.",
+          "number_format": "General",
+          "input_or_text": "Expert lead capacity and support work both constrain the forecast."
+        },
+        {
+          "cell": "J11",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B11<1,B11<>INT(B11),C11<0,C11<>INT(C11),K11<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K11",
+          "saved_value": 62,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B11*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C11*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L11",
+          "saved_value": 31,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B11>0,K11/B11,0),\"\")"
+        },
+        {
+          "cell": "M11",
+          "saved_value": 24,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C11,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N11",
+          "saved_value": 12,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C11,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O11",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$9)*L11),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+N11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P11",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$10)*L11),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q11",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$11)*L11),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R11",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$12)*L11),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S11",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$13)*L11),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T11",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$14)*L11),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U11",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$15)*L11),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V11",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$16)*L11),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W11",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J11<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B11,Inputs!$C$16,Plan!$F$17)*L11),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B11,Inputs!$C$16)*L11+M11))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A12",
+          "saved_value": "4 developers",
+          "number_format": "General",
+          "formula": "=IFERROR(D12&\" developers\",\"\")"
+        },
+        {
+          "cell": "B12",
+          "saved_value": 3,
+          "number_format": "General",
+          "input_or_text": 3
+        },
+        {
+          "cell": "C12",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1
+        },
+        {
+          "cell": "D12",
+          "saved_value": 4,
+          "number_format": "General",
+          "formula": "=IFERROR(B12+C12,\"\")"
+        },
+        {
+          "cell": "E12",
+          "saved_value": 7,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",SUM(O12:S12)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F12",
+          "saved_value": 14,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",SUM(O12:W12)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G12",
+          "saved_value": 16,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F12=\"\",\"\",F12+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H12",
+          "saved_value": 2240,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F12=\"\",\"\",F12*Inputs!$C$8*(B12*Inputs!$C$9+C12*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I12",
+          "saved_value": "Phase caps and gate time limit further acceleration.",
+          "number_format": "General",
+          "input_or_text": "Phase caps and gate time limit further acceleration."
+        },
+        {
+          "cell": "J12",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B12<1,B12<>INT(B12),C12<0,C12<>INT(C12),K12<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K12",
+          "saved_value": 96,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B12*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C12*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L12",
+          "saved_value": 32,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B12>0,K12/B12,0),\"\")"
+        },
+        {
+          "cell": "M12",
+          "saved_value": 24,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C12,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N12",
+          "saved_value": 12,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C12,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O12",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$9)*L12),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+N12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P12",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$10)*L12),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q12",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$11)*L12),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R12",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$12)*L12),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S12",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$13)*L12),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T12",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$14)*L12),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U12",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$15)*L12),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V12",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$16)*L12),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W12",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J12<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B12,Inputs!$C$16,Plan!$F$17)*L12),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B12,Inputs!$C$16)*L12+M12))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A13",
+          "saved_value": "2 developers",
+          "number_format": "General",
+          "formula": "=IFERROR(D13&\" developers\",\"\")"
+        },
+        {
+          "cell": "B13",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2
+        },
+        {
+          "cell": "C13",
+          "saved_value": 0,
+          "number_format": "General",
+          "input_or_text": 0
+        },
+        {
+          "cell": "D13",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(B13+C13,\"\")"
+        },
+        {
+          "cell": "E13",
+          "saved_value": 7.5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",SUM(O13:S13)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F13",
+          "saved_value": 15,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",SUM(O13:W13)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G13",
+          "saved_value": 17,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F13=\"\",\"\",F13+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H13",
+          "saved_value": 1200,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F13=\"\",\"\",F13*Inputs!$C$8*(B13*Inputs!$C$9+C13*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I13",
+          "saved_value": "Experienced staff also cover the support workload.",
+          "number_format": "General",
+          "input_or_text": "Experienced staff also cover the support workload."
+        },
+        {
+          "cell": "J13",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B13<1,B13<>INT(B13),C13<0,C13<>INT(C13),K13<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K13",
+          "saved_value": 68,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B13*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C13*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L13",
+          "saved_value": 34,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B13>0,K13/B13,0),\"\")"
+        },
+        {
+          "cell": "M13",
+          "saved_value": 0,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C13,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N13",
+          "saved_value": 0,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C13,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O13",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$9)*L13),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+N13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P13",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$10)*L13),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q13",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$11)*L13),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R13",
+          "saved_value": 1,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$12)*L13),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S13",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$13)*L13),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T13",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$14)*L13),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U13",
+          "saved_value": 2.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$15)*L13),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V13",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$16)*L13),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W13",
+          "saved_value": 2,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J13<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B13,Inputs!$C$16,Plan!$F$17)*L13),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B13,Inputs!$C$16)*L13+M13))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A14",
+          "saved_value": "3 developers",
+          "number_format": "General",
+          "formula": "=IFERROR(D14&\" developers\",\"\")"
+        },
+        {
+          "cell": "B14",
+          "saved_value": 1,
+          "number_format": "General",
+          "input_or_text": 1
+        },
+        {
+          "cell": "C14",
+          "saved_value": 2,
+          "number_format": "General",
+          "input_or_text": 2
+        },
+        {
+          "cell": "D14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(B14+C14,\"\")"
+        },
+        {
+          "cell": "E14",
+          "saved_value": 12,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",SUM(O14:S14)+SUM(Plan!$G$9:$G$13)),\"\")"
+        },
+        {
+          "cell": "F14",
+          "saved_value": 24.5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",SUM(O14:W14)+SUM(Plan!$G$9:$G$17)),\"\")"
+        },
+        {
+          "cell": "G14",
+          "saved_value": 26.5,
+          "number_format": "0.0",
+          "formula": "=IFERROR(IF(F14=\"\",\"\",F14+Inputs!$C$22),\"\")"
+        },
+        {
+          "cell": "H14",
+          "saved_value": 2940,
+          "number_format": "#,##0",
+          "formula": "=IFERROR(IF(F14=\"\",\"\",F14*Inputs!$C$8*(B14*Inputs!$C$9+C14*Inputs!$C$10)),\"\")"
+        },
+        {
+          "cell": "I14",
+          "saved_value": "More juniors may slow expert-critical work under the stated mentoring assumptions.",
+          "number_format": "General",
+          "input_or_text": "More juniors may slow expert-critical work under the stated mentoring assumptions."
+        },
+        {
+          "cell": "J14",
+          "saved_value": "OK",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(Inputs!$C$32<>\"OK\",B14<1,B14<>INT(B14),C14<0,C14<>INT(C14),K14<=0,COUNTIF(Plan!$T$9:$T$17,\"BLOCKED\")>0),\"BLOCKED\",\"OK\"),\"BLOCKED\")"
+        },
+        {
+          "cell": "K14",
+          "saved_value": 22,
+          "number_format": "General",
+          "formula": "=IFERROR(MAX(0,B14*Inputs!$C$8*Inputs!$C$9*Inputs!$C$12-C14*Inputs!$C$10*Inputs!$C$15),\"\")"
+        },
+        {
+          "cell": "L14",
+          "saved_value": 22,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(B14>0,K14/B14,0),\"\")"
+        },
+        {
+          "cell": "M14",
+          "saved_value": 48,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C14,Inputs!$C$17)*Inputs!$C$29,\"\")"
+        },
+        {
+          "cell": "N14",
+          "saved_value": 24,
+          "number_format": "General",
+          "formula": "=IFERROR(MIN(C14,Inputs!$C$17)*Inputs!$C$30,\"\")"
+        },
+        {
+          "cell": "O14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$9,Plan!$C$9*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$9)*L14),(Plan!$C$9+Plan!$D$9)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+N14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "P14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$10,Plan!$C$10*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$10)*L14),(Plan!$C$10+Plan!$D$10)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "Q14",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$11,Plan!$C$11*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$11)*L14),(Plan!$C$11+Plan!$D$11)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "R14",
+          "saved_value": 1.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$12,Plan!$C$12*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$12)*L14),(Plan!$C$12+Plan!$D$12)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "S14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$13,Plan!$C$13*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$13)*L14),(Plan!$C$13+Plan!$D$13)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "T14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$14,Plan!$C$14*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$14)*L14),(Plan!$C$14+Plan!$D$14)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "U14",
+          "saved_value": 4,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$15,Plan!$C$15*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$15)*L14),(Plan!$C$15+Plan!$D$15)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "V14",
+          "saved_value": 2.5,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$16,Plan!$C$16*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$16)*L14),(Plan!$C$16+Plan!$D$16)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "W14",
+          "saved_value": 3,
+          "number_format": "General",
+          "formula": "=IFERROR(IF(J14<>\"OK\",\"\",ROUNDUP(MAX(Plan!$E$17,Plan!$C$17*Inputs!$C$24/(MIN(B14,Inputs!$C$16,Plan!$F$17)*L14),(Plan!$C$17+Plan!$D$17)*Inputs!$C$24/(MIN(B14,Inputs!$C$16)*L14+M14))/Inputs!$C$23,0)*Inputs!$C$23),\"\")"
+        },
+        {
+          "cell": "A17",
+          "saved_value": "HOW TO READ THE COMPARISON",
+          "number_format": "General",
+          "input_or_text": "HOW TO READ THE COMPARISON"
+        },
+        {
+          "cell": "A18",
+          "saved_value": "A staffing comparison, not a hiring recommendation. Additional people do not remove test gates or prove business value. All experienced contributors must have the required skills.",
+          "number_format": "General",
+          "input_or_text": "A staffing comparison, not a hiring recommendation. Additional people do not remove test gates or prove business value. All experienced contributors must have the required skills."
+        },
+        {
+          "cell": "A21",
+          "saved_value": "To model 2 -> 3 developers in the active plan: set Inputs!C5 to 3 and leave Inputs!C6 at 1. To add a junior instead, set both total developers and junior count. Review the role mix, not only the total.",
+          "number_format": "General",
+          "input_or_text": "To model 2 -> 3 developers in the active plan: set Inputs!C5 to 3 and leave Inputs!C6 at 1. To add a junior instead, set both total developers and junior count. Review the role mix, not only the total."
+        },
+        {
+          "cell": "A24",
+          "saved_value": "The model applies one team from the planning start. It does not model mid-project joining dates or actual progress. For an in-flight reforecast, save a baseline copy and review remaining work and capacity with the senior lead.",
+          "number_format": "General",
+          "input_or_text": "The model applies one team from the planning start. It does not model mid-project joining dates or actual progress. For an in-flight reforecast, save a baseline copy and review remaining work and capacity with the senior lead."
+        }
+      ]
+    },
+    {
+      "name": "Business Case",
+      "state": "visible",
+      "merged_ranges": [
+        "E12:F12",
+        "E33:F33",
+        "E5:F5",
+        "A3:F3",
+        "E17:F17",
+        "E8:F8",
+        "E35:F35",
+        "A37:F39",
+        "E29:F29",
+        "E10:F10",
+        "A14:F14",
+        "E19:F19",
+        "A1:F2",
+        "E28:F28",
+        "A4:F4",
+        "E9:F9",
+        "E31:F31",
+        "E34:F34",
+        "A41:F42",
+        "E6:F6",
+        "E30:F30",
+        "E11:F11",
+        "E27:F27",
+        "E26:F26",
+        "A24:F24",
+        "E16:F16",
+        "E7:F7",
+        "E25:F25",
+        "A21:F22",
+        "E18:F18"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Business case | cost and value",
+          "number_format": "General",
+          "input_or_text": "Business case | cost and value"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "Optional inputs. Blank means not quantified, not free. Costs and savings are forecasts, not approval or realized results.",
+          "number_format": "General",
+          "input_or_text": "Optional inputs. Blank means not quantified, not free. Costs and savings are forecasts, not approval or realized results."
+        },
+        {
+          "cell": "A4",
+          "saved_value": "1  FUNDING ENVELOPE - ENTER APPROVED RATES AND COST ASSUMPTIONS",
+          "number_format": "General",
+          "input_or_text": "1  FUNDING ENVELOPE - ENTER APPROVED RATES AND COST ASSUMPTIONS"
+        },
+        {
+          "cell": "A5",
+          "saved_value": "Currency / unit",
+          "number_format": "General",
+          "input_or_text": "Currency / unit"
+        },
+        {
+          "cell": "E5",
+          "saved_value": "Use the same currency for every monetary input. No automatic currency conversion.",
+          "number_format": "General",
+          "input_or_text": "Use the same currency for every monetary input. No automatic currency conversion."
+        },
+        {
+          "cell": "A6",
+          "saved_value": "Experienced cost / allocated hour",
+          "number_format": "General",
+          "input_or_text": "Experienced cost / allocated hour"
+        },
+        {
+          "cell": "E6",
+          "saved_value": "Fully loaded internal rate or agreed billing rate. Include the cost basis.",
+          "number_format": "General",
+          "input_or_text": "Fully loaded internal rate or agreed billing rate. Include the cost basis."
+        },
+        {
+          "cell": "A7",
+          "saved_value": "Junior cost / allocated hour",
+          "number_format": "General",
+          "input_or_text": "Junior cost / allocated hour"
+        },
+        {
+          "cell": "E7",
+          "saved_value": "Enter 0 only if no juniors are allocated; otherwise use the approved rate.",
+          "number_format": "General",
+          "input_or_text": "Enter 0 only if no juniors are allocated; otherwise use the approved rate."
+        },
+        {
+          "cell": "A8",
+          "saved_value": "Recovery non-labour cap",
+          "number_format": "General",
+          "input_or_text": "Recovery non-labour cap"
+        },
+        {
+          "cell": "E8",
+          "saved_value": "Includes recovery infrastructure, access or authorized outside support. Enter 0 explicitly if none.",
+          "number_format": "General",
+          "input_or_text": "Includes recovery infrastructure, access or authorized outside support. Enter 0 explicitly if none."
+        },
+        {
+          "cell": "A9",
+          "saved_value": "Full-pilot non-labour cap",
+          "number_format": "General",
+          "input_or_text": "Full-pilot non-labour cap"
+        },
+        {
+          "cell": "E9",
+          "saved_value": "Includes the recovery non-labour amount; do not add recovery twice.",
+          "number_format": "General",
+          "input_or_text": "Includes the recovery non-labour amount; do not add recovery twice."
+        },
+        {
+          "cell": "A10",
+          "saved_value": "Reserve non-labour cap",
+          "number_format": "General",
+          "input_or_text": "Reserve non-labour cap"
+        },
+        {
+          "cell": "E10",
+          "saved_value": "Additional cost only if reserve is released. It is not automatically authorized.",
+          "number_format": "General",
+          "input_or_text": "Additional cost only if reserve is released. It is not automatically authorized."
+        },
+        {
+          "cell": "A11",
+          "saved_value": "Budget input check",
+          "number_format": "General",
+          "input_or_text": "Budget input check"
+        },
+        {
+          "cell": "C11",
+          "saved_value": "NOT SET",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(C5=\"\",COUNT(C6:C10)<>5),\"NOT SET\",IF(OR(C6<=0,C7<0,AND(Inputs!C6>0,C7<=0),MIN(C8:C10)<0,C9<C8),\"INVALID\",\"SET\")),\"INVALID\")"
+        },
+        {
+          "cell": "E11",
+          "saved_value": "Not SET? Complete or correct the blue fields; schedule calculations remain independent.",
+          "number_format": "General",
+          "input_or_text": "Not SET? Complete or correct the blue fields; schedule calculations remain independent."
+        },
+        {
+          "cell": "A12",
+          "saved_value": "Allocated labour cost / week",
+          "number_format": "General",
+          "input_or_text": "Allocated labour cost / week"
+        },
+        {
+          "cell": "C12",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(OR(C11<>\"SET\",Inputs!C32<>\"OK\"),\"\",Inputs!C8*(Inputs!C7*Inputs!C9*C6+Inputs!C6*Inputs!C10*C7)),\"\")"
+        },
+        {
+          "cell": "E12",
+          "saved_value": "Uses all allocated hours, including mentoring/support; not just accepted-work capacity.",
+          "number_format": "General",
+          "input_or_text": "Uses all allocated hours, including mentoring/support; not just accepted-work capacity."
+        },
+        {
+          "cell": "A14",
+          "saved_value": "CALCULATED COST - CURRENT TEAM AND FORECAST",
+          "number_format": "General",
+          "input_or_text": "CALCULATED COST - CURRENT TEAM AND FORECAST"
+        },
+        {
+          "cell": "A16",
+          "saved_value": "Recovery phase",
+          "number_format": "General",
+          "input_or_text": "Recovery phase"
+        },
+        {
+          "cell": "C16",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(C12)),Plan!I20=\"\"),\"\",Plan!I9*C12+C8),\"\")"
+        },
+        {
+          "cell": "E16",
+          "saved_value": "The immediate approval tranche, including any pre-phase waits entered in Plan.",
+          "number_format": "General",
+          "input_or_text": "The immediate approval tranche, including any pre-phase waits entered in Plan."
+        },
+        {
+          "cell": "A17",
+          "saved_value": "Full pilot, excluding reserve",
+          "number_format": "General",
+          "input_or_text": "Full pilot, excluding reserve"
+        },
+        {
+          "cell": "C17",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(C12)),Plan!I20=\"\"),\"\",Plan!I17*C12+C9),\"\")"
+        },
+        {
+          "cell": "E17",
+          "saved_value": "Includes recovery. Assumes the team remains allocated through all phases and waits.",
+          "number_format": "General",
+          "input_or_text": "Includes recovery. Assumes the team remains allocated through all phases and waits."
+        },
+        {
+          "cell": "A18",
+          "saved_value": "Additional reserve",
+          "number_format": "General",
+          "input_or_text": "Additional reserve"
+        },
+        {
+          "cell": "C18",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(OR(NOT(ISNUMBER(C12)),Plan!I20=\"\"),\"\",Inputs!C22*C12+C10),\"\")"
+        },
+        {
+          "cell": "E18",
+          "saved_value": "Only for sponsor-approved delays or acceptance defects; not additional features.",
+          "number_format": "General",
+          "input_or_text": "Only for sponsor-approved delays or acceptance defects; not additional features."
+        },
+        {
+          "cell": "A19",
+          "saved_value": "Maximum planning envelope",
+          "number_format": "General",
+          "input_or_text": "Maximum planning envelope"
+        },
+        {
+          "cell": "C19",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(COUNT(C17:C18)<>2,\"\",SUM(C17:C18)),\"\")"
+        },
+        {
+          "cell": "E19",
+          "saved_value": "Full pilot plus reserve. This is a planning ceiling, not a purchase authorization.",
+          "number_format": "General",
+          "input_or_text": "Full pilot plus reserve. This is a planning ceiling, not a purchase authorization."
+        },
+        {
+          "cell": "A21",
+          "saved_value": "Cost forecasts assume constant rates and the selected team from the planning start. No hidden implementer is included. Any external review or equipment must be priced explicitly. Monetary payback is not calculated from unpriced effort savings.",
+          "number_format": "General",
+          "input_or_text": "Cost forecasts assume constant rates and the selected team from the planning start. No hidden implementer is included. Any external review or equipment must be priced explicitly. Monetary payback is not calculated from unpriced effort savings."
+        },
+        {
+          "cell": "A24",
+          "saved_value": "2  REUSE VALUE - COMPARABLE EFFORT, SAME SCOPE AND QUALITY",
+          "number_format": "General",
+          "input_or_text": "2  REUSE VALUE - COMPARABLE EFFORT, SAME SCOPE AND QUALITY"
+        },
+        {
+          "cell": "A25",
+          "saved_value": "One later integration without reuse (h)",
+          "number_format": "General",
+          "input_or_text": "One later integration without reuse (h)"
+        },
+        {
+          "cell": "E25",
+          "saved_value": "Include implementation, review, integration and tests for the agreed scope.",
+          "number_format": "General",
+          "input_or_text": "Include implementation, review, integration and tests for the agreed scope."
+        },
+        {
+          "cell": "A26",
+          "saved_value": "One later integration with reuse (h)",
+          "number_format": "General",
+          "input_or_text": "One later integration with reuse (h)"
+        },
+        {
+          "cell": "E26",
+          "saved_value": "Use the same accounting and quality obligations as the no-reuse baseline.",
+          "number_format": "General",
+          "input_or_text": "Use the same accounting and quality obligations as the no-reuse baseline."
+        },
+        {
+          "cell": "A27",
+          "saved_value": "Extra one-time reuse investment (h)",
+          "number_format": "General",
+          "input_or_text": "Extra one-time reuse investment (h)"
+        },
+        {
+          "cell": "E27",
+          "saved_value": "Only the incremental work versus the one-off approach; not all project hours.",
+          "number_format": "General",
+          "input_or_text": "Only the incremental work versus the one-off approach; not all project hours."
+        },
+        {
+          "cell": "A28",
+          "saved_value": "Additional maintenance in period (h)",
+          "number_format": "General",
+          "input_or_text": "Additional maintenance in period (h)"
+        },
+        {
+          "cell": "E28",
+          "saved_value": "Total added maintenance across the defined comparison period, not per integration.",
+          "number_format": "General",
+          "input_or_text": "Total added maintenance across the defined comparison period, not per integration."
+        },
+        {
+          "cell": "A29",
+          "saved_value": "Expected later integrations (count)",
+          "number_format": "General",
+          "input_or_text": "Expected later integrations (count)"
+        },
+        {
+          "cell": "E29",
+          "saved_value": "Whole number, excluding the initial pilot. This is an assumption about adoption.",
+          "number_format": "General",
+          "input_or_text": "Whole number, excluding the initial pilot. This is an assumption about adoption."
+        },
+        {
+          "cell": "A30",
+          "saved_value": "Evidence / comparison period",
+          "number_format": "General",
+          "input_or_text": "Evidence / comparison period"
+        },
+        {
+          "cell": "E30",
+          "saved_value": "Record source estimates or measured work, scope, period and reviewer. Never label forecasts as realized savings.",
+          "number_format": "General",
+          "input_or_text": "Record source estimates or measured work, scope, period and reviewer. Never label forecasts as realized savings."
+        },
+        {
+          "cell": "A31",
+          "saved_value": "Value input check",
+          "number_format": "General",
+          "input_or_text": "Value input check"
+        },
+        {
+          "cell": "C31",
+          "saved_value": "NOT QUANTIFIED",
+          "number_format": "General",
+          "formula": "=IFERROR(IF(OR(COUNT(C25:C29)<>5,C30=\"\"),\"NOT QUANTIFIED\",IF(OR(C25<=0,MIN(C26:C29)<0,C29<>INT(C29)),\"INVALID\",\"SET\")),\"INVALID\")"
+        },
+        {
+          "cell": "E31",
+          "saved_value": "Complete all inputs and the evidence/period note before using the value forecast.",
+          "number_format": "General",
+          "input_or_text": "Complete all inputs and the evidence/period note before using the value forecast."
+        },
+        {
+          "cell": "A33",
+          "saved_value": "Time saved per later integration (h)",
+          "number_format": "General",
+          "input_or_text": "Time saved per later integration (h)"
+        },
+        {
+          "cell": "C33",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(C31<>\"SET\",\"\",C25-C26),\"\")"
+        },
+        {
+          "cell": "E33",
+          "saved_value": "A zero/negative result gives no positive effort-saving case.",
+          "number_format": "General",
+          "input_or_text": "A zero/negative result gives no positive effort-saving case."
+        },
+        {
+          "cell": "A34",
+          "saved_value": "Break-even later integrations",
+          "number_format": "General",
+          "input_or_text": "Break-even later integrations"
+        },
+        {
+          "cell": "C34",
+          "saved_value": null,
+          "number_format": "0",
+          "formula": "=IFERROR(IF(C31<>\"SET\",\"\",IF(C33<=0,\"NO PAYBACK\",ROUNDUP((C27+C28)/C33,0))),\"\")"
+        },
+        {
+          "cell": "E34",
+          "saved_value": "Includes extra setup and maintenance. Assumes the same saving for each later integration.",
+          "number_format": "General",
+          "input_or_text": "Includes extra setup and maintenance. Assumes the same saving for each later integration."
+        },
+        {
+          "cell": "A35",
+          "saved_value": "Forecast net effort saved (h)",
+          "number_format": "General",
+          "input_or_text": "Forecast net effort saved (h)"
+        },
+        {
+          "cell": "C35",
+          "saved_value": null,
+          "number_format": "#,##0.00;[Red](#,##0.00);\"-\"",
+          "formula": "=IFERROR(IF(C31<>\"SET\",\"\",C29*C33-C27-C28),\"\")"
+        },
+        {
+          "cell": "E35",
+          "saved_value": "Positive = fewer hours under these assumptions. Negative = extra effort; neither is realized cash.",
+          "number_format": "General",
+          "input_or_text": "Positive = fewer hours under these assumptions. Negative = extra effort; neither is realized cash."
+        },
+        {
+          "cell": "A37",
+          "saved_value": "Illustration only (not the live inputs): 80 h without reuse; 40 h with reuse; 160 h extra setup; 40 h added maintenance. Break-even is 5 later integrations. The pilot itself does not prove those values. Compare like-for-like effort; do not mix delivery-capacity hours with nominal staffed hours.",
+          "number_format": "General",
+          "input_or_text": "Illustration only (not the live inputs): 80 h without reuse; 40 h with reuse; 160 h extra setup; 40 h added maintenance. Break-even is 5 later integrations. The pilot itself does not prove those values. Compare like-for-like effort; do not mix delivery-capacity hours with nominal staffed hours."
+        },
+        {
+          "cell": "A41",
+          "saved_value": "Source: prior DAR and dynamic plan for scope/capacity; user-entered rates and comparable effort for cost/value. New business-case formulas are proposed management checks, not measured outcomes. Use SDV_Vehicle_Status_Approval_Report_EN.md / .docx for the approval narrative.",
+          "number_format": "General",
+          "input_or_text": "Source: prior DAR and dynamic plan for scope/capacity; user-entered rates and comparable effort for cost/value. New business-case formulas are proposed management checks, not measured outcomes. Use SDV_Vehicle_Status_Approval_Report_EN.md / .docx for the approval narrative."
+        }
+      ]
+    },
+    {
+      "name": "Guide",
+      "state": "visible",
+      "merged_ranges": [
+        "A41:F41",
+        "B34:F35",
+        "B10:F11",
+        "B44:F45",
+        "B6:F7",
+        "A3:F3",
+        "B24:F25",
+        "B36:F37",
+        "A5:F5",
+        "B20:F21",
+        "A1:F2",
+        "A17:F17",
+        "B32:F33",
+        "B30:F31",
+        "A29:F29",
+        "B22:F23",
+        "B26:F27",
+        "B18:F19",
+        "B12:F13",
+        "B8:F9",
+        "B46:F47",
+        "B42:F43",
+        "B38:F39",
+        "B14:F15",
+        "B48:F49"
+      ],
+      "cells": [
+        {
+          "cell": "A1",
+          "saved_value": "Read me | model and sources",
+          "number_format": "General",
+          "input_or_text": "Read me | model and sources"
+        },
+        {
+          "cell": "A3",
+          "saved_value": "The workbook is the single source for changing resources, forecast dates and the management report.",
+          "number_format": "General",
+          "input_or_text": "The workbook is the single source for changing resources, forecast dates and the management report."
+        },
+        {
+          "cell": "A5",
+          "saved_value": "USE THE WORKBOOK",
+          "number_format": "General",
+          "input_or_text": "USE THE WORKBOOK"
+        },
+        {
+          "cell": "A6",
+          "saved_value": "Change the team",
+          "number_format": "General",
+          "input_or_text": "Change the team"
+        },
+        {
+          "cell": "B6",
+          "saved_value": "Inputs!C5 = total developers; C6 = juniors. Experienced count is calculated. Example: 3 total and 1 junior means 2 experienced developers.",
+          "number_format": "General",
+          "input_or_text": "Inputs!C5 = total developers; C6 = juniors. Experienced count is calculated. Example: 3 total and 1 junior means 2 experienced developers."
+        },
+        {
+          "cell": "A8",
+          "saved_value": "Review capacity",
+          "number_format": "General",
+          "input_or_text": "Review capacity"
+        },
+        {
+          "cell": "B8",
+          "saved_value": "Check allocation, accepted-work rates and mentoring. Defaults reproduce the v1.0 assumptions: 28 experienced hours/week; junior 12 in recovery and 24 after recovery.",
+          "number_format": "General",
+          "input_or_text": "Check allocation, accepted-work rates and mentoring. Defaults reproduce the v1.0 assumptions: 28 experienced hours/week; junior 12 in recovery and 24 after recovery."
+        },
+        {
+          "cell": "A10",
+          "saved_value": "Review forecast",
+          "number_format": "General",
+          "input_or_text": "Review forecast"
+        },
+        {
+          "cell": "B10",
+          "saved_value": "Report shows milestones, schedule variance and allocated hours. Plan shows phase calculations. Scenarios compares role mixes without changing the active plan.",
+          "number_format": "General",
+          "input_or_text": "Report shows milestones, schedule variance and allocated hours. Plan shows phase calculations. Scenarios compares role mixes without changing the active plan."
+        },
+        {
+          "cell": "A12",
+          "saved_value": "Edit the estimate",
+          "number_format": "General",
+          "input_or_text": "Edit the estimate"
+        },
+        {
+          "cell": "B12",
+          "saved_value": "Plan blue cells change work, minimum duration, critical lead slots and waits. Inputs!C24 applies one work multiplier. Save a baseline copy before changing estimates.",
+          "number_format": "General",
+          "input_or_text": "Plan blue cells change work, minimum duration, critical lead slots and waits. Inputs!C24 applies one work multiplier. Save a baseline copy before changing estimates."
+        },
+        {
+          "cell": "A14",
+          "saved_value": "Share the report",
+          "number_format": "General",
+          "input_or_text": "Share the report"
+        },
+        {
+          "cell": "B14",
+          "saved_value": "Use Report with the companion approval report. Excel updates without macros. Word/Markdown explain the stable idea, examples, risks and approval criteria; they are not rewritten when inputs change.",
+          "number_format": "General",
+          "input_or_text": "Use Report with the companion approval report. Excel updates without macros. Word/Markdown explain the stable idea, examples, risks and approval criteria; they are not rewritten when inputs change."
+        },
+        {
+          "cell": "A17",
+          "saved_value": "WHAT THE MODEL DOES",
+          "number_format": "General",
+          "input_or_text": "WHAT THE MODEL DOES"
+        },
+        {
+          "cell": "A18",
+          "saved_value": "Capacity",
+          "number_format": "General",
+          "input_or_text": "Capacity"
+        },
+        {
+          "cell": "B18",
+          "saved_value": "Experienced pool = people x paid hours x allocation x usable-time rate minus allocated-junior mentoring. Split mentoring evenly across the experienced pool.",
+          "number_format": "General",
+          "input_or_text": "Experienced pool = people x paid hours x allocation x usable-time rate minus allocated-junior mentoring. Split mentoring evenly across the experienced pool."
+        },
+        {
+          "cell": "A20",
+          "saved_value": "Work assignment",
+          "number_format": "General",
+          "input_or_text": "Work assignment"
+        },
+        {
+          "cell": "B20",
+          "saved_value": "Expert-only work cannot be delegated to juniors. Support work may be done by juniors or spare experienced capacity; total work is counted once.",
+          "number_format": "General",
+          "input_or_text": "Expert-only work cannot be delegated to juniors. Support work may be done by juniors or spare experienced capacity; total work is counted once."
+        },
+        {
+          "cell": "A22",
+          "saved_value": "Duration",
+          "number_format": "General",
+          "input_or_text": "Duration"
+        },
+        {
+          "cell": "B22",
+          "saved_value": "For each phase, take MAX(minimum weeks, expert work / expert critical capacity, all work / combined capacity). Multiply work by the estimate factor and round up to the selected step.",
+          "number_format": "General",
+          "input_or_text": "For each phase, take MAX(minimum weeks, expert work / expert critical capacity, all work / combined capacity). Multiply work by the estimate factor and round up to the selected step."
+        },
+        {
+          "cell": "A24",
+          "saved_value": "Sequence and waits",
+          "number_format": "General",
+          "input_or_text": "Sequence and waits"
+        },
+        {
+          "cell": "B24",
+          "saved_value": "Phases are sequential. Roles may work together within a phase. Waiting weeks are added before that phase; the team is assumed allocated through waits and reserve.",
+          "number_format": "General",
+          "input_or_text": "Phases are sequential. Roles may work together within a phase. Waiting weeks are added before that phase; the team is assumed allocated through waits and reserve."
+        },
+        {
+          "cell": "A26",
+          "saved_value": "Scope and limits",
+          "number_format": "General",
+          "input_or_text": "Scope and limits"
+        },
+        {
+          "cell": "B26",
+          "saved_value": "No automatic initiative switch or test pass. No holiday calendar, individual join dates, actual-progress tracking, overtime or independent assurance. Leave start blank until agreed. Review parallel-work assumptions for larger teams.",
+          "number_format": "General",
+          "input_or_text": "No automatic initiative switch or test pass. No holiday calendar, individual join dates, actual-progress tracking, overtime or independent assurance. Leave start blank until agreed. Review parallel-work assumptions for larger teams."
+        },
+        {
+          "cell": "A29",
+          "saved_value": "TRACEABILITY AND APPROVAL",
+          "number_format": "General",
+          "input_or_text": "TRACEABILITY AND APPROVAL"
+        },
+        {
+          "cell": "A30",
+          "saved_value": "Planning source [P1]",
+          "number_format": "General",
+          "input_or_text": "Planning source [P1]"
+        },
+        {
+          "cell": "B30",
+          "saved_value": "SDV_Telematics_Vehicle_Status_AAOS_First_Plan_Revision_EN.md: AAOS-first baseline, core separation, mapping/cloud substitutions, S1-S6 and claim limits.",
+          "number_format": "General",
+          "input_or_text": "SDV_Telematics_Vehicle_Status_AAOS_First_Plan_Revision_EN.md: AAOS-first baseline, core separation, mapping/cloud substitutions, S1-S6 and claim limits."
+        },
+        {
+          "cell": "A32",
+          "saved_value": "Resource source [P2]",
+          "number_format": "General",
+          "input_or_text": "Resource source [P2]"
+        },
+        {
+          "cell": "B32",
+          "saved_value": "SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.md: sections 20 and 20B supply the capacity assumptions and 476 expert / 352 junior-work hours. Sections 2A-3A supply the Automotive alternatives.",
+          "number_format": "General",
+          "input_or_text": "SDV_Vehicle_Status_DAR_EN_v1_0_One_Senior_One_Junior.md: sections 20 and 20B supply the capacity assumptions and 476 expert / 352 junior-work hours. Sections 2A-3A supply the Automotive alternatives."
+        },
+        {
+          "cell": "A34",
+          "saved_value": "Model additions",
+          "number_format": "General",
+          "input_or_text": "Model additions"
+        },
+        {
+          "cell": "B34",
+          "saved_value": "Phase W5-W6 split equally for the Gate B checkpoint. Junior work becomes a shared-work pool. Phase floors, contributor caps, rounding, scenario staffing and wait controls are editable modeling assumptions, not measured facts.",
+          "number_format": "General",
+          "input_or_text": "Phase W5-W6 split equally for the Gate B checkpoint. Junior work becomes a shared-work pool. Phase floors, contributor caps, rounding, scenario staffing and wait controls are editable modeling assumptions, not measured facts."
+        },
+        {
+          "cell": "A36",
+          "saved_value": "Baseline reconciliation",
+          "number_format": "General",
+          "input_or_text": "Baseline reconciliation"
+        },
+        {
+          "cell": "B36",
+          "saved_value": "The original workload is preserved: 476 expert-only + 352 support hours. Default forecasts remain recovery W2, core W5, demo W8, full pilot W18 and reserve W20. Dates now remain blank until a start is entered.",
+          "number_format": "General",
+          "input_or_text": "The original workload is preserved: 476 expert-only + 352 support hours. Default forecasts remain recovery W2, core W5, demo W8, full pilot W18 and reserve W20. Dates now remain blank until a start is entered."
+        },
+        {
+          "cell": "A38",
+          "saved_value": "Approvals still needed",
+          "number_format": "General",
+          "input_or_text": "Approvals still needed"
+        },
+        {
+          "cell": "B38",
+          "saved_value": "Sponsor confirms objective, people, start, capacity and funding. Senior validates workload, skills, semantics, security and gate evidence. Re-estimate after recovery; record accepted deviations.",
+          "number_format": "General",
+          "input_or_text": "Sponsor confirms objective, people, start, capacity and funding. Senior validates workload, skills, semantics, security and gate evidence. Re-estimate after recovery; record accepted deviations."
+        },
+        {
+          "cell": "A41",
+          "saved_value": "OPTIONAL BUSINESS CASE AND APPROVAL",
+          "number_format": "General",
+          "input_or_text": "OPTIONAL BUSINESS CASE AND APPROVAL"
+        },
+        {
+          "cell": "A42",
+          "saved_value": "Budget",
+          "number_format": "General",
+          "input_or_text": "Budget"
+        },
+        {
+          "cell": "B42",
+          "saved_value": "Business Case C5:C10: enter currency, rates and non-labour caps. Recovery cost appears in Report. Full cost includes recovery once; reserve is separate. Blank inputs mean not quantified.",
+          "number_format": "General",
+          "input_or_text": "Business Case C5:C10: enter currency, rates and non-labour caps. Recovery cost appears in Report. Full cost includes recovery once; reserve is separate. Blank inputs mean not quantified."
+        },
+        {
+          "cell": "A44",
+          "saved_value": "Practical value",
+          "number_format": "General",
+          "input_or_text": "Practical value"
+        },
+        {
+          "cell": "B44",
+          "saved_value": "Business Case C25:C30: enter comparable hours, incremental setup, period maintenance, expected future integrations and evidence. Break-even and net effort are forecasts, not cash savings or measured adoption.",
+          "number_format": "General",
+          "input_or_text": "Business Case C25:C30: enter comparable hours, incremental setup, period maintenance, expected future integrations and evidence. Break-even and net effort are forecasts, not cash savings or measured adoption."
+        },
+        {
+          "cell": "A46",
+          "saved_value": "Save the approval",
+          "number_format": "General",
+          "input_or_text": "Save the approval"
+        },
+        {
+          "cell": "B46",
+          "saved_value": "Sponsor records the selected team, allocation, recovery cap, start and Gate A conditions. Save the approved workbook snapshot. Changing resources recalculates a proposal; it does not grant approval.",
+          "number_format": "General",
+          "input_or_text": "Sponsor records the selected team, allocation, recovery cap, start and Gate A conditions. Save the approved workbook snapshot. Changing resources recalculates a proposal; it does not grant approval."
+        },
+        {
+          "cell": "A48",
+          "saved_value": "Prior short DAR [P3]",
+          "number_format": "General",
+          "input_or_text": "Prior short DAR [P3]"
+        },
+        {
+          "cell": "B48",
+          "saved_value": "SDV_Vehicle_Status_DAR_Short_EN.md and SDV_Vehicle_Status_Plan.xlsx (v1.1): prior scope, six test groups and dynamic forecast. The current approval report adds management examples and an optional cost/value model.",
+          "number_format": "General",
+          "input_or_text": "SDV_Vehicle_Status_DAR_Short_EN.md and SDV_Vehicle_Status_Plan.xlsx (v1.1): prior scope, six test groups and dynamic forecast. The current approval report adds management examples and an optional cost/value model."
+        }
+      ]
+    }
+  ]
+}

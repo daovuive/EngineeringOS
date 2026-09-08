@@ -1,12 +1,12 @@
 # knowledge/architect/lessions
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Bài học, review, appendix và ghi chú gắn với chương trình Architect. Giữ tên lịch sử lessions để tránh hỏng liên kết. Learning_Progress.md là nguồn tiến độ; đọc trước khi học tiếp. Giữ Lesson_NNN.md, Lesson_NNN_Review.md và appendix riêng; không đánh dấu hoàn thành chỉ vì tạo file bài học.
+Lessons, reviews, appendices, and notes associated with the Architect program. Keep the historical name lessions to avoid breaking links. Learning_Progress.md is the progress source; read it before continuing study. Keep Lesson_NNN.md, Lesson_NNN_Review.md, and appendices separate; do not mark work complete merely because a lesson file was created.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [Architecture_Notes_State_vs_Status_vs_Mode.md](Architecture_Notes_State_vs_Status_vs_Mode.md).
 - [Learning_Progress.md](Learning_Progress.md).
@@ -22,6 +22,6 @@ Bài học, review, appendix và ghi chú gắn với chương trình Architect.
 - [Lesson_008.md](Lesson_008.md).
 - [Lesson_009.md](Lesson_009.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

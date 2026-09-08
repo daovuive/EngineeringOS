@@ -41,7 +41,7 @@ Use a small Ollama model set optimized for local use on constrained GPU memory:
 | Coding | `qwen2.5-coder:3b-instruct-q4_K_M` | `ollama pull qwen2.5-coder:3b-instruct-q4_K_M` |
 | Embedding | `nomic-embed-text` | `ollama pull nomic-embed-text` |
 
-The matching runtime configuration is stored in `configs/ai-runtime.json`.
+The matching model and runtime configuration is stored under `configs/ai/`.
 
 ## Assumptions
 

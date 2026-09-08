@@ -80,6 +80,28 @@
           "type": "boolean",
           "default": false
         },
+        "autoIndexedFiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "directory",
+              "pattern"
+            ],
+            "properties": {
+              "directory": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pattern": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
         "ignoredDirectories": {
           "type": "array",
           "items": {

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0",
+  "defaultProvider": "ollama-local",
+  "options": {
+    "temperature": 0.2,
+    "topP": 0.9,
+    "maxTokens": 4096,
+    "stream": true
+  }
+}

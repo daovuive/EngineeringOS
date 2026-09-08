@@ -1,13 +1,18 @@
 # runtime
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Dữ liệu sinh ra khi chạy: model, cache, index và dữ liệu runtime cục bộ. Code adapter nằm ở engineering_os/llm.py; cấu hình nằm ở configs/ai-runtime.json. Không lưu tài liệu nguồn duy nhất trong dữ liệu có thể tái tạo.
+Generated EngineeringOS execution state: caches, indexes, sessions, and other
+rebuildable local data. Adapter code is in engineering_os/llm.py; AI
+configuration is in configs/ai/. Do not store sole-source documents or
+provider-owned model binaries here.
 
-Các thư mục sinh tự động `models/`, `cache/`, `index/`, `vector-db/` được khai báo ngoại lệ trong manifest. Việc có tên một vùng dữ liệu không có nghĩa capability tương ứng đã triển khai.
+The generated directories `cache/`, `index/`, and `vector-db/` are declared
+exceptions in the manifest. Provider model storage is outside the EngineeringOS
+repository and is not represented by a `runtime/models/` directory.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

@@ -25,7 +25,7 @@ Module boundaries:
 - `tools/` contains integrations with external systems and utilities.
 - `memory/` contains persistent context about the project and its owner.
 - `knowledge/` contains source documents and engineering knowledge.
-- `runtime/` contains generated runtime data such as model caches and indexes.
+- `runtime/` contains EngineeringOS-owned generated data such as caches and indexes; provider-owned model binaries remain outside the repository.
 - `engineering_os/` contains executable Python modules, including runtime adapters.
 
 Repository governance is defined in [Structure Governance](STRUCTURE_GOVERNANCE.md).
@@ -38,9 +38,9 @@ whether document content belongs to the correct domain.
 AI runtime integration is accessed through a small runtime abstraction in
 `engineering_os.llm`. Core CLI, future RAG code, and agents should depend on
 the generic runtime API (`generate`, `embed`, `list_models`) rather than
-provider-specific HTTP endpoints. Ollama is the first implemented adapter;
-other runtime entries in `configs/ai-runtime.json` are prepared but disabled
-until adapters are added.
+provider-specific HTTP endpoints. Ollama is the first implemented adapter.
+Provider definitions and logical model bindings are stored under `configs/ai/`;
+additional providers require adapters before they can be enabled.
 
 When runtime `stream` is enabled, the Ollama adapter uses Ollama's streaming
 transport internally. The current `generate` API still buffers streamed chunks

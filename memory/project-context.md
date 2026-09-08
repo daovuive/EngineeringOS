@@ -109,11 +109,11 @@ Important configuration:
 
 - `configs/project-structure.json`: intended single source of truth for folder/file structure.
 - `configs/settings.json`: project settings, logging, knowledge, memory, agents, prompts, and runtime config paths.
-- `configs/ai-runtime.json`: local AI runtime definitions and model defaults.
+- `configs/ai/`: canonical local AI provider, model-role, and runtime configuration.
 
 Current runtime defaults:
 
-- Default runtime: `ollama`.
+- Default provider: `ollama-local` (Ollama running on Windows and reached from WSL).
 - RAG model: `granite3.1-moe:3b`.
 - Chat and reasoning model: `phi3.5:3.8b-mini-instruct-q4_K_M`.
 - Coding model: `qwen2.5-coder:3b-instruct-q4_K_M`.

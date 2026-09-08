@@ -12,7 +12,8 @@ song song `readme.md` trên Windows.
 README gốc đã được chủ project duyệt và áp dụng ngày 2026-09-05. Bản đọc và
 patch được giữ tại [hồ sơ đề xuất](proposals/README.md) để truy vết; README gốc
 là nguồn có hiệu lực. `rootNavigationPendingApproval` được đặt thành `false`:
-kiểm tra điều hướng từ root, README con, manifest và hash bảo vệ đều có hiệu lực.
+kiểm tra manifest, README con, các liên kết ổn định từ root và hash bảo vệ đều
+có hiệu lực; root không phải mục lục đầy đủ của mọi folder/file.
 Không bật lại ngoại lệ chuyển tiếp để che lỗi hoặc bỏ qua quy trình duyệt.
 
 ## Vai trò của từng nguồn
@@ -34,9 +35,11 @@ của chủ project có thể thay đổi thiết kế, nhưng phải được g
 
 ## Cây điều hướng và độ ổn định của root
 
-README gốc liên kết tới README của từng thư mục cấp một và tài liệu quản trị.
-README cấp một liên kết xuống các README con; mỗi README con liên kết ngược
-về README cha và liệt kê file thuộc phạm vi của nó.
+README gốc liên kết tới các vùng trách nhiệm ổn định và tài liệu quản trị; không
+phải là mục lục đầy đủ của mọi thư mục/file. Manifest là inventory chính xác để
+phát hiện thư mục cấp một mới. README cấp một liên kết xuống các README con;
+mỗi README con liên kết ngược về README cha và liệt kê file thuộc phạm vi của
+nó.
 
 Mọi tài liệu mới được truy cập từ gốc thông qua cây liên kết này. Không thêm
 một dòng vào README gốc cho mỗi lesson, JD hoặc skill; cập nhật mục lục gần
@@ -83,9 +86,10 @@ vùng. Giữ tên lịch sử `lessions/` cho đến khi có yêu cầu migratio
    quan. Không phải xin duyệt root cho thay đổi nội dung thông thường đã được
    người dùng yêu cầu.
 4. Khi thêm thư mục được quản lý, đăng ký `folders[]`, tạo README mô tả thật,
-   liên kết từ README cha; nếu là skill thì cập nhật skill registry. Thay đổi
-   ranh giới cấp cao hoặc thêm thư mục cấp một cần đề xuất chỉnh root và được
-   chủ project duyệt trước.
+   liên kết từ README cha ở cấp cục bộ; nếu là thư mục cấp một thì manifest là
+   điểm điều hướng chính và không cần thêm dòng vào root README. Nếu thư mục
+   mới tạo ranh giới trách nhiệm cấp cao thì cần đề xuất và được chủ project
+   duyệt trước.
 5. Khi di chuyển/đổi tên/xóa, kiểm tra file đích, liên kết, registry và nội dung
    đang làm dở. Không ghi đè nguồn khác hoặc xóa hàng loạt để làm cấu trúc đẹp.
 6. Chạy `python eng.py validate`, `git diff --check` và test phù hợp với code
@@ -116,7 +120,9 @@ Validator kiểm tra các vi phạm cơ học: đường dẫn manifest, file/th
 buộc, README con không rỗng, thư mục ngoài manifest, root file ngoài danh sách,
 liên kết README bị hỏng, điều hướng cha đến con và hash README gốc.
 File trực tiếp trong mỗi thư mục được quản lý cũng phải có liên kết từ README
-tại đó; các vùng dữ liệu sinh tự động đã khai báo được miễn mục lục file.
+tại đó, trừ file khớp các pattern đã khai báo trong
+`governance.autoIndexedFiles`; các vùng dữ liệu sinh tự động đã khai báo được
+miễn mục lục file.
 Skill registry được kiểm tra ID và đường dẫn khi có. Nội dung file có đúng domain,
 kinh nghiệm có bằng chứng và thiết kế có hợp lý vẫn cần review theo task.
 

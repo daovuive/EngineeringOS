@@ -1,11 +1,15 @@
 # scripts
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Script vận hành hỗ trợ EngineeringOS khi thật sự cần. Logic CLI có thể tái sử dụng thuộc engineering_os/. Chỉ thêm script khi có đầu vào, đầu ra, cách chạy và cách kiểm tra rõ ràng; không tạo implementation thứ hai của cùng chức năng.
+Operational scripts that support EngineeringOS when genuinely needed. Reusable CLI logic belongs in engineering_os/. Add a script only when its inputs, outputs, execution, and checks are clear; do not create a second implementation of the same function.
 
-## Khi mở rộng
+## Existing Documents and Files
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+- [evaluate_rag.py](evaluate_rag.py): repeatable RAG retrieval, grounding, and answer-behavior baseline.
+
+## Extension Rules
+
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

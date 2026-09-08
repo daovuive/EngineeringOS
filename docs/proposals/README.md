@@ -1,33 +1,25 @@
 # docs/proposals
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Bản đề xuất đang chờ chủ project duyệt, kèm tác động và patch nếu cần. Nội dung trong vùng này không thay thế quy tắc đang có hiệu lực. Sau khi duyệt, áp dụng vào nguồn chính và ghi lại quyết định duyệt.
+Proposals awaiting project-owner approval, with impact and patches when needed. Content in this area does not replace rules currently in force. After approval, apply the change to the primary source and record the approval decision.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
-- [Bản đọc để duyệt](ROOT_README.proposed.md): nội dung README gốc đề xuất; liên kết trong preview được chỉnh tương đối từ thư mục này để có thể bấm xem.
-- [Diff chính xác cho README gốc](root-readme.patch): thay phần giới thiệu dài và bài thực hành bằng hiến chương, sơ đồ trách nhiệm và cây liên kết. Đường dẫn trong patch được tính từ root.
+- [Approval preview](ROOT_README.proposed.md): proposed root README content; preview links are adjusted relative to this directory.
+- [Exact root README diff](root-readme.patch): replaces the long introduction and exercises with the constitution, responsibility model, and link tree. Patch paths are relative to the repository root.
 
-## Quyết định duyệt và trạng thái áp dụng
+## Approval Decision and Application Status
 
-Chủ project đã duyệt ngày 2026-09-05 bằng yêu cầu: “tốt, thực hiện thay đổi.”
-Trạng thái: **Approved / Applied**. Patch đã được áp dụng vào README.md gốc,
-hash bảo vệ đã cập nhật và `rootNavigationPendingApproval` đã đặt thành `false`.
-Bản đọc và patch được lưu lại làm lịch sử, không áp dụng lại patch này.
+The project owner approved the change on 2026-09-05 with the request: “good, implement the change.”
+Status: **Approved / Applied**. The patch was applied to the root README, the protected hash was updated, and `rootNavigationPendingApproval` was set to `false`. The preview and patch are retained as history; do not apply this patch again.
 
-Bản được duyệt giữ mục tiêu Local AI và phát triển
-Solution Architect, đưa chi tiết biến động sang docs/, chỉ rõ skills/agents và
-quy trình mở rộng. Bài thực hành cũ đã được lưu ở
-[Architecture Context](../ARCHITECTURE_CONTEXT.md) và ghi rõ là bối cảnh lịch sử.
+The approved version preserves the Local AI and Solution Architect goals, moves changing details into docs/, identifies skills/agents and extension rules, and records the former exercises in [Architecture Context](../ARCHITECTURE_CONTEXT.md) as historical context.
 
-README gốc là nguồn có hiệu lực; bản preview không phải bản chính để cập nhật
-cho các thay đổi sau này. Không tự áp dụng proposal chỉ vì nó có mặt trong
-repository. Không thay đổi skill workflow hoặc roadmap học
-trong đợt tổ chức README này; các nội dung đó vẫn thuộc đề xuất riêng trước đó.
+The root README is authoritative; the preview is not the source for future updates. Do not apply a proposal merely because it exists in the repository. The README organization work did not change skill workflows or the learning roadmap; those remain in a separate earlier proposal.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

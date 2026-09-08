@@ -1,16 +1,16 @@
 # docs
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Tài liệu vận hành, kiến trúc và quản trị của chính EngineeringOS. Chi tiết thay đổi theo thời gian nằm ở đây để README gốc giữ ổn định. Kiến thức kỹ thuật dùng chung thuộc knowledge/.
+Operational, architectural, and governance documentation for EngineeringOS itself. Time-varying details belong here so the root README remains stable. Shared technical knowledge belongs in knowledge/.
 
-## Thư mục con
+## Subdirectories
 
-- [proposals](proposals/README.md): Bản đề xuất đang chờ chủ project duyệt, kèm tác động và patch nếu cần.
+- [proposals](proposals/README.md): Proposals awaiting project-owner approval, with impact and patches when needed.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [ARCHITECTURE.md](ARCHITECTURE.md).
 - [ARCHITECTURE_CONTEXT.md](ARCHITECTURE_CONTEXT.md).
@@ -21,6 +21,6 @@ Tài liệu vận hành, kiến trúc và quản trị của chính EngineeringO
 - [ROADMAP.md](ROADMAP.md).
 - [STRUCTURE_GOVERNANCE.md](STRUCTURE_GOVERNANCE.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

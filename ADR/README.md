@@ -1,17 +1,18 @@
 # ADR
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Quyết định kiến trúc của chính EngineeringOS. Mỗi ADR ghi context, options, decision, consequences và trạng thái Proposed / Accepted / Deprecated / Superseded. Dùng tên ADR-NNNN.md; không coi ghi chú học tập là quyết định đã được chấp nhận.
+Architecture decisions for EngineeringOS itself. Each ADR records context, options, the decision, consequences, and a Proposed / Accepted / Deprecated / Superseded status. Use the `ADR-*.md` naming pattern; learning notes are not accepted decisions.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
-- [ADR-0001.md](ADR-0001.md).
-- [ADR-0002.md](ADR-0002.md).
-- [ADR-0003.md](ADR-0003.md).
+Files matching `ADR-*.md` in this directory are automatically recognized by
+structure governance and do not require individual README links. Add new ADRs
+using that naming pattern; keep README links for navigation to subdirectories
+or other content that is not covered by the auto-index rule.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

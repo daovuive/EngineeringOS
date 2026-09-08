@@ -25,6 +25,17 @@ documents.
 6. Answer with: current direction, reasoning, evidence, trade-offs and the next
    practical actions.
 
+## Local AI Integration
+
+- Retrieve canonical career sources through the existing EngineeringOS search
+  path (`eng.py knowledge search` or `engineering_os.knowledge.search_index`).
+- Use the configured chat or reasoning role through the shared runtime
+  (`eng.py llm chat` or `engineering_os.llm.create_runtime`).
+- Use the existing RAG path when an answer requires grounded source handling
+  (`eng.py knowledge ask` or `engineering_os.rag.answer_question`).
+- Do not create provider clients, call provider endpoints directly, load model
+  files, or duplicate retrieval, embedding, or model configuration.
+
 ## Output Rules
 
 - Treat Solution Architect as the primary direction unless the user explicitly

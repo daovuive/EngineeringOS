@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "models": {
+    "rag": {
+      "provider": "ollama-local",
+      "model": "granite3.1-moe:3b"
+    },
+    "chat": {
+      "provider": "ollama-local",
+      "model": "phi3.5:3.8b-mini-instruct-q4_K_M"
+    },
+    "reasoning": {
+      "provider": "ollama-local",
+      "model": "phi3.5:3.8b-mini-instruct-q4_K_M"
+    },
+    "coding": {
+      "provider": "ollama-local",
+      "model": "qwen2.5-coder:3b-instruct-q4_K_M"
+    },
+    "embedding": {
+      "provider": "ollama-local",
+      "model": "nomic-embed-text",
+      "dimensions": 768
+    }
+  }
+}

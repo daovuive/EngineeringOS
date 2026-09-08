@@ -1,16 +1,16 @@
 # knowledge/automotive
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Kiến thức và nghiên cứu domain Automotive, SDV, OTA, telematics. Ghi rõ nghiên cứu, ví dụ giả lập và kinh nghiệm được chứng minh; không dùng tài liệu nghiên cứu làm CV evidence.
+Automotive-domain knowledge and research, including SDV, OTA, and telematics. Clearly distinguish research, simulated examples, and demonstrated experience; do not use research documents as CV evidence.
 
-## Tài liệu và file hiện có
+## Existing Documents and Files
 
 - [SDV_Bilingual_Technical_Summary_EN_VI.md](SDV_Bilingual_Technical_Summary_EN_VI.md).
 - [Telematics_SDV_Research_and_Architecture_Decisions.md](Telematics_SDV_Research_and_Architecture_Decisions.md).
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

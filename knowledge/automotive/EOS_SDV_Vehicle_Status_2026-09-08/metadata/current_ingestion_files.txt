@@ -1,0 +1,5 @@
+current/00_EOS_CONTEXT.md
+current/01_DECISION_REGISTER.md
+current/SDV_Vehicle_Status_Approval_Report_EN.md
+current/02_DYNAMIC_PLAN_SNAPSHOT.md
+current/03_TECHNICAL_ACCEPTANCE_REFERENCE.md

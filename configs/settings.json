@@ -15,7 +15,17 @@
   "knowledge": {
     "root": "knowledge",
     "autoIndex": false,
-    "index": "runtime/index/knowledge.json"
+    "index": "runtime/index/knowledge.json",
+    "retrieval": {
+      "candidateMinScore": 0.45,
+      "confidenceThreshold": 0.62,
+      "overfetchFactor": 4
+    },
+    "grounding": {
+      "supportedClaimCoverage": 0.75,
+      "partialClaimCoverage": 0.4,
+      "minSharedTerms": 2
+    }
   },
 
   "templates": {
@@ -23,7 +33,7 @@
   },
 
   "runtime": {
-    "config": "configs/ai-runtime.json"
+    "config": "configs/ai/runtime.json"
   },
 
   "skills": {
@@ -32,7 +42,10 @@
   },
 
   "memory": {
-    "directory": "memory"
+    "directory": "memory",
+    "retrieval": {
+      "maxAgeDays": 90
+    }
   },
 
   "agents": {

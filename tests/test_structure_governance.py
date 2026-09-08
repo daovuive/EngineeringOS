@@ -49,6 +49,12 @@ class StructureGovernanceTests(unittest.TestCase):
         self.assertTrue(result.ok, result.governance_errors)
         self.assertEqual(result.error_count, 0)
 
+    def test_new_top_level_folder_uses_manifest_without_root_readme_link(self) -> None:
+        self.structure["folders"].append({"path": "new-area"})
+        self.write("new-area/README.md", "# New area\n")
+        result = self.validate()
+        self.assertTrue(result.ok, result.governance_errors)
+
     def test_missing_readme_and_parent_navigation_fail(self) -> None:
         (self.root / "docs/guides/README.md").unlink()
         self.write("docs/README.md", "# Docs\n")
@@ -67,6 +73,20 @@ class StructureGovernanceTests(unittest.TestCase):
         self.assertTrue(any("Unindexed file: docs/guides/new-lesson.md" in error for error in self.validate().governance_errors))
         self.write("docs/guides/README.md", "# Guides\n[Lesson](new-lesson.md)\n")
         self.assertTrue(self.validate().ok, self.validate().governance_errors)
+
+    def test_auto_indexed_file_pattern_does_not_require_individual_links(self) -> None:
+        self.structure["governance"]["autoIndexedFiles"] = [
+            {"directory": "docs/guides", "pattern": "Lesson-*.md"}
+        ]
+        self.write("docs/guides/Lesson-001.md", "# A lesson\n")
+        self.assertTrue(self.validate().ok, self.validate().governance_errors)
+
+        self.write("docs/guides/other.md", "# Other\n")
+        errors = self.validate().governance_errors
+        self.assertIn(
+            "Unindexed file: docs/guides/other.md must be linked from docs/guides/README.md",
+            errors,
+        )
 
     def test_sync_preserves_existing_root_and_refuses_missing_protected_root(self) -> None:
         original = (self.root / "README.md").read_bytes()

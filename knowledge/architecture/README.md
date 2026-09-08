@@ -1,18 +1,18 @@
 # knowledge/architecture
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Phân loại kiến thức kiến trúc dùng chung đã được manifest dự kiến, khác với tiến độ học cá nhân ở architect/. Hiện khởi tạo sườn README cho vùng này; không di chuyển bài học hoặc nhân bản sách. Thêm tài liệu khi có nội dung thực tế.
+Manifested taxonomy for shared architecture knowledge, separate from personal learning progress in architect/. This area currently provides the README scaffold; do not move lessons or duplicate books. Add documents when substantive content is available.
 
-## Thư mục con
+## Subdirectories
 
-- [patterns](patterns/README.md): Kiến thức về architecture/design pattern dùng lại: context, problem, forces, solution, trade-offs và nguồn.
-- [reviews](reviews/README.md): Review kiến trúc dùng cho học tập hoặc kiến thức dùng chung, có đối tượng, tiêu chí, bằng chứng và kết luận.
-- [styles](styles/README.md): So sánh và giải thích architecture styles như layered, event-driven hoặc service-based.
-- [system-designs](system-designs/README.md): Thiết kế hệ thống minh họa có requirements, views, assumptions và trade-offs.
+- [patterns](patterns/README.md): Reusable architecture/design-pattern knowledge: context, problem, forces, solution, trade-offs, and sources.
+- [reviews](reviews/README.md): Architecture reviews for learning or shared knowledge, with subject, criteria, evidence, and conclusions.
+- [styles](styles/README.md): Comparisons and explanations of architecture styles such as layered, event-driven, and service-based.
+- [system-designs](system-designs/README.md): Illustrative system designs with requirements, views, assumptions, and trade-offs.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

@@ -46,11 +46,11 @@ def run_doctor(
         try:
             definition = get_default_runtime_definition(runtime_config)
             runtime = create_runtime(runtime_config)
-            print(f"[ OK ] default runtime : {definition.endpoint.id}")
-            print(f"[ OK ] host            : {definition.endpoint.host}")
+            print(f"[ OK ] default provider : {definition.provider.id}")
+            print(f"[ OK ] endpoint         : {definition.provider.host}")
 
             ollama_executable = None
-            if definition.endpoint.id == "ollama":
+            if definition.provider.type == "ollama":
                 ollama_executable = shutil.which("ollama")
                 if not ollama_executable:
                     print("[INFO] Ollama executable not found on PATH")
@@ -58,7 +58,7 @@ def run_doctor(
             try:
                 models = runtime.list_models()
                 print(f"[ OK ] runtime API     : {len(models)} model(s) available")
-                if definition.endpoint.id == "ollama" and not ollama_executable:
+                if definition.provider.type == "ollama" and not ollama_executable:
                     print("[INFO] Ollama is reachable even though the executable is not on PATH")
             except LLMError as error:
                 print(f"[WARN] runtime API     : {error}")

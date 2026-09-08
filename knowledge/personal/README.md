@@ -1,18 +1,18 @@
 # knowledge/personal
 
-[Thư mục cha](../README.md) · [Quy tắc cấu trúc](../../docs/STRUCTURE_GOVERNANCE.md)
+[Parent directory](../README.md) · [Structure Governance](../../docs/STRUCTURE_GOVERNANCE.md)
 
-## Mục đích và ranh giới
+## Purpose and Scope
 
-Kiến thức rút ra từ trải nghiệm cá nhân: lessons learned, architecture notes, checklist và trade-off. Ngữ cảnh tạm hoặc trạng thái project thuộc memory/; profile bằng chứng thuộc career/profile/.
+Knowledge derived from personal experience: lessons learned, architecture notes, checklists, and trade-offs. Temporary context and project state belong in memory/; evidence profiles belong in career/profile/.
 
-## Thư mục con
+## Subdirectories
 
-- [architecture-notes](architecture-notes/README.md): Ghi chú tư duy kiến trúc cá nhân không gắn với một bài học cụ thể.
-- [checklists](checklists/README.md): Checklist kỹ thuật có mục đích, thời điểm dùng và nguồn.
-- [lessons-learned](lessons-learned/README.md): Bài học từ trải nghiệm đã xảy ra: context, kết quả, nguyên nhân, điều rút ra và nguồn.
-- [tradeoffs](tradeoffs/README.md): Ghi chú đánh đổi đã phân tích: options, constraints, benefits, costs và điều kiện đổi quyết định.
+- [architecture-notes](architecture-notes/README.md): Personal architecture-thinking notes not tied to a specific lesson.
+- [checklists](checklists/README.md): Technical checklists with purpose, usage timing, and sources.
+- [lessons-learned](lessons-learned/README.md): Lessons from events that occurred: context, outcome, causes, takeaways, and sources.
+- [tradeoffs](tradeoffs/README.md): Analyzed trade-offs: options, constraints, benefits, costs, and decision-change conditions.
 
-## Khi mở rộng
+## Extension Rules
 
-Thêm file đúng ranh giới trên và liên kết từ mục lục này. Thư mục con mới cần được đăng ký trong manifest, có README.md riêng và liên kết từ README cha. Áp dụng quy trình và kiểm tra trong tài liệu quy tắc cấu trúc.
+Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.

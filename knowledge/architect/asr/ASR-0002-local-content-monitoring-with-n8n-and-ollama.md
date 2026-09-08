@@ -674,7 +674,7 @@ Only add complexity after measured need:
 
 ## References
 
-- EngineeringOS `configs/ai-runtime.json`
+- EngineeringOS `configs/ai/`
 - EngineeringOS `runtime/README.md`
 - EngineeringOS `knowledge/architect/asr/ASR-0001-llm-model-selection-for-ollama-personal-pc.md`
 - [n8n Docker installation](https://docs.n8n.io/hosting/installation/docker/)
@@ -694,4 +694,3 @@ Create separate ASRs only when these decisions become necessary:
 - PostgreSQL migration.
 - Remote access to n8n.
 - Cloud LLM fallback.
-

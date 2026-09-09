@@ -4,7 +4,10 @@
 
 ## Purpose and Scope
 
-Defines AI roles and work-coordination rules. Agents select skills from the registry, use knowledge/career sources, and verify results. Reusable workflows belong in skills/ and must not be copied into agents/. No executable agent is currently implemented here.
+Defines AI roles and work-coordination rules. Agents select skills from the
+registry, use knowledge/career sources, and verify results. Reusable workflow
+intent belongs in `skills/`; bounded execution lives in
+`engineering_os.workflows`. No autonomous agent loop is currently implemented.
 
 ## Agent Integration Boundary
 
@@ -25,10 +28,12 @@ configuration remain under `configs/ai/`; retrieval and grounding remain under
 remain under `memory/`. Agents must not copy those responsibilities or call a
 provider directly.
 
-The current repository therefore has no executable agent to run. A direct
-single-skill request should use the skill workflow without adding an agent
-round-trip. Coordination is justified only when one task genuinely spans
-multiple skills or requires explicit result verification.
+A direct single-skill request uses `eng.py workflow <id>` or the corresponding
+web route without adding an agent round-trip. The Solution Architect workflow
+is the current bounded coordinator: it reuses requirement and ADR guidance in
+one validated generation contract. A future autonomous coordinator remains
+justified only when a task needs stateful multi-step execution beyond these
+bounded workflows.
 
 ## Extension Rules
 

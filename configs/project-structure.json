@@ -7,12 +7,24 @@
   },
   "folders": [
     {
+      "path": ".github",
+      "description": "GitHub repository automation and CI configuration"
+    },
+    {
+      "path": ".github/workflows",
+      "description": "GitHub Actions workflow definitions"
+    },
+    {
       "path": "ADR",
       "description": "Architecture Decision Records"
     },
     {
       "path": "docs",
       "description": "Project Documentation"
+    },
+    {
+      "path": "docs/webui-screenshots",
+      "description": "Deterministic visual-regression evidence for the governed WebUI"
     },
     {
       "path": "career",
@@ -83,6 +95,10 @@
       "description": "Engineering Knowledge Repository"
     },
     {
+      "path": "knowledge/inbox",
+      "description": "Governed destination for imported Markdown and plain-text knowledge"
+    },
+    {
       "path": "knowledge/architecture",
       "description": "Architecture Knowledge"
     },
@@ -129,6 +145,38 @@
     {
       "path": "knowledge/automotive",
       "description": "Automotive Engineering"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08",
+      "description": "Source-aware SDV Vehicle Status project context package"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/current",
+      "description": "Current SDV Vehicle Status context and deliverables"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/history",
+      "description": "Superseded SDV Vehicle Status versions and evolution records"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/history/v0_9",
+      "description": "Archived SDV Vehicle Status v0.9 proposal"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/history/v1_0",
+      "description": "Archived SDV Vehicle Status v1.0 proposal"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/history/v1_1",
+      "description": "Archived SDV Vehicle Status v1.1 proposal and planning artifacts"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/metadata",
+      "description": "Integrity, ingestion, and archival metadata for the SDV package"
+    },
+    {
+      "path": "knowledge/automotive/EOS_SDV_Vehicle_Status_2026-09-08/source",
+      "description": "Original SDV Vehicle Status planning source"
     },
     {
       "path": "knowledge/management",
@@ -183,6 +231,22 @@
       "description": "Package đánh giá định hướng nghề nghiệp"
     },
     {
+      "path": "skills/code-review",
+      "description": "Bounded source and diff review workflow"
+    },
+    {
+      "path": "skills/requirement-review",
+      "description": "Requirement quality review workflow"
+    },
+    {
+      "path": "skills/adr-assistant",
+      "description": "Unapproved ADR drafting workflow"
+    },
+    {
+      "path": "skills/solution-architect",
+      "description": "Bounded solution architecture proposal workflow"
+    },
+    {
       "path": "knowledge/architect",
       "description": "Chương trình học Architect cá nhân hiện có"
     },
@@ -200,6 +264,10 @@
     }
   ],
   "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "template": "EMPTY"
+    },
     {
       "path": "README.md",
       "template": "README"

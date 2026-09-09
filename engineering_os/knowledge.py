@@ -2,11 +2,17 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import tempfile
+import threading
+from contextlib import contextmanager
 from datetime import date, timedelta
 from dataclasses import asdict, dataclass
 from pathlib import Path
 import re
 from typing import Any, Protocol
+
+import fcntl
 
 
 EmbeddingContract = dict[str, Any]
@@ -39,13 +45,28 @@ class KnowledgeChunk:
     authority: str = AUTHORITATIVE_AUTHORITY
 
 
+@dataclass(frozen=True)
+class IndexUpdateResult:
+    path: str
+    chunk_count: int
+    changed: bool
+
+
+_INDEX_THREAD_LOCK = threading.RLock()
+
+
 def discover_markdown(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.md") if path.is_file())
 
 
 def read_markdown_chunks(path: Path, root: Path) -> list[tuple[str, str]]:
     relative_path = path.relative_to(root).as_posix()
-    lines = path.read_text(encoding="utf-8").splitlines()
+    lines = [
+        line
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if not line.startswith("<!-- eos-ingestion-")
+        and not line.startswith("<!-- eos-ingested-at:")
+    ]
     heading = path.stem
     sections: list[tuple[str, list[str]]] = []
 
@@ -157,13 +178,137 @@ def save_index(
     embedding_contract: EmbeddingContract,
 ) -> None:
     _validate_embedding_contract(embedding_contract)
+    with index_write_lock(path):
+        _save_index_atomic(path, chunks, embedding_contract=embedding_contract)
+
+
+def rebuild_index(
+    index_path: Path,
+    sources: list[tuple[Path, str, Path | None]],
+    runtime: EmbeddingRuntime,
+    *,
+    embedding_contract: EmbeddingContract,
+) -> list[KnowledgeChunk]:
+    """Rebuild all configured sources without racing incremental writers."""
+    _validate_embedding_contract(embedding_contract)
+    with index_write_lock(index_path):
+        chunks: list[KnowledgeChunk] = []
+        for root, source_type, path_root in sources:
+            chunks.extend(
+                build_index(
+                    root,
+                    runtime,
+                    source_type=source_type,
+                    path_root=path_root,
+                )
+            )
+        _save_index_atomic(index_path, chunks, embedding_contract=embedding_contract)
+        return chunks
+
+
+def update_document_index(
+    index_path: Path,
+    document_path: Path,
+    knowledge_root: Path,
+    runtime: EmbeddingRuntime,
+    *,
+    embedding_contract: EmbeddingContract,
+) -> IndexUpdateResult:
+    """Incrementally replace one document's chunks under a coordinated lock."""
+    index_path = index_path.resolve()
+    document_path = document_path.resolve()
+    knowledge_root = knowledge_root.resolve()
+    try:
+        relative_path = document_path.relative_to(knowledge_root).as_posix()
+    except ValueError as error:
+        raise KnowledgeIndexError("Indexed document must be inside the knowledge root.") from error
+    if document_path.suffix.lower() != ".md" or not document_path.is_file():
+        raise KnowledgeIndexError("Indexed document must be an existing Markdown file.")
+    _validate_embedding_contract(embedding_contract)
+
+    sections = read_markdown_chunks(document_path, knowledge_root)
+    if not sections:
+        raise KnowledgeIndexError("Saved document contains no indexable Markdown content.")
+
+    with index_write_lock(index_path):
+        chunks = (
+            load_index(index_path, embedding_contract=embedding_contract)
+            if index_path.exists()
+            else []
+        )
+        current = [chunk for chunk in chunks if chunk.path == relative_path]
+        expected = [(heading.split("#", 1)[1], text) for heading, text in sections]
+        observed = [(chunk.heading, chunk.text) for chunk in current]
+        if observed == expected:
+            return IndexUpdateResult(relative_path, len(current), False)
+
+        replacements: list[KnowledgeChunk] = []
+        for heading, text in sections:
+            embedding = runtime.embed(text)
+            if not embedding:
+                raise KnowledgeIndexError(f"Empty embedding returned for {heading}.")
+            if len(embedding) != embedding_contract["dimensions"]:
+                raise KnowledgeIndexError(
+                    "Embedding dimensions do not match the configured contract: "
+                    f"expected {embedding_contract['dimensions']}, got {len(embedding)}."
+                )
+            path_value, heading_value = heading.split("#", 1)
+            replacements.append(
+                KnowledgeChunk(path_value, heading_value, text, embedding)
+            )
+        retained = [chunk for chunk in chunks if chunk.path != relative_path]
+        _save_index_atomic(
+            index_path,
+            retained + replacements,
+            embedding_contract=embedding_contract,
+        )
+        return IndexUpdateResult(relative_path, len(replacements), True)
+
+
+@contextmanager
+def index_write_lock(index_path: Path):
+    """Serialize index writers across threads and local processes."""
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = index_path.with_suffix(index_path.suffix + ".lock")
+    with _INDEX_THREAD_LOCK:
+        with lock_path.open("a+b") as lock_file:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
+def _save_index_atomic(
+    path: Path,
+    chunks: list[KnowledgeChunk],
+    *,
+    embedding_contract: EmbeddingContract,
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "schemaVersion": "1.1",
         "embedding": dict(embedding_contract),
         "chunks": [asdict(chunk) for chunk in chunks],
     }
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary:
+            json.dump(payload, temporary, indent=2)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+            temporary_path = Path(temporary.name)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
 
 
 def load_index(

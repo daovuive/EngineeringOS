@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from engineering_os import __version__
@@ -17,12 +18,17 @@ from engineering_os.config import (
 from engineering_os.doctor import run_doctor
 from engineering_os.knowledge import (
     KnowledgeIndexError,
-    build_index,
     load_index,
-    save_index,
+    rebuild_index,
     search_index,
     select_retrieval_chunks,
 )
+from engineering_os.knowledge_organizer import (
+    KnowledgeOrganizationError,
+    load_destinations,
+    organize_markdown,
+)
+from engineering_os.ingestion import ingest_path, ingest_text
 from engineering_os.llm import (
     LLMError,
     build_pull_commands,
@@ -35,6 +41,12 @@ from engineering_os.rag import (
 )
 from engineering_os.query import query_knowledge
 from engineering_os.structure import ensure_structure, validate_structure
+from engineering_os.workflows import (
+    WorkflowDocument,
+    read_workflow_document,
+    run_workflow,
+    workflow_ids,
+)
 
 
 def banner() -> None:
@@ -109,6 +121,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     knowledge_subparsers = knowledge_parser.add_subparsers(dest="knowledge_command")
     knowledge_subparsers.add_parser("index", help="Build the Markdown knowledge index.")
+    organize_parser = knowledge_subparsers.add_parser(
+        "organize",
+        help="Classify one Markdown file with the local LLM and place it in knowledge.",
+    )
+    organize_parser.add_argument("--file", required=True, help="Markdown file to classify.")
+    organize_parser.add_argument(
+        "--move",
+        action="store_true",
+        help="Move the source after placement; the default keeps a copied original.",
+    )
+    organize_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show the LLM-selected destination without copying or moving a file.",
+    )
     search_parser = knowledge_subparsers.add_parser(
         "search",
         help="Search indexed knowledge.",
@@ -143,6 +170,77 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Include fresh project memory as contextual RAG input.",
     )
+
+    add_knowledge_parser = subparsers.add_parser(
+        "add-knowledge",
+        help="Import Markdown or UTF-8 text and index it for RAG by default.",
+        description=(
+            "Import exactly one Markdown (.md/.markdown), plain-text (.txt), "
+            "inline-text, or stdin source into governed knowledge storage. "
+            "The saved document is indexed automatically unless --no-index is used."
+        ),
+    )
+    add_knowledge_parser.add_argument(
+        "path",
+        nargs="?",
+        help="Markdown or text file path (short form).",
+    )
+    add_knowledge_parser.add_argument(
+        "--file",
+        help="Markdown or text file path.",
+    )
+    add_knowledge_parser.add_argument("--text", help="Knowledge entered directly as text.")
+    add_knowledge_parser.add_argument(
+        "--stdin",
+        action="store_true",
+        help="Read UTF-8 text from standard input.",
+    )
+    add_knowledge_parser.add_argument(
+        "--title",
+        help="Optional title used to derive a safe filename for direct text.",
+    )
+    add_knowledge_parser.add_argument(
+        "--auto-index",
+        action="store_true",
+        help="Explicitly enable indexing (already enabled by default).",
+    )
+    add_knowledge_parser.add_argument(
+        "--no-index",
+        action="store_true",
+        help="Save the document without updating the RAG index.",
+    )
+
+    workflow_parser = subparsers.add_parser(
+        "workflow",
+        help="Run a bounded engineering or architecture workflow.",
+    )
+    workflow_subparsers = workflow_parser.add_subparsers(dest="workflow_id")
+    for workflow_id in workflow_ids():
+        parser_for_workflow = workflow_subparsers.add_parser(
+            workflow_id,
+            help=f"Run the {workflow_id} workflow.",
+        )
+        parser_for_workflow.add_argument(
+            "--file",
+            action="append",
+            default=[],
+            help="UTF-8 input file, relative to --root unless absolute; repeatable.",
+        )
+        parser_for_workflow.add_argument(
+            "--text",
+            action="append",
+            default=[],
+            help="Inline input text; repeatable.",
+        )
+        parser_for_workflow.add_argument(
+            "--with-knowledge",
+            action="store_true",
+            help="Retrieve supporting context from the existing knowledge index.",
+        )
+        parser_for_workflow.add_argument(
+            "--knowledge-query",
+            help="Explicit retrieval query; defaults to a bounded excerpt of the input.",
+        )
 
     return parser
 
@@ -303,18 +401,32 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
     runtime_config = load_runtime_config(paths)
     runtime = create_runtime(runtime_config)
     embedding_contract = get_embedding_contract(runtime_config)
+    if args.knowledge_command == "organize":
+        source = Path(args.file)
+        if not source.is_absolute():
+            source = paths.root / source
+        result = organize_markdown(
+            source,
+            paths.root,
+            runtime,
+            load_destinations(knowledge),
+            move=args.move,
+            dry_run=args.dry_run,
+        )
+        print(f"Knowledge file {result.action}: {result.destination.as_posix()}")
+        print(f"Reason: {result.reason}")
+        print("Run `python eng.py knowledge index` to make it searchable.")
+        return 0
     if args.knowledge_command == "index":
-        chunks = build_index(root, runtime)
+        sources: list[tuple[Path, str, Path | None]] = [(root, "knowledge", None)]
         if memory_root != root:
-            chunks.extend(
-                build_index(
-                    memory_root,
-                    runtime,
-                    source_type="memory",
-                    path_root=paths.root,
-                )
-            )
-        save_index(index_path, chunks, embedding_contract=embedding_contract)
+            sources.append((memory_root, "memory", paths.root))
+        chunks = rebuild_index(
+            index_path,
+            sources,
+            runtime,
+            embedding_contract=embedding_contract,
+        )
         print(f"Indexed {len(chunks)} Markdown chunk(s) into {index_path.as_posix()}")
         return 0
 
@@ -330,7 +442,85 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
             print(f"        {chunk.text.splitlines()[0][:160]}")
         return 0
 
-    raise KnowledgeIndexError("Missing knowledge command. Use: index or search.")
+    raise KnowledgeIndexError("Missing knowledge command. Use: index, search, ask, or organize.")
+
+
+def command_workflow(paths: ProjectPaths, args: argparse.Namespace) -> int:
+    if not args.workflow_id:
+        raise ValueError(
+            "Missing workflow. Use: " + ", ".join(workflow_ids()) + "."
+        )
+    documents: list[WorkflowDocument] = []
+    for value in args.file:
+        file_path = Path(value)
+        if not file_path.is_absolute():
+            file_path = paths.root / file_path
+        documents.append(read_workflow_document(file_path.resolve()))
+    documents.extend(
+        WorkflowDocument(f"inline-{number}", value)
+        for number, value in enumerate(args.text, 1)
+    )
+    response = run_workflow(
+        paths,
+        args.workflow_id,
+        documents,
+        with_knowledge=args.with_knowledge,
+        knowledge_query=args.knowledge_query,
+    )
+    print(response.result)
+    print("")
+    print(f"Workflow: {response.workflow}")
+    print(f"Knowledge retrieval: {response.retrieval_status}")
+    return 0
+
+
+def command_add_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
+    sources = [args.path is not None, args.file is not None, args.text is not None, args.stdin]
+    if sum(sources) != 1:
+        raise ValueError(
+            "Exactly one input source is required: positional file, --file, --text, or --stdin."
+        )
+    if args.auto_index and args.no_index:
+        raise ValueError("--auto-index and --no-index cannot be used together.")
+    auto_index = not args.no_index
+
+    if args.text is not None:
+        result = ingest_text(paths, args.text, title=args.title, auto_index=auto_index)
+    elif args.stdin:
+        result = ingest_text(
+            paths,
+            sys.stdin.read(),
+            title=args.title,
+            auto_index=auto_index,
+        )
+    else:
+        value = args.file if args.file is not None else args.path
+        assert value is not None
+        source = Path(value)
+        if not source.is_absolute():
+            source = paths.root / source
+        result = ingest_path(paths, source, title=args.title, auto_index=auto_index)
+
+    print(f"Document: {result.document_path}")
+    print(f"Import: {result.import_outcome}")
+    print(f"Indexing: {result.indexing_state}")
+    if result.chunk_count is not None:
+        print(f"Chunks: {result.chunk_count}")
+    if result.ready_for_rag:
+        print("Ready for RAG: yes")
+        return 0
+    if result.indexing_state == "skipped":
+        print("Ready for RAG: no (indexing intentionally skipped)")
+        return 0
+    print(f"Saved, indexing failed: {result.error or 'unknown indexing error'}")
+    print(f"Retry: python3 eng.py add-knowledge --file {json_quote(result.document_path)} --auto-index")
+    return 1
+
+
+def json_quote(value: str) -> str:
+    import json
+
+    return json.dumps(value, ensure_ascii=False)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -359,6 +549,10 @@ def main(argv: list[str] | None = None) -> int:
             return command_llm(paths, args)
         if command == "knowledge":
             return command_knowledge(paths, args)
+        if command == "add-knowledge":
+            return command_add_knowledge(paths, args)
+        if command == "workflow":
+            return command_workflow(paths, args)
         if command == "version":
             banner()
             return 0

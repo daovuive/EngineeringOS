@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from engineering_os.config import ProjectPaths
 from engineering_os.knowledge import KnowledgeChunk
-from engineering_os.query import query_knowledge
+from engineering_os.query import query_knowledge, retrieve_knowledge
 from engineering_os.rag import INSUFFICIENT_EVIDENCE
 
 
@@ -171,3 +171,40 @@ class QueryKnowledgeTests(TestCase):
             )
 
         self.assertIn("[Memory: memory/project-context.md#Current Notes", runtime.prompts[0])
+
+    def test_retrieve_knowledge_reuses_score_and_confidence_gates(self) -> None:
+        runtime = FakeRuntime([1.0, 0.0], "unused")
+        with (
+            patch("engineering_os.query.load_settings", return_value=SETTINGS),
+            patch("engineering_os.query.load_runtime_config", return_value={}),
+            patch("engineering_os.query.create_runtime", return_value=runtime),
+            patch(
+                "engineering_os.query.get_embedding_contract",
+                return_value=EMBEDDING_CONTRACT,
+            ),
+            patch("engineering_os.query.load_index", return_value=self.chunks),
+        ):
+            retrieved = retrieve_knowledge(self.paths, "design", limit=1)
+
+        self.assertEqual(len(retrieved), 1)
+        self.assertEqual(retrieved[0].source, "knowledge/design.md#Decision")
+
+        weak_chunks = [
+            KnowledgeChunk(
+                "knowledge/weak.md",
+                "Weak",
+                "Weak match.",
+                [0.6, 0.8],
+            )
+        ]
+        with (
+            patch("engineering_os.query.load_settings", return_value=SETTINGS),
+            patch("engineering_os.query.load_runtime_config", return_value={}),
+            patch("engineering_os.query.create_runtime", return_value=runtime),
+            patch(
+                "engineering_os.query.get_embedding_contract",
+                return_value=EMBEDDING_CONTRACT,
+            ),
+            patch("engineering_os.query.load_index", return_value=weak_chunks),
+        ):
+            self.assertEqual(retrieve_knowledge(self.paths, "design", limit=1), ())

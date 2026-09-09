@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from engineering_os.config import ProjectPaths, load_runtime_config
 from engineering_os.llm import (
+    LLMError,
     OllamaRuntime,
     build_pull_commands,
     create_runtime,
@@ -44,3 +45,58 @@ class LLMConfigurationTests(TestCase):
         self.assertIn("ollama pull granite3.1-moe:3b", commands)
         self.assertIn("ollama pull nomic-embed-text", commands)
         self.assertEqual(len(commands), 4)
+
+    def test_generation_can_bound_tokens_for_one_workflow_stage(self) -> None:
+        class RecordingHttpClient:
+            def __init__(self) -> None:
+                self.payload = None
+
+            def request_json_lines(self, method, path, payload):
+                self.payload = payload
+                return [{"response": "bounded"}]
+
+        client = RecordingHttpClient()
+        runtime = OllamaRuntime(
+            get_default_runtime_definition(self.config),
+            http_client=client,
+        )
+
+        self.assertEqual(
+            runtime.generate("stage", role="reasoning", max_tokens=123),
+            "bounded",
+        )
+        self.assertEqual(client.payload["options"]["num_predict"], 123)
+
+        with self.assertRaisesRegex(LLMError, "positive integer"):
+            runtime.generate("stage", max_tokens=0)
+
+    def test_structured_generation_sends_schema_and_parses_object(self) -> None:
+        class RecordingHttpClient:
+            def __init__(self) -> None:
+                self.payload = None
+
+            def request_json_lines(self, method, path, payload):
+                self.payload = payload
+                return [{"response": '{"proposal":"bounded"}'}]
+
+        client = RecordingHttpClient()
+        runtime = OllamaRuntime(
+            get_default_runtime_definition(self.config),
+            http_client=client,
+        )
+        schema = {
+            "type": "object",
+            "properties": {"proposal": {"type": "string"}},
+            "required": ["proposal"],
+        }
+
+        result = runtime.generate_structured(
+            "proposal",
+            schema,
+            role="reasoning",
+            max_tokens=321,
+        )
+
+        self.assertEqual(result, {"proposal": "bounded"})
+        self.assertEqual(client.payload["format"], schema)
+        self.assertEqual(client.payload["options"]["num_predict"], 321)

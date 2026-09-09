@@ -230,6 +230,7 @@ class ClaimGrounding:
     status: GroundingStatus
     sources: tuple[str, ...]
     support_score: float
+    cited: bool = False
 
 
 @dataclass(frozen=True)
@@ -349,7 +350,13 @@ def verify_claims(
 
         if not candidate_sources:
             results.append(
-                ClaimGrounding(claim, GroundingStatus.UNSUPPORTED, (), 0.0)
+                ClaimGrounding(
+                    claim,
+                    GroundingStatus.UNSUPPORTED,
+                    (),
+                    0.0,
+                    bool(cited_sources),
+                )
             )
             continue
 
@@ -367,7 +374,13 @@ def verify_claims(
                 status = best_status
                 support_score = best_score
         results.append(
-            ClaimGrounding(claim, status, candidate_sources, support_score)
+            ClaimGrounding(
+                claim,
+                status,
+                candidate_sources,
+                support_score,
+                bool(cited_sources),
+            )
         )
 
     return tuple(results)

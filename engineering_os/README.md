@@ -4,7 +4,20 @@
 
 ## Purpose and Scope
 
-EngineeringOS Python implementation: CLI, configuration, structure creation/validation, runtime abstraction, and Markdown search. The root eng.py is only an entry point. The runtime API goes through LLMRuntime/create_runtime; learning workflows and model data do not belong in the code module.
+EngineeringOS Python implementation: CLI, configuration loading, structure
+creation/validation, runtime abstraction, knowledge ingestion, incremental JSON
+indexing, Markdown search/RAG, bounded engineering workflows, explicit web
+actions, governed knowledge-library reads, preview-bound mutations, and the
+loopback web adapter. The root `eng.py` is only an entry point.
+Runtime calls go through `LLMRuntime`/`create_runtime`; workflow intent remains
+registered under `skills/`, while executable orchestration lives in
+`engineering_os.workflows`.
+
+Canonical contracts and user behavior are documented in
+[Architecture](../docs/ARCHITECTURE.md), the
+[Knowledge Ingestion Guide](../docs/KNOWLEDGE_INGESTION.md), and
+[EOS Command and Web Coverage](../docs/COMMAND_COVERAGE.md). The five-screen
+interface is documented in the [WebUI Guide](../docs/WEBUI_GUIDE.md).
 
 ## Extension Rules
 

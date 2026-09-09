@@ -6,6 +6,11 @@
 
 Reusable prompts or prompt fragments. A skill defines a workflow; a prompt defines how input is expressed for a model. Knowledge and experience content must be referenced from primary sources, not copied into prompts.
 
+`Resume_EngineeringOS_Development.md` is the canonical live development
+checkpoint. Update it after each verified increment with the current evidence,
+limitations, pending approvals, and next action; do not create parallel resume
+files.
+
 ## Extension Rules
 
 Add files within the scope above. This README is a local guide, not a complete

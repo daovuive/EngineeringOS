@@ -19,6 +19,42 @@
       "purpose": "Answer current career direction and path questions from canonical career sources.",
       "inputs": ["career question"],
       "outputs": ["current direction", "path trade-offs", "next actions", "evidence references"]
+    },
+    {
+      "id": "code-review",
+      "path": "skills/code-review/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Review supplied source files or diffs without executing or modifying them.",
+      "inputs": ["source files or diff text"],
+      "outputs": ["prioritized findings", "suggested corrections", "validation steps", "coverage limits"]
+    },
+    {
+      "id": "requirement-review",
+      "path": "skills/requirement-review/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Review requirements for quality, testability, and traceability gaps.",
+      "inputs": ["requirement document or text"],
+      "outputs": ["actionable findings", "proposed revisions", "assumptions", "validation needs"]
+    },
+    {
+      "id": "adr-assistant",
+      "path": "skills/adr-assistant/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Draft an unapproved architecture decision from supplied context and options.",
+      "inputs": ["decision context", "constraints", "candidate options"],
+      "outputs": ["draft ADR", "trade-offs", "risks", "validation needs"]
+    },
+    {
+      "id": "solution-architect",
+      "path": "skills/solution-architect/SKILL.md",
+      "version": "1.0.0",
+      "status": "active",
+      "purpose": "Create a bounded, traceable solution architecture proposal.",
+      "inputs": ["problem and stakeholders", "requirements", "quality attributes", "constraints", "system context"],
+      "outputs": ["architecture proposal", "Mermaid view", "trade-offs", "risks and experiments", "draft ADR proposals"]
     }
   ]
 }

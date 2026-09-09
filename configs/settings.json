@@ -14,8 +14,12 @@
 
   "knowledge": {
     "root": "knowledge",
-    "autoIndex": false,
+    "autoIndex": true,
     "index": "runtime/index/knowledge.json",
+    "ingestion": {
+      "directory": "knowledge/inbox",
+      "maxBytes": 2097152
+    },
     "retrieval": {
       "candidateMinScore": 0.45,
       "confidenceThreshold": 0.62,
@@ -25,6 +29,28 @@
       "supportedClaimCoverage": 0.75,
       "partialClaimCoverage": 0.4,
       "minSharedTerms": 2
+    },
+    "organizer": {
+      "destinations": [
+        {"path": "knowledge/architecture/patterns", "description": "Reusable architecture patterns and tactics."},
+        {"path": "knowledge/architecture/styles", "description": "Architecture styles and their trade-offs."},
+        {"path": "knowledge/architecture/system-designs", "description": "System-design references and technical designs."},
+        {"path": "knowledge/architecture/reviews", "description": "Architecture review methods and review notes."},
+        {"path": "knowledge/architect/asr", "description": "Architecture-significant requirement learning and research."},
+        {"path": "knowledge/architect/books", "description": "Architecture book notes and reading material."},
+        {"path": "knowledge/architect/lessions", "description": "Personal Solution Architect learning lessons and progress notes."},
+        {"path": "knowledge/automotive", "description": "Automotive, SDV, OTA, telematics, and vehicle engineering knowledge."},
+        {"path": "knowledge/standards/iSAQB", "description": "iSAQB standard and curriculum knowledge."},
+        {"path": "knowledge/standards/ISO26262", "description": "ISO 26262 functional-safety knowledge."},
+        {"path": "knowledge/standards/AUTOSAR", "description": "AUTOSAR standard knowledge."},
+        {"path": "knowledge/standards/ASPICE", "description": "Automotive SPICE process knowledge."},
+        {"path": "knowledge/software-engineering", "description": "General software-engineering knowledge."},
+        {"path": "knowledge/management", "description": "Requirements, Scrum, and stakeholder-management knowledge."},
+        {"path": "knowledge/personal/lessons-learned", "description": "Personal lessons learned from engineering work."},
+        {"path": "knowledge/personal/architecture-notes", "description": "Personal architecture notes and observations."},
+        {"path": "knowledge/personal/checklists", "description": "Reusable personal engineering checklists."},
+        {"path": "knowledge/personal/tradeoffs", "description": "Personal architecture trade-off notes."}
+      ]
     }
   },
 

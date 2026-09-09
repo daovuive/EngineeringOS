@@ -6,6 +6,10 @@
 
 Architecture decisions for EngineeringOS itself. Each ADR records context, options, the decision, consequences, and a Proposed / Accepted / Deprecated / Superseded status. Use the `ADR-*.md` naming pattern; learning notes are not accepted decisions.
 
+Use the [Architecture Decision index](../docs/DECISIONS.md) for navigation and
+current status. An implemented candidate marked `Proposed` is not an accepted
+project decision until the owner records explicit approval.
+
 ## Extension Rules
 
 Add files within the scope above. This README is a local guide, not a complete

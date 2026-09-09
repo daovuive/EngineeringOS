@@ -21,11 +21,27 @@ class LLMRuntime(Protocol):
     def list_models(self) -> list[str]:
         """Return model names available in the runtime."""
 
-    def generate(self, prompt: str, *, role: str = "chat") -> str:
+    def generate(
+        self,
+        prompt: str,
+        *,
+        role: str = "chat",
+        max_tokens: int | None = None,
+    ) -> str:
         """Generate text using a configured model role."""
 
     def embed(self, text: str) -> list[float]:
         """Create one embedding vector using the configured embedding model."""
+
+    def generate_structured(
+        self,
+        prompt: str,
+        schema: dict[str, Any],
+        *,
+        role: str = "reasoning",
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
+        """Generate a JSON object constrained by a supplied schema."""
 
 
 @dataclass(frozen=True)
@@ -101,13 +117,27 @@ class OllamaRuntime:
                 names.append(model["name"])
         return names
 
-    def generate(self, prompt: str, *, role: str = "chat") -> str:
+    def generate(
+        self,
+        prompt: str,
+        *,
+        role: str = "chat",
+        max_tokens: int | None = None,
+    ) -> str:
+        if max_tokens is not None and (
+            not isinstance(max_tokens, int)
+            or isinstance(max_tokens, bool)
+            or max_tokens < 1
+        ):
+            raise LLMError("Generation max_tokens must be a positive integer.")
         payload = {
             "model": self.definition.model_for(role),
             "prompt": prompt,
             "stream": self.definition.options.stream,
         }
         options = _to_ollama_options(self.definition.options)
+        if max_tokens is not None:
+            options["num_predict"] = max_tokens
         if options:
             payload["options"] = options
 
@@ -118,6 +148,51 @@ class OllamaRuntime:
         if not isinstance(response, str):
             raise LLMError("Ollama response did not include text output.")
         return response
+
+    def generate_structured(
+        self,
+        prompt: str,
+        schema: dict[str, Any],
+        *,
+        role: str = "reasoning",
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
+        if not isinstance(schema, dict) or not schema:
+            raise LLMError("Structured generation requires a JSON schema.")
+        if max_tokens is not None and (
+            not isinstance(max_tokens, int)
+            or isinstance(max_tokens, bool)
+            or max_tokens < 1
+        ):
+            raise LLMError("Generation max_tokens must be a positive integer.")
+        payload: dict[str, Any] = {
+            "model": self.definition.model_for(role),
+            "prompt": prompt,
+            "stream": self.definition.options.stream,
+            "format": schema,
+        }
+        options = _to_ollama_options(self.definition.options)
+        if max_tokens is not None:
+            options["num_predict"] = max_tokens
+        if options:
+            payload["options"] = options
+
+        if self.definition.options.stream:
+            raw = self._generate_stream(payload)
+        else:
+            response = self._http.request_json("POST", "/api/generate", payload).get(
+                "response"
+            )
+            if not isinstance(response, str):
+                raise LLMError("Ollama response did not include text output.")
+            raw = response
+        try:
+            result = json.loads(raw)
+        except json.JSONDecodeError as error:
+            raise LLMError("Ollama returned invalid structured JSON.") from error
+        if not isinstance(result, dict):
+            raise LLMError("Ollama structured response was not a JSON object.")
+        return result
 
     def embed(self, text: str) -> list[float]:
         payload = self._http.request_json(

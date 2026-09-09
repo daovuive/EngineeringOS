@@ -1,0 +1,307 @@
+#!/usr/bin/env bash
+
+# Local EngineeringOS operational diagnostic. It never sends credentials.
+# Usage: eos-status [--deep]
+
+set -o pipefail
+
+SCRIPT_DIRECTORY="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DEFAULT_PROJECT_ROOT="$(cd -- "$SCRIPT_DIRECTORY/.." && pwd)"
+
+resolve_local_url() {
+    python3 - "$EOS_STATUS_PROJECT_ROOT" <<'PY' 2>/dev/null || printf '%s\n' 'http://127.0.0.1:8081'
+import sys
+
+sys.path.insert(0, sys.argv[1])
+from engineering_os.web import DEFAULT_HOST, DEFAULT_PORT
+
+print(f"http://{DEFAULT_HOST}:{DEFAULT_PORT}")
+PY
+}
+
+resolve_ollama_url() {
+    python3 - "$EOS_STATUS_PROJECT_ROOT" <<'PY' 2>/dev/null || printf '%s\n' 'http://127.0.0.1:11434'
+import sys
+
+sys.path.insert(0, sys.argv[1])
+from engineering_os.config import ProjectPaths, load_runtime_config
+from engineering_os.llm import get_default_runtime_definition
+
+definition = get_default_runtime_definition(
+    load_runtime_config(ProjectPaths(root=__import__("pathlib").Path(sys.argv[1])))
+)
+print(definition.provider.host)
+PY
+}
+
+EOS_STATUS_PROJECT_ROOT="${EOS_STATUS_PROJECT_ROOT:-$DEFAULT_PROJECT_ROOT}"
+EOS_LOCAL_URL="${EOS_STATUS_LOCAL_URL:-$(resolve_local_url)}"
+EOS_PUBLIC_URL="${EOS_STATUS_PUBLIC_URL:-https://eos.dao-labs.org}"
+OLLAMA_URL="${EOS_STATUS_OLLAMA_URL:-$(resolve_ollama_url)}"
+EOS_SERVICE="${EOS_STATUS_WEB_SERVICE:-engineeringos-web}"
+CLOUDFLARED_SERVICE="${EOS_STATUS_CLOUDFLARED_SERVICE:-cloudflared}"
+EOS_STATUS_LISTEN_PORTS="${EOS_STATUS_LISTEN_PORTS:-8081,11434,20241}"
+
+WIDTH=25
+DEEP=false
+
+case "${1:-}" in
+    "") ;;
+    --deep) DEEP=true ;;
+    *)
+        echo "Usage: eos-status [--deep]"
+        exit 2
+        ;;
+esac
+
+line() {
+    printf '%*s\n' 72 '' | tr ' ' '-'
+}
+
+row() {
+    printf "%-${WIDTH}s %s\n" "$1" "$2"
+}
+
+ok() {
+    row "$1" "OK"
+}
+
+warn() {
+    row "$1" "WARN - $2"
+}
+
+fail() {
+    row "$1" "FAIL - $2"
+}
+
+section() {
+    echo
+    line
+    echo "$1"
+    line
+}
+
+service_status() {
+    local state
+    state="$(systemctl is-active "$1" 2>/dev/null || true)"
+    if [[ "$state" == "active" ]]; then
+        ok "$2"
+    else
+        fail "$2" "${state:-unknown}"
+    fi
+}
+
+service_enabled() {
+    local state
+    state="$(systemctl is-enabled "$1" 2>/dev/null || true)"
+    if [[ "$state" == "enabled" ]]; then
+        ok "$2"
+    else
+        warn "$2" "${state:-unknown}"
+    fi
+}
+
+measure_url() {
+    curl -o /dev/null -s -w '%{http_code} %{time_total}' --max-time 10 "$1" 2>/dev/null
+}
+
+to_ms() {
+    awk -v t="$1" 'BEGIN { printf "%.0f ms", t * 1000 }'
+}
+
+format_models() {
+    python3 -c '
+import json
+import sys
+
+try:
+    models = json.load(sys.stdin).get("models", [])
+    if not models:
+        print("  none")
+    for model in models:
+        name = model.get("name", "?")
+        size = model.get("size", 0)
+        vram = model.get("size_vram")
+        details = f"  {name} | RAM {size / (1024 ** 3):.2f} GB"
+        if isinstance(vram, (int, float)):
+            details += f" | VRAM {vram / (1024 ** 3):.2f} GB"
+        print(details)
+except Exception:
+    print("  unavailable")
+' 2>/dev/null
+}
+
+sanitize_preview() {
+    sed -E 's#/(home|root|etc|var|tmp|usr|opt|mnt)(/[[:alnum:]_.@+-]+)+#[redacted-path]#g'
+}
+
+echo
+echo "EngineeringOS Status"
+echo "===================="
+echo "Time: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+echo "Host: $(hostname)"
+if $DEEP; then
+    echo "Mode: DEEP"
+else
+    echo "Mode: FAST"
+fi
+
+section "SYSTEM"
+SYSTEMD_STATE="$(systemctl is-system-running 2>/dev/null || true)"
+case "$SYSTEMD_STATE" in
+    running) ok "systemd" ;;
+    degraded) warn "systemd" "degraded" ;;
+    *) warn "systemd" "${SYSTEMD_STATE:-unknown}" ;;
+esac
+
+FAILED_COUNT="$(systemctl --failed --no-legend 2>/dev/null | grep -c '^[^[:space:]]' || true)"
+if [[ "$FAILED_COUNT" == "0" ]]; then
+    ok "Failed units"
+else
+    warn "Failed units" "$FAILED_COUNT"
+fi
+row "WSL uptime" "$(uptime -p 2>/dev/null | sed 's/^up //' || true)"
+row "Kernel" "$(uname -r)"
+row "CPU cores" "$(nproc 2>/dev/null || echo unknown)"
+row "Load avg" "$(awk '{print $1, $2, $3}' /proc/loadavg 2>/dev/null || echo unknown)"
+
+section "MEMORY"
+row "RAM" "$(free -h 2>/dev/null | awk '/^Mem:/ {print $3 " / " $2 " used"}')"
+row "RAM usage" "$(free 2>/dev/null | awk '/^Mem:/ {if ($2 > 0) printf "%.1f%%", ($3/$2)*100}')"
+row "Swap" "$(free -h 2>/dev/null | awk '/^Swap:/ {print $3 " / " $2 " used"}')"
+
+section "DISK"
+row "Home filesystem" "$(df -h "$HOME" 2>/dev/null | awk 'NR==2 {print $3 " / " $2 " used (" $5 ")"}')"
+if [[ -d "$EOS_STATUS_PROJECT_ROOT" ]]; then
+    row "EngineeringOS size" "$(du -sh "$EOS_STATUS_PROJECT_ROOT" 2>/dev/null | awk '{print $1}')"
+else
+    fail "EngineeringOS path" "not found"
+fi
+
+section "SERVICES"
+service_status "$EOS_SERVICE" "EngineeringOS"
+service_enabled "$EOS_SERVICE" "EOS auto-start"
+service_status "$CLOUDFLARED_SERVICE" "Cloudflared"
+service_enabled "$CLOUDFLARED_SERVICE" "Cloudflare auto-start"
+
+section "ENGINEERINGOS"
+EOS_RESULT="$(measure_url "$EOS_LOCAL_URL/health")"
+EOS_HTTP="$(awk '{print $1}' <<< "$EOS_RESULT")"
+EOS_TIME="$(awk '{print $2}' <<< "$EOS_RESULT")"
+if [[ "$EOS_HTTP" == "200" ]]; then
+    ok "EOS health"
+else
+    fail "EOS health" "HTTP ${EOS_HTTP:-unreachable}"
+fi
+[[ -n "$EOS_TIME" ]] && row "EOS health latency" "$(to_ms "$EOS_TIME")"
+row "EOS local URL" "$EOS_LOCAL_URL"
+
+section "OLLAMA"
+OLLAMA_TAGS="$(curl -fsS --max-time 5 "$OLLAMA_URL/api/tags" 2>/dev/null || true)"
+if [[ -n "$OLLAMA_TAGS" ]]; then
+    ok "Ollama"
+else
+    fail "Ollama" "not reachable"
+fi
+OLLAMA_VERSION_JSON="$(curl -fsS --max-time 5 "$OLLAMA_URL/api/version" 2>/dev/null || true)"
+OLLAMA_VERSION="$(printf '%s' "$OLLAMA_VERSION_JSON" | python3 -c 'import json, sys
+try:
+    print(json.load(sys.stdin).get("version", "unknown"))
+except Exception:
+    print("unknown")' 2>/dev/null)"
+row "Ollama version" "$OLLAMA_VERSION"
+echo
+echo "Installed models:"
+printf '%s' "$OLLAMA_TAGS" | format_models
+echo
+echo "Running models:"
+curl -fsS --max-time 5 "$OLLAMA_URL/api/ps" 2>/dev/null | format_models
+
+section "NETWORK"
+echo "Relevant listening ports:"
+PORT_PATTERN="$(printf '%s' "$EOS_STATUS_LISTEN_PORTS" | sed 's/,/|/g')"
+PORT_OUTPUT="$(ss -lntp 2>/dev/null | grep -E ":(${PORT_PATTERN})\\b" || true)"
+if [[ -n "$PORT_OUTPUT" ]]; then
+    printf '%s\n' "$PORT_OUTPUT" | sed 's/^/  /'
+else
+    echo "  none detected"
+fi
+
+section "CLOUDFLARE ACCESS"
+PUBLIC_RESULT="$(measure_url "$EOS_PUBLIC_URL/health")"
+PUBLIC_HTTP="$(awk '{print $1}' <<< "$PUBLIC_RESULT")"
+PUBLIC_TIME="$(awk '{print $2}' <<< "$PUBLIC_RESULT")"
+case "$PUBLIC_HTTP" in
+    200) ok "Public endpoint" ;;
+    302|401|403) row "Public endpoint" "ACCESS PROTECTED (HTTP $PUBLIC_HTTP)" ;;
+    000|"") fail "Public endpoint" "unreachable" ;;
+    *) warn "Public endpoint" "HTTP $PUBLIC_HTTP" ;;
+esac
+[[ -n "$PUBLIC_TIME" ]] && row "Public latency" "$(to_ms "$PUBLIC_TIME")"
+row "Public URL" "$EOS_PUBLIC_URL"
+
+if $DEEP; then
+    section "DEEP RAG TEST"
+    echo "Running real EngineeringOS query..."
+    START_NS="$(date +%s%N)"
+    DEEP_RESPONSE="$(curl -sS --max-time 120 -X POST "$EOS_LOCAL_URL/api/v1/query" -H 'Content-Type: application/json' --data '{"query":"What is EngineeringOS?"}' 2>/dev/null)"
+    CURL_EXIT=$?
+    END_NS="$(date +%s%N)"
+    ELAPSED_MS="$(awk -v start="$START_NS" -v end="$END_NS" 'BEGIN {printf "%.0f", (end-start)/1000000}')"
+    if [[ "$CURL_EXIT" -ne 0 || -z "$DEEP_RESPONSE" ]]; then
+        fail "RAG query" "request failed"
+    else
+        DEEP_PARSED="$(printf '%s' "$DEEP_RESPONSE" | python3 -c 'import json, sys
+try:
+    data = json.load(sys.stdin)
+    print(data.get("status", "unknown"))
+    print(data.get("answer_status", "unknown"))
+    print(len(data.get("sources", [])))
+    print(data.get("answer", "").replace("\\n", " ")[:160])
+except Exception:
+    print("parse_error\\nparse_error\\n0\\n")' 2>/dev/null)"
+        DEEP_STATUS="$(sed -n '1p' <<< "$DEEP_PARSED")"
+        ANSWER_STATUS="$(sed -n '2p' <<< "$DEEP_PARSED")"
+        SOURCE_COUNT="$(sed -n '3p' <<< "$DEEP_PARSED")"
+        ANSWER_PREVIEW="$(sed -n '4p' <<< "$DEEP_PARSED" | sanitize_preview)"
+        [[ "$DEEP_STATUS" == "ok" ]] && ok "RAG request" || fail "RAG request" "$DEEP_STATUS"
+        row "Answer status" "$ANSWER_STATUS"
+        row "Source count" "$SOURCE_COUNT"
+        row "RAG latency" "${ELAPSED_MS} ms"
+        if [[ -n "$ANSWER_PREVIEW" ]]; then
+            echo
+            echo "Answer preview:"
+            echo "  $ANSWER_PREVIEW"
+        fi
+    fi
+    echo
+    echo "Running models after query:"
+    curl -fsS --max-time 5 "$OLLAMA_URL/api/ps" 2>/dev/null | format_models
+fi
+
+section "RECENT ERRORS"
+warning_count() {
+    journalctl -u "$1" --since "1 hour ago" -p warning --no-pager -q 2>/dev/null |
+        grep -c '^[^[:space:]]' || true
+}
+for service_label in "$EOS_SERVICE:EngineeringOS" "$CLOUDFLARED_SERVICE:Cloudflared"; do
+    service="${service_label%%:*}"
+    label="${service_label#*:}"
+    count="$(warning_count "$service")"
+    if [[ "$count" == "0" ]]; then
+        ok "$label warnings"
+    else
+        warn "$label warnings" "$count event(s) in the last hour"
+    fi
+done
+
+section "SUMMARY"
+echo "Local:"
+echo "  $EOS_LOCAL_URL"
+echo
+echo "Public:"
+echo "  $EOS_PUBLIC_URL"
+echo
+echo "Commands:"
+echo "  eos-status"
+echo "  eos-status --deep"

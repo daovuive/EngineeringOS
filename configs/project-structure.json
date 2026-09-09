@@ -167,6 +167,10 @@
       "description": "Mã Python của EngineeringOS: CLI, cấu hình, tạo/kiểm tra cấu trúc, runtime abstraction và tìm kiếm Markdown"
     },
     {
+      "path": "engineering_os/web_static",
+      "description": "Tài sản giao diện trình duyệt cục bộ cho HTTP adapter EngineeringOS"
+    },
+    {
       "path": "skills",
       "description": "Nguồn chính cho workflow AI tái sử dụng"
     },
@@ -253,15 +257,8 @@
     "readmeName": "README.md",
     "protectedRootReadme": {
       "path": "README.md",
-      "sha256": "9c7fb3b3ab191d45eeeff567863b414c06f2ffee63edfa147b7d187d67fdf089"
+      "sha256": "5839df9c41d1fa53417d80566a12fda7a49f97b55fad859b6c100dfa5c6cafc7"
     },
-    "rootNavigationPendingApproval": false,
-    "autoIndexedFiles": [
-      {
-        "directory": "ADR",
-        "pattern": "ADR-*.md"
-      }
-    ],
     "ignoredDirectories": [
       ".git",
       ".venv",

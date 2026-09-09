@@ -55,12 +55,10 @@ class StructureGovernanceTests(unittest.TestCase):
         result = self.validate()
         self.assertTrue(result.ok, result.governance_errors)
 
-    def test_missing_readme_and_parent_navigation_fail(self) -> None:
+    def test_missing_readme_fails(self) -> None:
         (self.root / "docs/guides/README.md").unlink()
-        self.write("docs/README.md", "# Docs\n")
         result = self.validate()
         self.assertIn("Missing architecture README: docs/guides/README.md", result.governance_errors)
-        self.assertTrue(any("Parent README docs/README.md must link" in error for error in result.governance_errors))
         self.assertFalse(result.ok)
         self.assertEqual(result.error_count, len(result.governance_errors))
 
@@ -68,25 +66,9 @@ class StructureGovernanceTests(unittest.TestCase):
         self.write("docs/guides/README.md", "  \n")
         self.assertIn("Empty architecture README: docs/guides/README.md", self.validate().governance_errors)
 
-    def test_new_file_requires_local_readme_link(self) -> None:
+    def test_new_file_does_not_require_local_readme_link(self) -> None:
         self.write("docs/guides/new-lesson.md", "# A lesson\n")
-        self.assertTrue(any("Unindexed file: docs/guides/new-lesson.md" in error for error in self.validate().governance_errors))
-        self.write("docs/guides/README.md", "# Guides\n[Lesson](new-lesson.md)\n")
         self.assertTrue(self.validate().ok, self.validate().governance_errors)
-
-    def test_auto_indexed_file_pattern_does_not_require_individual_links(self) -> None:
-        self.structure["governance"]["autoIndexedFiles"] = [
-            {"directory": "docs/guides", "pattern": "Lesson-*.md"}
-        ]
-        self.write("docs/guides/Lesson-001.md", "# A lesson\n")
-        self.assertTrue(self.validate().ok, self.validate().governance_errors)
-
-        self.write("docs/guides/other.md", "# Other\n")
-        errors = self.validate().governance_errors
-        self.assertIn(
-            "Unindexed file: docs/guides/other.md must be linked from docs/guides/README.md",
-            errors,
-        )
 
     def test_sync_preserves_existing_root_and_refuses_missing_protected_root(self) -> None:
         original = (self.root / "README.md").read_bytes()
@@ -100,14 +82,10 @@ class StructureGovernanceTests(unittest.TestCase):
         self.assertFalse((self.root / "README.md").exists())
         self.assertFalse((self.root / "new-folder").exists())
 
-    def test_root_approval_exception_does_not_exempt_nested_navigation_or_hash(self) -> None:
-        self.structure["governance"]["rootNavigationPendingApproval"] = True
+    def test_root_hash_remains_protected(self) -> None:
         self.write("README.md", "# Changed root\n")
-        self.write("docs/README.md", "# Docs\n")
         errors = self.validate().governance_errors
         self.assertTrue(any("Protected README.md changed" in error for error in errors))
-        self.assertTrue(any("Parent README docs/README.md must link" in error for error in errors))
-        self.assertFalse(any("Parent README README.md must link" in error for error in errors))
 
     def test_markdown_paths_support_encoding_anchors_references_and_parentheses(self) -> None:
         self.write("docs/a file (draft).md", "Document\n")
@@ -170,7 +148,6 @@ class StructureGovernanceTests(unittest.TestCase):
     def test_skill_registry_requires_unique_ids_existing_files_and_declared_parent(self) -> None:
         self.write("configs/README.md", "# Configs\n")
         self.structure["folders"].append({"path": "configs"})
-        self.structure["governance"]["rootNavigationPendingApproval"] = True
         self.write("configs/skills.json", json.dumps({"skills": [
             {"id": "review", "path": "docs/guides/README.md"},
             {"id": "review", "path": "skills/missing/SKILL.md"},

@@ -31,11 +31,9 @@ from engineering_os.llm import (
     get_default_runtime_definition,
 )
 from engineering_os.rag import (
-    GroundingPolicy,
-    RetrievalPolicy,
-    answer_question,
     render_response,
 )
+from engineering_os.query import query_knowledge
 from engineering_os.structure import ensure_structure, validate_structure
 
 
@@ -280,6 +278,18 @@ def command_llm(paths: ProjectPaths, args: argparse.Namespace) -> int:
 
 
 def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
+    if args.knowledge_command == "ask":
+        response = query_knowledge(
+            paths,
+            args.query,
+            limit=args.limit,
+            min_score=args.min_score,
+            confidence_threshold=args.confidence_threshold,
+            include_memory=args.include_memory,
+        )
+        print(render_response(response))
+        return 0
+
     settings = load_settings(paths)
     knowledge = settings.get("knowledge", {})
     root = paths.resolve(knowledge.get("root", "knowledge"))
@@ -293,9 +303,6 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
     runtime_config = load_runtime_config(paths)
     runtime = create_runtime(runtime_config)
     embedding_contract = get_embedding_contract(runtime_config)
-    retrieval_policy = RetrievalPolicy.from_settings(settings)
-    grounding_policy = GroundingPolicy.from_settings(settings)
-
     if args.knowledge_command == "index":
         chunks = build_index(root, runtime)
         if memory_root != root:
@@ -321,33 +328,6 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
         for score, chunk in search_index(chunks, args.query, runtime, limit=args.limit):
             print(f"{score:.4f}  {chunk.path}#{chunk.heading}")
             print(f"        {chunk.text.splitlines()[0][:160]}")
-        return 0
-
-    if args.knowledge_command == "ask":
-        chunks = load_index(index_path, embedding_contract=embedding_contract)
-        response = answer_question(
-            chunks,
-            args.query,
-            runtime,
-            runtime,
-            top_k=args.limit,
-            min_relevance=(
-                retrieval_policy.candidate_min_score
-                if args.min_score is None
-                else args.min_score
-            ),
-            confidence_threshold=(
-                retrieval_policy.confidence_threshold
-                if args.confidence_threshold is None
-                else args.confidence_threshold
-            ),
-            overfetch_factor=retrieval_policy.overfetch_factor,
-            role="rag",
-            grounding_policy=grounding_policy,
-            include_memory=args.include_memory,
-            memory_max_age_days=memory_max_age_days,
-        )
-        print(render_response(response))
         return 0
 
     raise KnowledgeIndexError("Missing knowledge command. Use: index or search.")

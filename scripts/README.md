@@ -6,10 +6,9 @@
 
 Operational scripts that support EngineeringOS when genuinely needed. Reusable CLI logic belongs in engineering_os/. Add a script only when its inputs, outputs, execution, and checks are clear; do not create a second implementation of the same function.
 
-## Existing Documents and Files
-
-- [evaluate_rag.py](evaluate_rag.py): repeatable RAG retrieval, grounding, and answer-behavior baseline.
-
 ## Extension Rules
 
-Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.
+Add files within the scope above. This README is a local guide, not a complete
+file index; adding a file does not require editing it. New subdirectories must
+be registered in the manifest, contain their own README.md. Folder and file navigation is discovered
+through the manifest; no parent README needs a new link for routine additions. Follow the process and checks in the Structure Governance document.

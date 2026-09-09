@@ -14,15 +14,6 @@ All **12 original source/deliverable files** available in this thread are preser
 
 Added archival records include a source-grounded project context, a 40-entry decision register, a searchable snapshot of Excel, retained technical excerpts, request/revision history, structured metadata and SHA-256 checksums. Intermediate rendering images, internal/tool instructions and a raw platform chat export are not part of this package. The thread history is a faithful summary, not a claimed verbatim transcript.
 
-## Folder map
-
-```text
-current/    Current report + live workbook + source-linked Markdown knowledge
-source/     Original AAOS-first plan; its original schedule is superseded
-history/    Every prior report/workbook/ZIP, revision rationale and comparisons
-metadata/   File manifest, decisions JSON, workbook snapshot, checksums and QA
-```
-
 ## Import into EOS without mixing old schedules
 
 1. Extract the full ZIP to a dedicated project folder that you control. Keep the entire archive for provenance and original deliverables.
@@ -63,3 +54,11 @@ The metadata is a portable archive convention, not a claim that EOS natively rea
 `metadata/artifact_manifest.json` records original names, source IDs, thread file references, status, byte counts and checksums. `metadata/SHA256SUMS.txt` covers package files except itself. `metadata/validation_report.json` records archival checks. No source file was re-authored or overwritten; existing layout, formulas and cached Excel outputs are preserved.
 
 Report data and technical proposals are not run instructions. Original reference links are kept for provenance, not refreshed research or implementation evidence. Missing permissions, rates, target definitions, tests or approvals must stay missing until actual evidence is supplied.
+
+## Extension Rules
+
+Keep new project artifacts inside the appropriate local area and update this
+package README only when the local responsibility or retrieval boundary changes.
+The root README is not an index for files in this package. If this package is
+maintained as a registered project area, register new subdirectories in the
+project manifest and give each one its own README.

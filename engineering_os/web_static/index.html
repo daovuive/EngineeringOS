@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EngineeringOS</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>EngineeringOS</h1>
+        <p>Ask the local grounded knowledge service.</p>
+      </header>
+
+      <section aria-labelledby="query-heading">
+        <h2 id="query-heading">Query</h2>
+        <label for="query">Question</label>
+        <textarea id="query" rows="6" maxlength="4000" placeholder="Ask a question about this EngineeringOS knowledge base."></textarea>
+        <p class="hint">Use Ctrl+Enter to ask. Enter adds a new line.</p>
+        <button id="ask" type="button">Ask</button>
+      </section>
+
+      <p id="loading" role="status" hidden>Asking…</p>
+      <p id="error" role="alert" hidden></p>
+
+      <section aria-labelledby="answer-heading">
+        <h2 id="answer-heading">Answer</h2>
+        <p id="answer-status">Ready</p>
+        <pre id="answer"></pre>
+      </section>
+
+      <section id="sources-section" aria-labelledby="sources-heading" hidden>
+        <h2 id="sources-heading">Sources</h2>
+        <ul id="sources"></ul>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

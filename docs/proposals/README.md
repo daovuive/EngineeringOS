@@ -6,11 +6,6 @@
 
 Proposals awaiting project-owner approval, with impact and patches when needed. Content in this area does not replace rules currently in force. After approval, apply the change to the primary source and record the approval decision.
 
-## Existing Documents and Files
-
-- [Approval preview](ROOT_README.proposed.md): proposed root README content; preview links are adjusted relative to this directory.
-- [Exact root README diff](root-readme.patch): replaces the long introduction and exercises with the constitution, responsibility model, and link tree. Patch paths are relative to the repository root.
-
 ## Approval Decision and Application Status
 
 The project owner approved the change on 2026-09-05 with the request: “good, implement the change.”
@@ -22,4 +17,7 @@ The root README is authoritative; the preview is not the source for future updat
 
 ## Extension Rules
 
-Add files within the scope above and link them from this index. New subdirectories must be registered in the manifest, contain their own README.md, and be linked from the parent README. Follow the process and checks in the Structure Governance document.
+Add files within the scope above. This README is a local guide, not a complete
+file index; adding a file does not require editing it. New subdirectories must
+be registered in the manifest, contain their own README.md. Folder and file navigation is discovered
+through the manifest; no parent README needs a new link for routine additions. Follow the process and checks in the Structure Governance document.

@@ -212,10 +212,10 @@ The following table is a stable map of high-level responsibilities. It is not an
 exhaustive index of every folder or file in the repository.
 
 The manifest is the authoritative machine-readable inventory. Do not add a row
-or link to this root README for each new folder or file. Add new content to the
-nearest responsibility area and update that area's README when a local index is
-useful or required. Update this root README only when a responsibility boundary
-or another stable architectural contract changes.
+or link to any README for each new folder or file. Add new content to the
+nearest responsibility area and update its README only when the responsibility,
+local rules, or retrieval boundary changes. Update this root README only when a
+responsibility boundary or another stable architectural contract changes.
 
 Each child README defines:
 
@@ -500,8 +500,8 @@ When extending EngineeringOS:
 4. Follow the README hierarchy from parent to target directory.
 5. Search for an existing primary source before creating new content.
 6. Select a location based on responsibility rather than convenience.
-7. Add or update the nearest relevant README when required; do not add routine
-   file or folder entries to this root README.
+7. Add or update a README only when its responsibility, local rules, or
+   retrieval boundary changes; do not add routine file or folder entries.
 8. Register new structural elements in the appropriate manifest or registry.
 9. Keep links synchronized when moving or renaming content.
 10. Do not modify protected architectural baselines without explicit approval.

@@ -5,7 +5,6 @@ import json
 import os
 import re
 import shutil
-from fnmatch import fnmatchcase
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
@@ -275,30 +274,6 @@ def _validate_governance(project_root: Path, structure: dict[str, Any]) -> list[
         if folder.parent != Path(".") and folder.parent not in folders:
             errors.append(f"Folder parent is not declared: {folder.as_posix()}")
 
-    auto_indexed_files: dict[Path, list[str]] = {}
-    configured_auto_indexed = governance.get("autoIndexedFiles", [])
-    if not isinstance(configured_auto_indexed, list):
-        errors.append("governance.autoIndexedFiles must be an array")
-        configured_auto_indexed = []
-    for entry in configured_auto_indexed:
-        if not isinstance(entry, dict):
-            errors.append("governance.autoIndexedFiles entries must be objects")
-            continue
-        try:
-            directory = _relative_path(project_root, entry.get("directory", ""))
-        except (TypeError, ValueError) as error:
-            errors.append(f"Invalid auto-indexed directory: {error}")
-            continue
-        pattern = entry.get("pattern")
-        if directory not in folders:
-            errors.append(
-                f"Auto-indexed directory is not declared: {directory.as_posix()}"
-            )
-        if not isinstance(pattern, str) or not pattern:
-            errors.append("Auto-indexed file pattern must be a non-empty string")
-            continue
-        auto_indexed_files.setdefault(directory, []).append(pattern)
-
     readme_name = governance.get("readmeName", "README.md")
     if readme_name != "README.md":
         errors.append("governance.readmeName must be README.md")
@@ -314,16 +289,6 @@ def _validate_governance(project_root: Path, structure: dict[str, Any]) -> list[
             errors.append(f"Missing architecture README: {relative.as_posix()}")
             continue
         links_by_readme[relative] = _readme_links(project_root, readme, errors)
-    for folder in sorted(folders):
-        parent_readme = folder.parent / readme_name
-        # The root README is a stable architectural map, not an exhaustive
-        # index. The manifest is the source of truth for top-level folders;
-        # local README hierarchy remains mandatory below the root.
-        if parent_readme == Path(readme_name):
-            continue
-        if (project_root / folder / readme_name).resolve() not in links_by_readme.get(parent_readme, set()):
-            errors.append(f"Parent README {parent_readme.as_posix()} must link to {folder.as_posix()}/{readme_name}")
-
     protected = governance.get("protectedRootReadme")
     if isinstance(protected, dict):
         if protected.get("path") != readme_name:
@@ -344,19 +309,6 @@ def _validate_governance(project_root: Path, structure: dict[str, Any]) -> list[
             ignored.add(_relative_path(project_root, value))
         except ValueError as error:
             errors.append(str(error))
-    for folder in sorted(folders):
-        directory = project_root / folder
-        if not directory.is_dir() or folder in ignored or any(parent in ignored for parent in folder.parents):
-            continue
-        indexed = links_by_readme.get(folder / readme_name, set())
-        for child in sorted(directory.iterdir()):
-            if child.is_file() and child.name != readme_name and child.resolve() not in indexed:
-                if any(
-                    fnmatchcase(child.name, pattern)
-                    for pattern in auto_indexed_files.get(folder, [])
-                ):
-                    continue
-                errors.append(f"Unindexed file: {child.relative_to(project_root).as_posix()} must be linked from {folder.as_posix()}/{readme_name}")
     populated: set[Path] = set()
     for current, directories, filenames in os.walk(project_root, followlinks=False):
         relative = Path(current).relative_to(project_root)

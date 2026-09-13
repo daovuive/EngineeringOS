@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from engineering_os.config import ProjectPaths, load_runtime_config, load_settings
-from engineering_os.knowledge import KnowledgeIndexError, discover_markdown, load_index
+from engineering_os.knowledge import KnowledgeIndexError, discover_documents, load_index
 from engineering_os.llm import get_embedding_contract
 
 
@@ -31,7 +31,7 @@ def list_knowledge_documents(
     query: str = "",
     folder: str = "",
 ) -> dict[str, Any]:
-    """List governed Markdown documents with truthful current index state."""
+    """List governed Markdown/PDF documents with truthful current index state."""
     settings = load_settings(paths)
     knowledge = settings.get("knowledge", {})
     knowledge_root = paths.resolve(knowledge.get("root", "knowledge")).resolve()
@@ -56,7 +56,7 @@ def list_knowledge_documents(
     folder_value = folder.strip().strip("/")
     all_documents: list[LibraryDocument] = []
     folders: set[str] = set()
-    for document in discover_markdown(knowledge_root):
+    for document in discover_documents(knowledge_root):
         if document.is_symlink():
             continue
         relative = document.relative_to(paths.root.resolve()).as_posix()
@@ -96,7 +96,7 @@ def list_knowledge_documents(
 
 
 def resolve_knowledge_document(paths: ProjectPaths, value: str) -> Path:
-    """Resolve one Markdown path under the configured knowledge root."""
+    """Resolve one inspectable document path under the knowledge root."""
     if not isinstance(value, str) or not value.strip():
         raise KnowledgeLibraryError("A knowledge document path is required.")
     raw_path = value.split("#", 1)[0].strip()
@@ -119,12 +119,12 @@ def resolve_knowledge_document(paths: ProjectPaths, value: str) -> Path:
     for part in relative.parts:
         current /= part
         if current.is_symlink():
-            raise KnowledgeLibraryError("Document path must name a governed Markdown file.")
+            raise KnowledgeLibraryError("Document path must name a governed knowledge file.")
     resolved = candidate.resolve(strict=False)
     if not resolved.is_relative_to(knowledge_root):
         raise KnowledgeLibraryError("Document path must be inside the knowledge root.")
-    if resolved.suffix.lower() != ".md" or not resolved.is_file():
-        raise KnowledgeLibraryError("Document path must name a governed Markdown file.")
+    if resolved.suffix.lower() not in {".md", ".pdf"} or not resolved.is_file():
+        raise KnowledgeLibraryError("Document path must name a governed Markdown or PDF file.")
     return resolved
 
 
@@ -138,15 +138,17 @@ def read_knowledge_document(paths: ProjectPaths, value: str) -> dict[str, Any]:
         raise KnowledgeLibraryError("Knowledge document size policy is invalid.")
     if document.stat().st_size > maximum:
         raise KnowledgeLibraryError("Knowledge document exceeds the inspection size limit.")
+    result = {
+        "path": document.relative_to(paths.root.resolve()).as_posix(),
+        "name": document.name,
+    }
+    if document.suffix.lower() == ".pdf":
+        return {**result, "content": document.read_bytes(), "content_type": "application/pdf"}
     try:
         content = document.read_text(encoding="utf-8")
     except UnicodeDecodeError as error:
         raise KnowledgeLibraryError("Knowledge document must be valid UTF-8 Markdown.") from error
-    return {
-        "path": document.relative_to(paths.root.resolve()).as_posix(),
-        "name": document.name,
-        "content": content,
-    }
+    return {**result, "content": content, "content_type": "text/markdown; charset=utf-8"}
 
 
 def _normalize_index_path(value: str, knowledge_root: Path, project_root: Path) -> str:

@@ -3,11 +3,18 @@ name = "engineering-os"
 version = "1.0.0"
 description = "Personal Engineering Knowledge Platform powered by Local AI"
 requires-python = ">=3.10"
+dependencies = [
+    "fonttools>=4.0,<5.0",
+    "pypdf>=4.0,<7.0",
+]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
 ]
+
+[tool.setuptools]
+packages = ["engineering_os"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

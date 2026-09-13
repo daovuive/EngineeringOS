@@ -325,12 +325,13 @@
     "readmeName": "README.md",
     "protectedRootReadme": {
       "path": "README.md",
-      "sha256": "5839df9c41d1fa53417d80566a12fda7a49f97b55fad859b6c100dfa5c6cafc7"
+      "sha256": "80a24bdf97de7195932877fbcf390b8b9f2d0f01f6c7db10e34c96523cd0f00d"
     },
     "ignoredDirectories": [
       ".git",
       ".venv",
       "venv",
+      "engineering_os.egg-info",
       "__pycache__",
       ".pytest_cache",
       ".vscode",

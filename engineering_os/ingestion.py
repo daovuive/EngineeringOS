@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from engineering_os.chunking import ChunkingConfig, ChunkingError
 from engineering_os.config import ProjectPaths, load_runtime_config, load_settings
 from engineering_os.knowledge import (
     IndexUpdateResult,
@@ -18,9 +19,15 @@ from engineering_os.knowledge import (
     update_document_index,
 )
 from engineering_os.llm import LLMError, LLMRuntime, create_runtime, get_embedding_contract
+from engineering_os.pdf import PDFExtractionError
 
 
-SUPPORTED_SUFFIXES = {".md": "markdown", ".markdown": "markdown", ".txt": "text"}
+SUPPORTED_SUFFIXES = {
+    ".md": "markdown",
+    ".markdown": "markdown",
+    ".txt": "text",
+    ".pdf": "pdf",
+}
 DEFAULT_MAX_BYTES = 2 * 1024 * 1024
 _HASH_PATTERN = re.compile(r"^<!-- eos-ingestion-sha256: ([0-9a-f]{64}) -->$", re.MULTILINE)
 
@@ -65,15 +72,16 @@ def ingest_path(
         inside_knowledge = True
     except ValueError:
         inside_knowledge = False
-    if inside_knowledge and source.suffix.lower() == ".md":
+    if inside_knowledge and source.suffix.lower() in {".md", ".pdf"}:
         if source.stat().st_size > max_bytes:
             raise KnowledgeIngestionError(f"Input exceeds the {max_bytes}-byte limit.")
-        try:
-            existing_content = source.read_text(encoding="utf-8")
-        except UnicodeDecodeError as error:
-            raise KnowledgeIngestionError("Input must be valid UTF-8 text.") from error
-        if not existing_content.strip():
-            raise KnowledgeIngestionError("Input content must not be empty.")
+        if source.suffix.lower() == ".md":
+            try:
+                existing_content = source.read_text(encoding="utf-8")
+            except UnicodeDecodeError as error:
+                raise KnowledgeIngestionError("Input must be valid UTF-8 text.") from error
+            if not existing_content.strip():
+                raise KnowledgeIngestionError("Input content must not be empty.")
         return _finish_indexing(
             paths,
             source,
@@ -132,14 +140,22 @@ def ingest_bytes(
     source_format = SUPPORTED_SUFFIXES.get(suffix)
     if source_format is None:
         raise KnowledgeIngestionError(
-            "Unsupported file format. Supported formats: .md, .markdown, and .txt."
+            "Unsupported file format. Supported formats: .md, .markdown, .txt, and .pdf."
         )
-    try:
-        decoded = content.decode("utf-8")
-    except UnicodeDecodeError as error:
-        raise KnowledgeIngestionError("Input must be valid UTF-8 text.") from error
-    if not decoded.strip():
-        raise KnowledgeIngestionError("Input content must not be empty.")
+    pdf_settings = settings.get("knowledge", {}).get("pdf", {})
+    if source_format == "pdf" and isinstance(pdf_settings, dict) and not pdf_settings.get("enabled", True):
+        raise KnowledgeIngestionError("PDF ingestion is disabled by configuration.")
+    decoded = ""
+    if source_format == "pdf":
+        if not content.startswith(b"%PDF-"):
+            raise KnowledgeIngestionError("PDF input is malformed or missing its PDF header.")
+    else:
+        try:
+            decoded = content.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise KnowledgeIngestionError("Input must be valid UTF-8 text.") from error
+        if not decoded.strip():
+            raise KnowledgeIngestionError("Input content must not be empty.")
 
     digest = hashlib.sha256(content).hexdigest()
     derived_title = _derive_title(title, decoded, Path(source_name).stem)
@@ -148,21 +164,24 @@ def ingest_bytes(
         if title is not None or source_name == "direct-text.txt"
         else Path(source_name).stem
     )
-    filename = _safe_filename(filename_source)
-    stored = _stored_markdown(decoded, derived_title, source_name, source_format, digest)
+    filename = _safe_filename(filename_source, suffix=".pdf" if source_format == "pdf" else ".md")
     inbox.mkdir(parents=False, exist_ok=True)
 
     ingestion_guard = paths.resolve(
         settings.get("knowledge", {}).get("index", "runtime/index/knowledge.json")
     ).with_name("knowledge-ingestion")
     with index_write_lock(ingestion_guard):
-        duplicate = _find_duplicate(inbox, digest)
+        duplicate = _find_duplicate(inbox, digest, source_format)
         if duplicate is not None:
             document = duplicate
             outcome = "unchanged"
         else:
             document = _collision_safe_target(inbox, filename, digest)
-            _write_text_atomic(document, stored)
+            if source_format == "pdf":
+                _write_bytes_atomic(document, content)
+            else:
+                stored = _stored_markdown(decoded, derived_title, source_name, source_format, digest)
+                _write_text_atomic(document, stored)
             outcome = "saved"
 
     return _finish_indexing(
@@ -187,8 +206,8 @@ def retry_document_index(
         document.relative_to(knowledge_root)
     except ValueError as error:
         raise KnowledgeIngestionError("Retry path must be inside the knowledge root.") from error
-    if document.suffix.lower() != ".md" or not document.is_file():
-        raise KnowledgeIngestionError("Retry path must name an existing Markdown document.")
+    if document.suffix.lower() not in {".md", ".pdf"} or not document.is_file():
+        raise KnowledgeIngestionError("Retry path must name an existing Markdown or PDF document.")
     return _finish_indexing(
         paths,
         document,
@@ -208,6 +227,20 @@ def _finish_indexing(
     settings: dict[str, Any],
 ) -> IngestionResult:
     relative = document.relative_to(paths.root.resolve()).as_posix()
+    pdf_settings = settings.get("knowledge", {}).get("pdf", {})
+    if (
+        document.suffix.lower() == ".pdf"
+        and isinstance(pdf_settings, dict)
+        and not pdf_settings.get("enabled", True)
+    ):
+        return IngestionResult(
+            relative,
+            outcome,
+            "failed",
+            None,
+            None,
+            "PDF ingestion is disabled by configuration.",
+        )
     if not auto_index:
         return IngestionResult(relative, outcome, "skipped", None, None)
     knowledge = settings.get("knowledge", {})
@@ -220,8 +253,10 @@ def _finish_indexing(
             paths.resolve(knowledge.get("root", "knowledge")),
             active_runtime,
             embedding_contract=get_embedding_contract(runtime_config),
+            chunking=ChunkingConfig.from_settings(settings),
+            default_language=settings.get("project", {}).get("language"),
         )
-    except (KnowledgeIndexError, LLMError) as error:
+    except (ChunkingError, KnowledgeIndexError, LLMError, PDFExtractionError) as error:
         return IngestionResult(relative, outcome, "failed", None, None, str(error))
     except OSError:
         return IngestionResult(
@@ -272,12 +307,12 @@ def _derive_title(title: str | None, content: str, fallback: str) -> str:
     return fallback or "knowledge-note"
 
 
-def _safe_filename(value: str) -> str:
+def _safe_filename(value: str, *, suffix: str = ".md") -> str:
     value = re.sub(r"[\\/\x00-\x1f:*?\"<>|]+", "-", value.strip())
     value = re.sub(r"\s+", "-", value).strip(" .-")
     if not value:
         value = "knowledge-note"
-    return f"{value[:100]}.md"
+    return f"{value[:100]}{suffix}"
 
 
 def _stored_markdown(
@@ -299,7 +334,15 @@ def _stored_markdown(
     return metadata + f"# {title}\n\n" + content
 
 
-def _find_duplicate(inbox: Path, digest: str) -> Path | None:
+def _find_duplicate(inbox: Path, digest: str, source_format: str) -> Path | None:
+    if source_format == "pdf":
+        for candidate in sorted(inbox.glob("*.pdf")):
+            try:
+                if hashlib.sha256(candidate.read_bytes()).hexdigest() == digest:
+                    return candidate
+            except OSError:
+                continue
+        return None
     for candidate in sorted(inbox.glob("*.md")):
         try:
             prefix = candidate.read_text(encoding="utf-8")[:512]
@@ -316,7 +359,7 @@ def _collision_safe_target(inbox: Path, filename: str, digest: str) -> Path:
     if not target.exists():
         return target
     stem = target.stem
-    target = inbox / f"{stem}-{digest[:12]}.md"
+    target = inbox / f"{stem}-{digest[:12]}{target.suffix}"
     if target.exists():
         raise KnowledgeIngestionError(
             f"Unable to resolve filename collision safely for {target.name}."
@@ -330,6 +373,26 @@ def _write_text_atomic(path: Path, content: str) -> None:
         with tempfile.NamedTemporaryFile(
             mode="w",
             encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary:
+            temporary.write(content)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+            temporary_path = Path(temporary.name)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
+
+
+def _write_bytes_atomic(path: Path, content: bytes) -> None:
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
             dir=path.parent,
             prefix=f".{path.name}.",
             suffix=".tmp",

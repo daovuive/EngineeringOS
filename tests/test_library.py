@@ -76,6 +76,7 @@ class KnowledgeLibraryTests(TestCase):
             (paths.root / "knowledge/architecture/saved.md").write_text(
                 "# Saved\n\nFact", encoding="utf-8"
             )
+            (paths.root / "knowledge/inbox/design.pdf").write_bytes(b"%PDF-test")
             (paths.root / "runtime/index/knowledge.json").write_text(
                 json.dumps(
                     {
@@ -106,7 +107,8 @@ class KnowledgeLibraryTests(TestCase):
             by_name = {item["name"]: item for item in result["documents"]}
             self.assertEqual(by_name["indexed.md"]["status"], "indexed")
             self.assertEqual(by_name["saved.md"]["status"], "saved_only")
-            self.assertEqual(result["summary"]["documents"], 2)
+            self.assertEqual(by_name["design.pdf"]["status"], "saved_only")
+            self.assertEqual(result["summary"]["documents"], 3)
             filtered = list_knowledge_documents(paths, query="indexed")
             self.assertEqual([item["name"] for item in filtered["documents"]], ["indexed.md"])
 
@@ -122,12 +124,17 @@ class KnowledgeLibraryTests(TestCase):
                 resolve_knowledge_document(paths, "inbox/note.md"), document
             )
             self.assertIn("Safe content", read_knowledge_document(paths, "knowledge/inbox/note.md")["content"])
-            with self.assertRaisesRegex(KnowledgeLibraryError, "governed Markdown"):
+            pdf = paths.root / "knowledge/inbox/design.pdf"
+            pdf.write_bytes(b"%PDF-test")
+            inspected = read_knowledge_document(paths, "knowledge/inbox/design.pdf")
+            self.assertEqual(inspected["content"], b"%PDF-test")
+            self.assertEqual(inspected["content_type"], "application/pdf")
+            with self.assertRaisesRegex(KnowledgeLibraryError, "governed Markdown or PDF"):
                 resolve_knowledge_document(paths, "configs/secret.md")
             with self.assertRaisesRegex(KnowledgeLibraryError, "inside the knowledge root"):
                 resolve_knowledge_document(paths, "../configs/secret.md")
 
             link = paths.root / "knowledge/inbox/link.md"
             link.symlink_to(document)
-            with self.assertRaisesRegex(KnowledgeLibraryError, "governed Markdown"):
+            with self.assertRaisesRegex(KnowledgeLibraryError, "governed knowledge"):
                 resolve_knowledge_document(paths, "inbox/link.md")

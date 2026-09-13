@@ -38,30 +38,68 @@ string.
 
 ## Knowledge and RAG pipeline
 
-1. `add-knowledge` accepts one Markdown, plain-text, pasted-text, or stdin
-   source. External sources are copied into governed `knowledge/inbox/`; text
-   is wrapped as Markdown without rewriting its body.
-2. Ingestion records format, source filename, SHA-256, and timestamp comments.
-   Unchanged re-imports reuse the existing document; deterministic hash suffixes
-   resolve different-content filename collisions without overwrite.
-3. Markdown files are split by heading; ingestion comments are not embedded.
-4. Automatic indexing updates only the saved document, preserves unrelated
-   chunks, replaces stale chunks, and avoids re-embedding unchanged content.
-5. Index writers use thread/process coordination and atomic replacement. The
-   previous valid index remains readable if embedding or persistence fails.
-6. The configured embedding role creates vectors.
-7. Chunks, source metadata, and the embedding compatibility contract are stored
-   in a versioned JSON index under `runtime/index/`.
-8. A query is embedded and ranked by cosine similarity.
-9. Candidate minimum score and top-candidate confidence thresholds can cause an
-   explicit insufficient-evidence response before generation.
-10. Selected context is sent to the configured RAG model with source IDs.
-11. Generated claims are split and checked lexically against cited evidence.
-   Partial and unsupported claims are excluded from the returned factual answer.
-12. Fresh memory is contextual, opt-in, and cannot ground authoritative claims.
+```text
+Markdown / TXT / text PDF / Memory / explicitly allowed Logs
+                         |
+                         v
+              Document-type parsers
+                         |
+                         v
+        Token-aware chunks + overlap + metadata
+                         |
+               +---------+---------+
+               v                   v
+       Dense embeddings      persisted BM25
+               +---------+---------+
+                         v
+               weighted RRF fusion
+                         v
+                metadata filters
+                         v
+          deterministic local reranker
+                         v
+                  confidence gate
+                         v
+                 top-k evidence
+                         v
+                 Ollama RAG LLM
+                         v
+          citations + claim verification
+```
+
+1. `add-knowledge` accepts Markdown, plain text, a text-based PDF, pasted text,
+   or stdin. External sources are copied atomically into
+   `knowledge/inbox/`; PDF bytes are preserved and TXT becomes Markdown.
+2. Markdown/TXT imports record source filename, format, SHA-256, and time.
+   PDF identity uses its byte hash. Re-imports are idempotent and collisions use
+   a deterministic hash suffix without overwrite.
+3. Markdown heading hierarchy and PDF page boundaries feed a deterministic
+   approximate-token chunker with configured maximum, overlap, and minimum.
+   Chunks carry stable document/chunk IDs, format, language, project, tags,
+   authority, source time, and optional page range.
+4. Incremental ingestion updates only the saved document. Full explicit rebuild
+   also reads fresh memory and, only when enabled, allowlisted recent logs.
+   Query execution never reparses PDFs or changing logs.
+5. The configured embedding role creates vectors. Schema `2.0` stores chunks,
+   the embedding contract, and BM25 corpus statistics in one atomic JSON index;
+   schema `1.1` remains readable through safe metadata/lexical defaults.
+6. Queries generate dense and BM25 candidates. Weighted Reciprocal Rank Fusion
+   combines rankings before optional source/document/project/language/tag
+   filtering. A bounded replaceable local reranker then scores evidence
+   alignment, dense quality, and hybrid rank quality.
+7. Dense score is cosine similarity. BM25 score is unbounded lexical relevance.
+   Hybrid score is normalized RRF rank agreement. Rerank score is final local
+   evidence quality. Candidate eligibility and final confidence are separate;
+   weak final evidence still returns the explicit insufficient-evidence answer.
+8. Top evidence is sent to the configured RAG model with Markdown
+   `path#heading` or PDF `path#page=N` source IDs. Generated claims are then
+   independently checked against authoritative cited evidence; reranking never
+   replaces post-generation grounding.
+9. Fresh memory and indexed logs are contextual sources. Memory remains opt-in
+   and neither memory nor log-only text can establish authoritative claims.
 
 The JSON index is intentionally retained at current scale. It is not a vector
-database and has no metadata-query engine. Imported documents support
+database, but the application retrieval layer supports metadata filters. Imported documents support
 document-level incremental updates; a full rebuild remains available and is
 required after embedding-contract changes.
 
@@ -85,11 +123,12 @@ Requirement Review and ADR guidance and requires a Mermaid diagram.
 
 ## Interfaces
 
-- CLI ingestion: `eng.py add-knowledge` with a positional/`--file`, `--text`,
+- CLI ingestion: `eng.py add-knowledge` with a Markdown/TXT/PDF positional or
+  `--file`, `--text`,
   or `--stdin` source. Indexing is automatic unless `--no-index` is explicit.
 - CLI: `eng.py workflow <workflow-id> --file ...` or `--text ...`.
 - Web ingestion: upload or paste through `POST /api/v1/knowledge/ingest`, retry
-  indexing, list governed documents, and safely inspect Markdown under the
+  indexing, list governed documents, and safely inspect Markdown/PDF under the
   configured knowledge root.
 - Web workflows: `POST /api/v1/workflows/<workflow-id>` with pasted input.
 - Existing knowledge API: `POST /api/v1/query` remains backward compatible.
@@ -120,15 +159,14 @@ presence does not make deployment reproducible.
 
 ## Decision status
 
-The implementation is reflected by three decision records that remain proposals
-until explicit owner approval:
+The implementation is governed by four owner-accepted decision records:
 
 - [Governed ingestion and atomic JSON index updates](../ADR/ADR-2026-09-13-01-governed-ingestion-and-atomic-json-index-updates.md)
 - [Shared explicit CLI/web application actions](../ADR/ADR-2026-09-13-02-shared-cli-web-application-actions.md)
 - [Five governed WebUI workspaces](../ADR/ADR-2026-09-13-03-governed-five-screen-webui.md)
+- [Local Hybrid RAG with persisted BM25 and bounded reranking](../ADR/ADR-2026-09-13-04-local-hybrid-rag.md)
 
-Their `Proposed` status means the implementation is reviewable evidence, not an
-approved architectural precedent. The canonical status list is
+The project owner accepted all four on 2026-09-13. The canonical status list is
 [Architecture Decisions](DECISIONS.md).
 
 ## Validation and limitations

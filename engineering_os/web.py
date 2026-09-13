@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import json
 import threading
 from contextlib import nullcontext
@@ -39,7 +41,7 @@ from engineering_os.workflows import (
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8081
 MAX_REQUEST_BODY_BYTES = 16 * 1024
-MAX_INGESTION_BODY_BYTES = 2 * 1024 * 1024 + 64 * 1024
+MAX_INGESTION_BODY_BYTES = 3 * 1024 * 1024
 MAX_QUERY_CHARACTERS = 4_000
 STATIC_DIRECTORY = Path(__file__).with_name("web_static")
 STATIC_ASSETS = {
@@ -143,19 +145,37 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
         payload = self._read_json_request(max_bytes=MAX_INGESTION_BODY_BYTES)
         if payload is None:
             return
-        allowed = {"content", "filename", "title", "auto_index"}
-        if "content" not in payload or not set(payload).issubset(allowed):
+        allowed = {"content", "content_base64", "filename", "title", "auto_index"}
+        if not ({"content", "content_base64"} & set(payload)) or not set(payload).issubset(allowed):
             self._send_error(
                 400,
                 "invalid_request",
-                "Ingestion requires content and supports filename, title, and auto_index.",
+                "Ingestion requires content or content_base64 and supports filename, title, and auto_index.",
             )
             return
-        content = payload["content"]
+        content = payload.get("content")
+        encoded = payload.get("content_base64")
         filename = payload.get("filename")
         title = payload.get("title")
         auto_index = payload.get("auto_index", True)
-        if not isinstance(content, str) or not content.strip():
+        if content is not None and encoded is not None:
+            self._send_error(400, "invalid_input", "Provide one content encoding only.")
+            return
+        if encoded is not None:
+            if filename is None:
+                self._send_error(400, "invalid_input", "Base64 file content requires a filename.")
+                return
+            if not isinstance(encoded, str) or not encoded:
+                self._send_error(400, "invalid_input", "Base64 content must be non-empty text.")
+                return
+            try:
+                file_content = base64.b64decode(encoded, validate=True)
+            except (ValueError, binascii.Error):
+                self._send_error(400, "invalid_input", "Base64 content is invalid.")
+                return
+        elif isinstance(content, str) and content.strip():
+            file_content = content.encode("utf-8")
+        else:
             self._send_error(400, "invalid_input", "Content must be non-empty UTF-8 text.")
             return
         if filename is not None and (
@@ -182,7 +202,7 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
                 else:
                     result = ingest_bytes(
                         self.server.paths,
-                        content.encode("utf-8"),
+                        file_content,
                         source_name=filename,
                         title=title,
                         auto_index=auto_index,
@@ -231,8 +251,10 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
             return
         try:
             result = read_knowledge_document(self.server.paths, values[0])
-            body = result["content"].encode("utf-8")
+            content = result["content"]
+            body = content.encode("utf-8") if isinstance(content, str) else content
             filename = result["name"]
+            content_type = result["content_type"]
         except KnowledgeLibraryError as error:
             self._send_error(400, "invalid_document", str(error))
             return
@@ -240,7 +262,7 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
             self._send_error(500, "internal_error", "Unable to open knowledge document.")
             return
         self.send_response(200)
-        self.send_header("Content-Type", "text/markdown; charset=utf-8")
+        self.send_header("Content-Type", content_type)
         self.send_header("Content-Disposition", f'inline; filename="{filename}"')
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
@@ -395,6 +417,8 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
             "confidence_threshold",
             "include_memory",
             "role",
+            "filters",
+            "debug",
         }
         if "query" not in payload or not set(payload).issubset(allowed):
             self._send_error(
@@ -439,6 +463,31 @@ class LocalQueryHandler(BaseHTTPRequestHandler):
                 self._send_error(400, "invalid_query", "role must be rag or reasoning.")
                 return None
             options["role"] = role
+        filters = payload.get("filters")
+        if filters is not None:
+            if not isinstance(filters, dict) or not set(filters).issubset(
+                {"source_type", "document_type", "project", "language", "tags"}
+            ):
+                self._send_error(400, "invalid_query", "filters contain unsupported metadata fields.")
+                return None
+            for key, value in filters.items():
+                if key == "tags":
+                    valid = isinstance(value, list) and all(
+                        isinstance(item, str) and item.strip() and len(item) <= 100
+                        for item in value
+                    )
+                else:
+                    valid = isinstance(value, str) and bool(value.strip()) and len(value) <= 100
+                if not valid:
+                    self._send_error(400, "invalid_query", f"Invalid metadata filter: {key}.")
+                    return None
+            options["filters"] = filters
+        debug = payload.get("debug")
+        if debug is not None:
+            if not isinstance(debug, bool):
+                self._send_error(400, "invalid_query", "debug must be a boolean.")
+                return None
+            options["debug"] = debug
         return query, options
 
     def _read_json_request(
@@ -521,14 +570,14 @@ def _serialize_response(response: RAGResponse) -> dict[str, Any]:
         if response.answer == INSUFFICIENT_EVIDENCE
         else "answered"
     )
-    return {
+    payload: dict[str, Any] = {
         "status": "ok",
         "answer_status": answer_status,
         "answer": response.answer,
         "sources": list(response.sources),
         "source_details": [
             {
-                "source": f"{item.chunk.path}#{item.chunk.heading}",
+                "source": item.source,
                 "path": item.chunk.path,
                 "heading": item.chunk.heading,
                 "score": round(item.score, 4),
@@ -540,6 +589,9 @@ def _serialize_response(response: RAGResponse) -> dict[str, Any]:
             if item.chunk.source_type == "knowledge"
         ],
     }
+    if response.diagnostics is not None:
+        payload["diagnostics"] = response.diagnostics
+    return payload
 
 
 def _serialize_ingestion(result: IngestionResult) -> dict[str, Any]:
@@ -568,8 +620,8 @@ def _resolve_ingested_document(paths: ProjectPaths, value: str) -> Path:
         candidate.relative_to(inbox)
     except ValueError as error:
         raise KnowledgeIngestionError("Document path must be inside the ingestion directory.") from error
-    if candidate.suffix.lower() != ".md" or not candidate.is_file() or candidate.is_symlink():
-        raise KnowledgeIngestionError("Document path must name an imported Markdown file.")
+    if candidate.suffix.lower() not in {".md", ".pdf"} or not candidate.is_file() or candidate.is_symlink():
+        raise KnowledgeIngestionError("Document path must name an imported Markdown or PDF file.")
     return candidate
 
 

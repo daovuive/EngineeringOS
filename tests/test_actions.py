@@ -4,8 +4,9 @@ from unittest.mock import patch
 
 from engineering_os.actions import ACTION_CATALOG, ActionError, execute_action
 from engineering_os.config import ProjectPaths
-from engineering_os.knowledge import KnowledgeChunk
+from engineering_os.knowledge import KnowledgeChunk, KnowledgeIndex
 from engineering_os.rag import RAGResponse
+from engineering_os.retrieval import RetrievedChunk
 from engineering_os.structure import ValidationResult
 
 
@@ -120,21 +121,26 @@ class ActionTests(TestCase):
 
     def test_search_and_ask_actions_preserve_options_and_sources(self) -> None:
         chunk = KnowledgeChunk("inbox/demo.md", "Fact", "Distinct fact", [1.0, 0.0])
+        candidate = RetrievedChunk(chunk, 0.8, 1.2, 0.7, 0.87654)
         with (
             patch("engineering_os.actions.create_runtime", return_value=FakeRuntime()),
-            patch("engineering_os.actions.load_index", return_value=[chunk]),
             patch(
-                "engineering_os.actions.search_index", return_value=[(0.87654, chunk)]
+                "engineering_os.actions.load_knowledge_index",
+                return_value=KnowledgeIndex([chunk], {}, "2.0"),
+            ),
+            patch(
+                "engineering_os.actions.retrieve_candidates", return_value=[candidate]
             ) as search,
         ):
             result = execute_action(
                 self.paths,
                 "knowledge.search",
-                {"query": "distinct", "limit": 7, "include_memory": False},
+                {"query": "distinct", "limit": 7, "include_memory": False, "debug": True},
             )
         self.assertEqual(result["results"][0]["score"], 0.8765)
         self.assertEqual(result["results"][0]["source"], "inbox/demo.md#Fact")
         self.assertEqual(search.call_args.kwargs["limit"], 7)
+        self.assertEqual(result["results"][0]["diagnostics"]["rerank_score"], 0.87654)
 
         response = RAGResponse("Grounded answer", ("inbox/demo.md#Fact",), ())
         with (

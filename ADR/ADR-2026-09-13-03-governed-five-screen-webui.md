@@ -1,7 +1,7 @@
 # ADR: Extend the Existing WebUI into Five Governed Workspaces
 
 - **Date:** 2026-09-13
-- **Status:** Proposed
+- **Status:** Accepted
 - **Scope:** Web information architecture, shared application integration, and
   governed browser operations
 
@@ -49,7 +49,7 @@ services.
 Rejected. Typed allowlisted application actions provide equivalent behavior
 without command injection or arbitrary server-path access.
 
-## Proposed decision
+## Decision
 
 1. Extend the existing dependency-free WebUI into five client-side workspaces:
    Knowledge, Ask EOS, Engineering, Models, and Project, with one shared shell
@@ -129,7 +129,6 @@ the embedded demo-data path; all browser URLs now use the real local API.
 
 ## Approval
 
-The five mockups are owner-approved visual direction through the implementation
-request dated 2026-09-13. This architecture record remains **Proposed** pending
-explicit owner acceptance of the additional WebUI integration and recovery
-decisions described above.
+The five mockups and this architecture record were explicitly accepted by the
+project owner on 2026-09-13. Future changes to the integration or recovery
+boundary require a superseding decision where architecturally significant.

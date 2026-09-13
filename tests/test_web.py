@@ -1,3 +1,4 @@
+import base64
 import http.client
 import json
 import threading
@@ -100,6 +101,31 @@ class LocalWebTests(TestCase):
         self.assertIn(b"localStorage", body)
         self.assertNotIn(b"DEMO DATA", body)
         self.assertNotIn(b'get("demo")', body)
+
+    def test_ask_submit_clears_input_after_validation_before_request(self) -> None:
+        script = (PROJECT_ROOT / "engineering_os/web_static/app.js").read_text(
+            encoding="utf-8"
+        )
+        handler = script[script.index("async function submitAsk()") :]
+        captured_query = handler.index('const query = $("ask-input").value.trim();')
+        validation = handler.index('if (!query || $("ask-submit").disabled)')
+        rejected_return = handler.index("return;", validation)
+        clear_input = handler.index('$("ask-input").value = "";', rejected_return)
+        request_start = handler.index("try {", clear_input)
+
+        self.assertLess(captured_query, validation)
+        self.assertLess(validation, rejected_return)
+        self.assertLess(rejected_return, clear_input)
+        self.assertLess(clear_input, request_start)
+        self.assertIn(
+            '$("ask-submit").addEventListener("click", submitAsk);', script
+        )
+        self.assertIn(
+            'event.key === "Enter" && event.ctrlKey', script
+        )
+        self.assertIn("submitAsk();", script)
+        self.assertIn('action("knowledge.search", { query,', handler)
+        self.assertIn("const body = {\n        query,", handler)
 
     def test_stylesheet_is_served(self) -> None:
         status, body, content_type = self._raw_request("GET", "/style.css")
@@ -286,6 +312,36 @@ class LocalWebTests(TestCase):
             "POST",
             "/api/v1/query",
             self._json_body({"query": "Question", "role": "shell"}),
+            {"Content-Type": "application/json"},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(payload["error"]["code"], "invalid_query")
+
+    def test_query_accepts_metadata_filters_and_opt_in_debug(self) -> None:
+        response = RAGResponse(
+            "Answer",
+            (),
+            (),
+            diagnostics={"confidence_decision": "pass", "candidates": []},
+        )
+        filters = {"project": "eos", "document_type": "pdf", "tags": ["sdv"]}
+        with patch("engineering_os.web.query_knowledge", return_value=response) as service:
+            status, payload, _ = self._request(
+                "POST",
+                "/api/v1/query",
+                self._json_body({"query": "REQ-SDV-0012", "filters": filters, "debug": True}),
+                {"Content-Type": "application/json"},
+            )
+        self.assertEqual(status, 200)
+        self.assertEqual(payload["diagnostics"]["confidence_decision"], "pass")
+        service.assert_called_once_with(
+            self.paths, "REQ-SDV-0012", filters=filters, debug=True
+        )
+
+        status, payload, _ = self._request(
+            "POST",
+            "/api/v1/query",
+            self._json_body({"query": "x", "filters": {"path": "secret"}}),
             {"Content-Type": "application/json"},
         )
         self.assertEqual(status, 400)
@@ -485,6 +541,34 @@ class LocalWebTests(TestCase):
         self.assertEqual(status, 200)
         text_service.assert_called_once_with(
             self.paths, "Pasted fact", title="Pasted note", auto_index=False
+        )
+
+    def test_pdf_upload_uses_validated_base64_bytes(self) -> None:
+        result = IngestionResult(
+            "knowledge/inbox/design.pdf", "saved", "indexed", 1, True
+        )
+        content = b"%PDF-synthetic"
+        with patch("engineering_os.web.ingest_bytes", return_value=result) as service:
+            status, payload, _ = self._request(
+                "POST",
+                "/api/v1/knowledge/ingest",
+                self._json_body(
+                    {
+                        "content_base64": base64.b64encode(content).decode("ascii"),
+                        "filename": "design.pdf",
+                        "auto_index": True,
+                    }
+                ),
+                {"Content-Type": "application/json"},
+            )
+        self.assertEqual(status, 200)
+        self.assertTrue(payload["ready_for_rag"])
+        service.assert_called_once_with(
+            self.paths,
+            content,
+            source_name="design.pdf",
+            title=None,
+            auto_index=True,
         )
 
     def test_ingestion_failure_is_partial_and_retry_is_available(self) -> None:

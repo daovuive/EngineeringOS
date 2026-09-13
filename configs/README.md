@@ -13,15 +13,19 @@ Configuration as data: the structure manifest, schemas, runtime settings, templa
 `knowledge.ingestion` owns the fixed inbox and maximum input size; and
 `knowledge.organizer.destinations` is the only destination allowlist available
 to model-assisted organization. The
-`knowledge.retrieval` values define candidate filtering, the evidence
-confidence gate, and the existing over-fetch factor; they are kept separate
-from provider/model configuration under `configs/ai/`. The
+`knowledge.chunking` defines approximate token bounds and overlap.
+`knowledge.retrieval` defines dense/BM25 enablement, candidate eligibility,
+RRF weights, and final confidence; `knowledge.rerank` bounds and weights the
+replaceable local reranker. `knowledge.pdf` keeps OCR explicitly disabled, and
+`knowledge.logs` owns the disabled-by-default allowlist, size, and retention
+policy. These remain separate from provider/model configuration under
+`configs/ai/`. The
 `knowledge.grounding` values define the conservative lexical claim-support
 contract applied after generation; unsupported and partial claims are not
 returned as EngineeringOS facts.
 
 User behavior and recovery are documented in the canonical
-[Knowledge Ingestion Guide](../docs/KNOWLEDGE_INGESTION.md). Machine-specific
+[Knowledge Ingestion and Hybrid RAG Guide](../docs/KNOWLEDGE_INGESTION.md). Machine-specific
 provider endpoints and model assignments remain under `configs/ai/`; do not
 place them in ingestion policy.
 

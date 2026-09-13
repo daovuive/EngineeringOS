@@ -17,6 +17,7 @@ candidates but are not approved decisions until the project owner accepts them.
 | [2026-09-06-06](../ADR/ADR-2026-09-06-06-run-ollama-on-windows-store-models-on-d-drive.md) | Windows Ollama and external model storage | Accepted |
 | [2026-09-06-07](../ADR/ADR-2026-09-06-07-codex-uses-minimum-required-context.md) | Minimum-required Codex context | Accepted |
 | [2026-09-06-08](../ADR/ADR-2026-09-06-08-local-ai-practice-one-master-file.md) | One master Local AI practice prompt | Accepted |
-| [2026-09-13-01](../ADR/ADR-2026-09-13-01-governed-ingestion-and-atomic-json-index-updates.md) | Governed ingestion and atomic JSON index updates | Proposed — owner approval pending |
-| [2026-09-13-02](../ADR/ADR-2026-09-13-02-shared-cli-web-application-actions.md) | Shared explicit CLI/web application actions | Proposed — owner approval pending |
-| [2026-09-13-03](../ADR/ADR-2026-09-13-03-governed-five-screen-webui.md) | Five governed WebUI workspaces | Proposed — visual direction approved; architecture approval pending |
+| [2026-09-13-01](../ADR/ADR-2026-09-13-01-governed-ingestion-and-atomic-json-index-updates.md) | Governed ingestion and atomic JSON index updates | Accepted |
+| [2026-09-13-02](../ADR/ADR-2026-09-13-02-shared-cli-web-application-actions.md) | Shared explicit CLI/web application actions | Accepted |
+| [2026-09-13-03](../ADR/ADR-2026-09-13-03-governed-five-screen-webui.md) | Five governed WebUI workspaces | Accepted |
+| [2026-09-13-04](../ADR/ADR-2026-09-13-04-local-hybrid-rag.md) | Local Hybrid RAG with persisted BM25 and bounded reranking | Accepted |

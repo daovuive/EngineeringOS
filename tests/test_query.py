@@ -3,7 +3,8 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from engineering_os.config import ProjectPaths
-from engineering_os.knowledge import KnowledgeChunk
+from engineering_os.knowledge import KnowledgeChunk, KnowledgeIndex
+from engineering_os.lexical import build_lexical_index
 from engineering_os.query import query_knowledge, retrieve_knowledge
 from engineering_os.rag import INSUFFICIENT_EVIDENCE
 
@@ -67,6 +68,10 @@ class QueryKnowledgeTests(TestCase):
         ]
 
     def _query(self, runtime: FakeRuntime, chunks: list[KnowledgeChunk] | None = None):
+        loaded_chunks = chunks if chunks is not None else self.chunks
+        index = KnowledgeIndex(
+            loaded_chunks, build_lexical_index(loaded_chunks), "2.0"
+        )
         with (
             patch("engineering_os.query.load_settings", return_value=SETTINGS) as load_settings,
             patch("engineering_os.query.load_runtime_config", return_value={}) as load_runtime_config,
@@ -76,9 +81,9 @@ class QueryKnowledgeTests(TestCase):
                 return_value=EMBEDDING_CONTRACT,
             ) as get_embedding_contract,
             patch(
-                "engineering_os.query.load_index",
-                return_value=chunks if chunks is not None else self.chunks,
-            ) as load_index,
+                "engineering_os.query.load_knowledge_index",
+                return_value=index,
+            ) as load_knowledge_index,
         ):
             response = query_knowledge(self.paths, "What is the design decision?", limit=1)
 
@@ -87,7 +92,7 @@ class QueryKnowledgeTests(TestCase):
             "load_runtime_config": load_runtime_config,
             "create_runtime": create_runtime,
             "get_embedding_contract": get_embedding_contract,
-            "load_index": load_index,
+            "load_knowledge_index": load_knowledge_index,
         }
 
     def test_grounded_answer_preserves_sources_and_uses_configured_path(self) -> None:
@@ -109,11 +114,11 @@ class QueryKnowledgeTests(TestCase):
         )
         self.assertEqual(runtime.roles, ["rag"])
         self.assertEqual(
-            dependencies["load_index"].call_args.args[0],
+            dependencies["load_knowledge_index"].call_args.args[0],
             Path("/project/runtime/index/knowledge.json"),
         )
         self.assertEqual(
-            dependencies["load_index"].call_args.kwargs,
+            dependencies["load_knowledge_index"].call_args.kwargs,
             {"embedding_contract": EMBEDDING_CONTRACT},
         )
         for dependency in dependencies.values():
@@ -161,7 +166,10 @@ class QueryKnowledgeTests(TestCase):
             patch("engineering_os.query.load_runtime_config", return_value={}),
             patch("engineering_os.query.create_runtime", return_value=runtime),
             patch("engineering_os.query.get_embedding_contract", return_value=EMBEDDING_CONTRACT),
-            patch("engineering_os.query.load_index", return_value=chunks),
+            patch(
+                "engineering_os.query.load_knowledge_index",
+                return_value=KnowledgeIndex(chunks, build_lexical_index(chunks), "2.0"),
+            ),
         ):
             query_knowledge(
                 self.paths,
@@ -182,7 +190,12 @@ class QueryKnowledgeTests(TestCase):
                 "engineering_os.query.get_embedding_contract",
                 return_value=EMBEDDING_CONTRACT,
             ),
-            patch("engineering_os.query.load_index", return_value=self.chunks),
+            patch(
+                "engineering_os.query.load_knowledge_index",
+                return_value=KnowledgeIndex(
+                    self.chunks, build_lexical_index(self.chunks), "2.0"
+                ),
+            ),
         ):
             retrieved = retrieve_knowledge(self.paths, "design", limit=1)
 
@@ -205,6 +218,11 @@ class QueryKnowledgeTests(TestCase):
                 "engineering_os.query.get_embedding_contract",
                 return_value=EMBEDDING_CONTRACT,
             ),
-            patch("engineering_os.query.load_index", return_value=weak_chunks),
+            patch(
+                "engineering_os.query.load_knowledge_index",
+                return_value=KnowledgeIndex(
+                    weak_chunks, build_lexical_index(weak_chunks), "2.0"
+                ),
+            ),
         ):
             self.assertEqual(retrieve_knowledge(self.paths, "design", limit=1), ())

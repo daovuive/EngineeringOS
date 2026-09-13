@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from engineering_os import __version__
+from engineering_os.chunking import ChunkingConfig
 from engineering_os.config import (
     DEFAULT_STRUCTURE_CONFIG,
     DEFAULT_TEMPLATE_CONFIG,
@@ -19,8 +21,8 @@ from engineering_os.doctor import run_doctor
 from engineering_os.knowledge import (
     KnowledgeIndexError,
     load_index,
+    load_knowledge_index,
     rebuild_index,
-    search_index,
     select_retrieval_chunks,
 )
 from engineering_os.knowledge_organizer import (
@@ -36,10 +38,11 @@ from engineering_os.llm import (
     get_embedding_contract,
     get_default_runtime_definition,
 )
+from engineering_os.log_ingestion import LogIngestionConfig
 from engineering_os.rag import (
     render_response,
 )
-from engineering_os.query import query_knowledge
+from engineering_os.query import query_knowledge, retrieve_candidates
 from engineering_os.structure import ensure_structure, validate_structure
 from engineering_os.workflows import (
     WorkflowDocument,
@@ -120,7 +123,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Index and search knowledge.",
     )
     knowledge_subparsers = knowledge_parser.add_subparsers(dest="knowledge_command")
-    knowledge_subparsers.add_parser("index", help="Build the Markdown knowledge index.")
+    knowledge_subparsers.add_parser("index", help="Build the configured knowledge index.")
     organize_parser = knowledge_subparsers.add_parser(
         "organize",
         help="Classify one Markdown file with the local LLM and place it in knowledge.",
@@ -147,6 +150,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Include fresh project memory as contextual retrieval results.",
     )
+    _add_retrieval_filter_arguments(search_parser)
+    search_parser.add_argument("--debug", action="store_true", help="Show retrieval stage scores and ranks.")
     ask_parser = knowledge_subparsers.add_parser(
         "ask",
         help="Answer a question using retrieved knowledge and the configured RAG model.",
@@ -159,6 +164,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Override the configured minimum score for a retrieved candidate.",
     )
+    _add_retrieval_filter_arguments(ask_parser)
+    ask_parser.add_argument("--debug", action="store_true", help="Show retrieval diagnostics after the answer.")
     ask_parser.add_argument(
         "--confidence-threshold",
         type=float,
@@ -173,21 +180,21 @@ def build_parser() -> argparse.ArgumentParser:
 
     add_knowledge_parser = subparsers.add_parser(
         "add-knowledge",
-        help="Import Markdown or UTF-8 text and index it for RAG by default.",
+        help="Import Markdown, UTF-8 text, or text PDF and index it for RAG by default.",
         description=(
             "Import exactly one Markdown (.md/.markdown), plain-text (.txt), "
-            "inline-text, or stdin source into governed knowledge storage. "
+            "text PDF (.pdf), inline-text, or stdin source into governed knowledge storage. "
             "The saved document is indexed automatically unless --no-index is used."
         ),
     )
     add_knowledge_parser.add_argument(
         "path",
         nargs="?",
-        help="Markdown or text file path (short form).",
+        help="Markdown, text, or text-PDF file path (short form).",
     )
     add_knowledge_parser.add_argument(
         "--file",
-        help="Markdown or text file path.",
+        help="Markdown, text, or text-PDF file path.",
     )
     add_knowledge_parser.add_argument("--text", help="Knowledge entered directly as text.")
     add_knowledge_parser.add_argument(
@@ -377,15 +384,22 @@ def command_llm(paths: ProjectPaths, args: argparse.Namespace) -> int:
 
 def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
     if args.knowledge_command == "ask":
-        response = query_knowledge(
-            paths,
-            args.query,
-            limit=args.limit,
-            min_score=args.min_score,
-            confidence_threshold=args.confidence_threshold,
-            include_memory=args.include_memory,
-        )
+        options = {
+            "limit": args.limit,
+            "min_score": args.min_score,
+            "confidence_threshold": args.confidence_threshold,
+            "include_memory": args.include_memory,
+        }
+        filters = _retrieval_filters(args)
+        if filters:
+            options["filters"] = filters
+        if args.debug:
+            options["debug"] = True
+        response = query_knowledge(paths, args.query, **options)
         print(render_response(response))
+        if args.debug and response.diagnostics is not None:
+            print("\nRetrieval diagnostics:")
+            print(json.dumps(response.diagnostics, indent=2, ensure_ascii=False))
         return 0
 
     settings = load_settings(paths)
@@ -426,23 +440,66 @@ def command_knowledge(paths: ProjectPaths, args: argparse.Namespace) -> int:
             sources,
             runtime,
             embedding_contract=embedding_contract,
+            chunking=ChunkingConfig.from_settings(settings),
+            default_language=settings.get("project", {}).get("language"),
+            pdf_enabled=settings.get("knowledge", {}).get("pdf", {}).get("enabled", True),
+            log_config=LogIngestionConfig.from_settings(settings),
+            project_root=paths.root,
         )
-        print(f"Indexed {len(chunks)} Markdown chunk(s) into {index_path.as_posix()}")
+        print(f"Indexed {len(chunks)} knowledge chunk(s) into {index_path.as_posix()}")
         return 0
 
     if args.knowledge_command == "search":
-        chunks = load_index(index_path, embedding_contract=embedding_contract)
+        loaded_index = load_knowledge_index(
+            index_path, embedding_contract=embedding_contract
+        )
         chunks = select_retrieval_chunks(
-            chunks,
+            loaded_index.chunks,
             include_memory=args.include_memory,
             memory_max_age_days=memory_max_age_days,
         )
-        for score, chunk in search_index(chunks, args.query, runtime, limit=args.limit):
-            print(f"{score:.4f}  {chunk.path}#{chunk.heading}")
-            print(f"        {chunk.text.splitlines()[0][:160]}")
+        candidates = retrieve_candidates(
+            settings,
+            chunks,
+            loaded_index.lexical,
+            args.query,
+            runtime,
+            limit=args.limit,
+            min_score=None,
+            filters=_retrieval_filters(args),
+        )
+        for item in candidates:
+            print(f"{item.score:.4f}  {item.source}")
+            print(f"        {item.chunk.text.splitlines()[0][:160]}")
+            if args.debug:
+                print(
+                    "        "
+                    f"dense={item.dense_score!r} bm25={item.lexical_score!r} "
+                    f"hybrid={item.hybrid_score:.4f} rerank={item.rerank_score!r} "
+                    f"candidate_rank={item.candidate_rank} final_rank={item.final_rank}"
+                )
         return 0
 
     raise KnowledgeIndexError("Missing knowledge command. Use: index, search, ask, or organize.")
+
+
+def _add_retrieval_filter_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--source-type", choices=("knowledge", "memory", "log"))
+    parser.add_argument("--document-type")
+    parser.add_argument("--project")
+    parser.add_argument("--language")
+    parser.add_argument("--tag", action="append", default=[])
+
+
+def _retrieval_filters(args: argparse.Namespace) -> dict[str, object] | None:
+    filters = {
+        "source_type": getattr(args, "source_type", None),
+        "document_type": getattr(args, "document_type", None),
+        "project": getattr(args, "project", None),
+        "language": getattr(args, "language", None),
+        "tags": getattr(args, "tag", []),
+    }
+    return {key: value for key, value in filters.items() if value not in (None, [], "")} or None
 
 
 def command_workflow(paths: ProjectPaths, args: argparse.Namespace) -> int:

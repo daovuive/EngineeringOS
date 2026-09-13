@@ -14,10 +14,20 @@ from typing import Any, Protocol
 
 import fcntl
 
+from engineering_os.chunking import ChunkingConfig, read_markdown_chunk_drafts
+from engineering_os.lexical import build_lexical_index, validate_lexical_index
+from engineering_os.pdf import read_pdf_chunk_drafts
+from engineering_os.log_ingestion import (
+    LogIngestionConfig,
+    discover_allowed_logs,
+    read_log_chunk_drafts,
+)
+
 
 EmbeddingContract = dict[str, Any]
 KNOWLEDGE_SOURCE = "knowledge"
 MEMORY_SOURCE = "memory"
+LOG_SOURCE = "log"
 AUTHORITATIVE_AUTHORITY = "authoritative"
 CONTEXTUAL_AUTHORITY = "contextual"
 _LAST_UPDATED_PATTERN = re.compile(
@@ -43,6 +53,20 @@ class KnowledgeChunk:
     source_type: str = KNOWLEDGE_SOURCE
     last_updated: str | None = None
     authority: str = AUTHORITATIVE_AUTHORITY
+    heading_path: tuple[str, ...] = ()
+    document_type: str = "markdown"
+    language: str | None = None
+    project: str | None = None
+    version: str | None = None
+    tags: tuple[str, ...] = ()
+    document_id: str = ""
+    chunk_id: str = ""
+    chunk_index: int = 0
+    page_start: int | None = None
+    page_end: int | None = None
+    source_timestamp: str | None = None
+    document_title: str | None = None
+    document_author: str | None = None
 
 
 @dataclass(frozen=True)
@@ -52,6 +76,15 @@ class IndexUpdateResult:
     changed: bool
 
 
+@dataclass(frozen=True)
+class KnowledgeIndex:
+    """Loaded vector chunks plus the matching persisted lexical corpus."""
+
+    chunks: list[KnowledgeChunk]
+    lexical: dict[str, Any]
+    schema_version: str
+
+
 _INDEX_THREAD_LOCK = threading.RLock()
 
 
@@ -59,34 +92,38 @@ def discover_markdown(root: Path) -> list[Path]:
     return sorted(path for path in root.rglob("*.md") if path.is_file())
 
 
+def discover_documents(root: Path) -> list[Path]:
+    return sorted(
+        path
+        for path in root.rglob("*")
+        if path.is_file()
+        and not path.is_symlink()
+        and path.suffix.lower() in {".md", ".pdf"}
+    )
+
+
+def read_document_chunk_drafts(
+    path: Path,
+    root: Path,
+    *,
+    chunking: ChunkingConfig | None = None,
+    default_language: str | None = None,
+):
+    if path.suffix.lower() == ".pdf":
+        return read_pdf_chunk_drafts(
+            path, root, config=chunking, default_language=default_language
+        )
+    return read_markdown_chunk_drafts(
+        path, root, config=chunking, default_language=default_language
+    )
+
+
 def read_markdown_chunks(path: Path, root: Path) -> list[tuple[str, str]]:
-    relative_path = path.relative_to(root).as_posix()
-    lines = [
-        line
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if not line.startswith("<!-- eos-ingestion-")
-        and not line.startswith("<!-- eos-ingested-at:")
+    """Backward-compatible tuple view over token-aware Markdown chunks."""
+    return [
+        (f"{draft.path}#{draft.heading}", draft.text)
+        for draft in read_markdown_chunk_drafts(path, root)
     ]
-    heading = path.stem
-    sections: list[tuple[str, list[str]]] = []
-
-    for line in lines:
-        if line.startswith("#") and line.lstrip("#").startswith(" "):
-            if sections and "\n".join(sections[-1][1]).strip():
-                sections[-1][1].append("")
-            heading = line.lstrip("#").strip()
-            sections.append((heading, []))
-        elif not sections:
-            sections.append((heading, []))
-        else:
-            sections[-1][1].append(line)
-
-    chunks = []
-    for section_heading, section_lines in sections:
-        text = "\n".join(section_lines).strip()
-        if text:
-            chunks.append((f"{relative_path}#{section_heading}", text))
-    return chunks
 
 
 def build_index(
@@ -95,33 +132,60 @@ def build_index(
     *,
     source_type: str = KNOWLEDGE_SOURCE,
     path_root: Path | None = None,
+    chunking: ChunkingConfig | None = None,
+    default_language: str | None = None,
+    pdf_enabled: bool = True,
 ) -> list[KnowledgeChunk]:
     if source_type not in {KNOWLEDGE_SOURCE, MEMORY_SOURCE}:
         raise KnowledgeIndexError(f"Unsupported source type: {source_type}")
 
     chunks: list[KnowledgeChunk] = []
     relative_root = path_root or root
-    for path in discover_markdown(root):
+    for path in discover_documents(root):
+        if path.suffix.lower() == ".pdf" and not pdf_enabled:
+            continue
+        if source_type == MEMORY_SOURCE and path.suffix.lower() != ".md":
+            continue
         last_updated = extract_last_updated(path) if source_type == MEMORY_SOURCE else None
         authority = (
             CONTEXTUAL_AUTHORITY
             if source_type == MEMORY_SOURCE
             else AUTHORITATIVE_AUTHORITY
         )
-        for heading, text in read_markdown_chunks(path, relative_root):
-            embedding = runtime.embed(text)
+        for draft in read_document_chunk_drafts(
+            path,
+            relative_root,
+            chunking=chunking,
+            default_language=default_language,
+        ):
+            embedding = runtime.embed(draft.text)
             if not embedding:
-                raise KnowledgeIndexError(f"Empty embedding returned for {heading}.")
-            path_value, heading_value = heading.split("#", 1)
+                raise KnowledgeIndexError(
+                    f"Empty embedding returned for {draft.path}#{draft.heading}."
+                )
             chunks.append(
                 KnowledgeChunk(
-                    path_value,
-                    heading_value,
-                    text,
+                    draft.path,
+                    draft.heading,
+                    draft.text,
                     embedding,
                     source_type,
                     last_updated,
                     authority,
+                    draft.heading_path,
+                    draft.document_type,
+                    draft.language,
+                    draft.project,
+                    draft.version,
+                    draft.tags,
+                    draft.document_id,
+                    draft.chunk_id,
+                    draft.chunk_index,
+                    getattr(draft, "page_start", None),
+                    getattr(draft, "page_end", None),
+                    getattr(draft, "source_timestamp", None),
+                    getattr(draft, "document_title", None),
+                    getattr(draft, "document_author", None),
                 )
             )
     return chunks
@@ -188,6 +252,11 @@ def rebuild_index(
     runtime: EmbeddingRuntime,
     *,
     embedding_contract: EmbeddingContract,
+    chunking: ChunkingConfig | None = None,
+    default_language: str | None = None,
+    pdf_enabled: bool = True,
+    log_config: LogIngestionConfig | None = None,
+    project_root: Path | None = None,
 ) -> list[KnowledgeChunk]:
     """Rebuild all configured sources without racing incremental writers."""
     _validate_embedding_contract(embedding_contract)
@@ -200,8 +269,51 @@ def rebuild_index(
                     runtime,
                     source_type=source_type,
                     path_root=path_root,
+                    chunking=chunking,
+                    default_language=default_language,
+                    pdf_enabled=pdf_enabled,
                 )
             )
+        if log_config is not None and log_config.enabled:
+            if project_root is None:
+                raise KnowledgeIndexError("Project root is required for log ingestion.")
+            for log_path in discover_allowed_logs(project_root, log_config):
+                for draft in read_log_chunk_drafts(
+                    log_path,
+                    project_root,
+                    config=chunking,
+                    default_language=default_language,
+                ):
+                    embedding = runtime.embed(draft.text)
+                    if not embedding:
+                        raise KnowledgeIndexError(
+                            f"Empty embedding returned for {draft.path}#{draft.heading}."
+                        )
+                    chunks.append(
+                        KnowledgeChunk(
+                            draft.path,
+                            draft.heading,
+                            draft.text,
+                            embedding,
+                            LOG_SOURCE,
+                            None,
+                            CONTEXTUAL_AUTHORITY,
+                            draft.heading_path,
+                            draft.document_type,
+                            draft.language,
+                            draft.project,
+                            draft.version,
+                            draft.tags,
+                            draft.document_id,
+                            draft.chunk_id,
+                            draft.chunk_index,
+                            None,
+                            None,
+                            draft.source_timestamp,
+                            None,
+                            None,
+                        )
+                    )
         _save_index_atomic(index_path, chunks, embedding_contract=embedding_contract)
         return chunks
 
@@ -213,6 +325,8 @@ def update_document_index(
     runtime: EmbeddingRuntime,
     *,
     embedding_contract: EmbeddingContract,
+    chunking: ChunkingConfig | None = None,
+    default_language: str | None = None,
 ) -> IndexUpdateResult:
     """Incrementally replace one document's chunks under a coordinated lock."""
     index_path = index_path.resolve()
@@ -222,13 +336,18 @@ def update_document_index(
         relative_path = document_path.relative_to(knowledge_root).as_posix()
     except ValueError as error:
         raise KnowledgeIndexError("Indexed document must be inside the knowledge root.") from error
-    if document_path.suffix.lower() != ".md" or not document_path.is_file():
-        raise KnowledgeIndexError("Indexed document must be an existing Markdown file.")
+    if document_path.suffix.lower() not in {".md", ".pdf"} or not document_path.is_file():
+        raise KnowledgeIndexError("Indexed document must be an existing Markdown or PDF file.")
     _validate_embedding_contract(embedding_contract)
 
-    sections = read_markdown_chunks(document_path, knowledge_root)
-    if not sections:
-        raise KnowledgeIndexError("Saved document contains no indexable Markdown content.")
+    drafts = read_document_chunk_drafts(
+        document_path,
+        knowledge_root,
+        chunking=chunking,
+        default_language=default_language,
+    )
+    if not drafts:
+        raise KnowledgeIndexError("Saved document contains no indexable content.")
 
     with index_write_lock(index_path):
         chunks = (
@@ -237,24 +356,49 @@ def update_document_index(
             else []
         )
         current = [chunk for chunk in chunks if chunk.path == relative_path]
-        expected = [(heading.split("#", 1)[1], text) for heading, text in sections]
-        observed = [(chunk.heading, chunk.text) for chunk in current]
+        expected = [(draft.chunk_id, draft.text) for draft in drafts]
+        observed = [(chunk.chunk_id, chunk.text) for chunk in current]
+        if current and not all(chunk.chunk_id for chunk in current):
+            observed = []
         if observed == expected:
             return IndexUpdateResult(relative_path, len(current), False)
 
         replacements: list[KnowledgeChunk] = []
-        for heading, text in sections:
-            embedding = runtime.embed(text)
+        for draft in drafts:
+            embedding = runtime.embed(draft.text)
             if not embedding:
-                raise KnowledgeIndexError(f"Empty embedding returned for {heading}.")
+                raise KnowledgeIndexError(
+                    f"Empty embedding returned for {draft.path}#{draft.heading}."
+                )
             if len(embedding) != embedding_contract["dimensions"]:
                 raise KnowledgeIndexError(
                     "Embedding dimensions do not match the configured contract: "
                     f"expected {embedding_contract['dimensions']}, got {len(embedding)}."
                 )
-            path_value, heading_value = heading.split("#", 1)
             replacements.append(
-                KnowledgeChunk(path_value, heading_value, text, embedding)
+                KnowledgeChunk(
+                    draft.path,
+                    draft.heading,
+                    draft.text,
+                    embedding,
+                    KNOWLEDGE_SOURCE,
+                    None,
+                    AUTHORITATIVE_AUTHORITY,
+                    draft.heading_path,
+                    draft.document_type,
+                    draft.language,
+                    draft.project,
+                    draft.version,
+                    draft.tags,
+                    draft.document_id,
+                    draft.chunk_id,
+                    draft.chunk_index,
+                    getattr(draft, "page_start", None),
+                    getattr(draft, "page_end", None),
+                    getattr(draft, "source_timestamp", None),
+                    getattr(draft, "document_title", None),
+                    getattr(draft, "document_author", None),
+                )
             )
         retained = [chunk for chunk in chunks if chunk.path != relative_path]
         _save_index_atomic(
@@ -287,9 +431,10 @@ def _save_index_atomic(
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "schemaVersion": "1.1",
+        "schemaVersion": "2.0",
         "embedding": dict(embedding_contract),
         "chunks": [asdict(chunk) for chunk in chunks],
+        "lexical": build_lexical_index(chunks),
     }
     temporary_path: Path | None = None
     try:
@@ -316,6 +461,15 @@ def load_index(
     *,
     embedding_contract: EmbeddingContract,
 ) -> list[KnowledgeChunk]:
+    """Load chunks while preserving the pre-2.0 public API."""
+    return load_knowledge_index(path, embedding_contract=embedding_contract).chunks
+
+
+def load_knowledge_index(
+    path: Path,
+    *,
+    embedding_contract: EmbeddingContract,
+) -> KnowledgeIndex:
     if not path.exists():
         raise KnowledgeIndexError(f"Knowledge index not found: {path}")
     try:
@@ -337,10 +491,28 @@ def load_index(
             f"stored={stored_contract!r}, expected={embedding_contract!r}. "
             "Rebuild the index."
         )
+    schema_version = payload.get("schemaVersion")
+    if schema_version not in {"1.1", "2.0"}:
+        raise KnowledgeIndexError(
+            f"Unsupported knowledge index schema {schema_version!r}; rebuild the index."
+        )
     try:
-        return [KnowledgeChunk(**item) for item in payload["chunks"]]
+        chunks = [_chunk_from_payload(item) for item in payload["chunks"]]
     except (TypeError, ValueError) as error:
         raise KnowledgeIndexError("Knowledge index contains an invalid chunk.") from error
+    lexical = validate_lexical_index(payload.get("lexical"), chunks)
+    return KnowledgeIndex(chunks, lexical, schema_version)
+
+
+def _chunk_from_payload(item: Any) -> KnowledgeChunk:
+    if not isinstance(item, dict):
+        raise TypeError("chunk must be an object")
+    normalized = dict(item)
+    for key in ("heading_path", "tags"):
+        value = normalized.get(key)
+        if isinstance(value, list):
+            normalized[key] = tuple(value)
+    return KnowledgeChunk(**normalized)
 
 
 def search_index(

@@ -1,7 +1,7 @@
 # ADR: Share Explicit Application Actions Between CLI and Web Adapters
 
 - **Date:** 2026-09-13
-- **Status:** Proposed
+- **Status:** Accepted
 - **Scope:** Application-service boundaries and web command coverage
 
 ## Context
@@ -34,7 +34,7 @@ runtime semaphore. The browser records the last result and marks an interrupted
 request completion-unknown without replay. Add a persistent bounded job service
 only after measured request/proxy failures justify it.
 
-## Proposed decision
+## Decision
 
 1. CLI and web adapters call shared application services for structure,
    configuration, runtime, ingestion, indexing, retrieval, RAG, and workflows.
@@ -83,6 +83,6 @@ only after measured request/proxy failures justify it.
 
 ## Approval
 
-This ADR documents implemented behavior but remains **Proposed** until the
-project owner explicitly accepts it. Persistent job execution would require a
-new or superseding decision once evidence defines its recovery contract.
+Accepted by the project owner on 2026-09-13 together with the completed Hybrid
+RAG increment. Persistent job execution still requires a new or superseding
+decision once evidence defines its recovery contract.

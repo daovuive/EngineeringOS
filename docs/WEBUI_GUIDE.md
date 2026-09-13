@@ -15,8 +15,8 @@ restarted by its operator after updating the working tree.
 
 ### Knowledge
 
-Browse, search, and filter governed Markdown documents; inspect saved content;
-upload `.md`, `.markdown`, or `.txt`; paste text; save with automatic indexing
+Browse, search, and filter governed Markdown/PDF documents; inspect saved content;
+upload `.md`, `.markdown`, `.txt`, or text `.pdf`; paste text; save with automatic indexing
 or without indexing; retry a failed index update; and preview/confirm a complete
 index rebuild.
 
@@ -29,12 +29,18 @@ after organization to refresh citation paths.
 
 ### Ask EOS
 
-Choose **Ask with RAG** for a grounded answer or **Search only** for retrieval
-without generation. Select the RAG or reasoning role, optionally include recent
-project memory, set the retrieval limit and confidence threshold, and inspect
+Choose **Ask with RAG** for a grounded answer or **Search only** for hybrid
+dense/BM25 retrieval without generation. Select the RAG or reasoning role,
+optionally include recent project memory, set the retrieval limit and confidence threshold, and inspect
 bounded source excerpts. Full source opening remains restricted to governed
 knowledge documents. Empty or weak retrieval produces an explicit no-evidence
 state rather than invented support.
+
+Advanced controls filter by project, Markdown/PDF/log document type, language,
+and required comma-separated tags. **Debug retrieval** is opt-in and displays
+dense, BM25, hybrid, rerank, rank, filter, and confidence details. Normal user
+output does not expose diagnostics. PDF sources cite and open the original page
+aware document; scanned PDFs require an external reviewed OCR step.
 
 ### Engineering
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## Local Hybrid RAG — 2026-09-13
+
+- Replaced heading-only/dense-only retrieval with token-aware overlapping
+  chunks, rich stable metadata, persisted BM25, weighted RRF, metadata filters,
+  and a bounded replaceable deterministic local reranker.
+- Kept candidate eligibility separate from final confidence and preserved
+  abstention, inline citations, Ollama roles, and post-generation claim checks.
+- Added controlled text-PDF ingestion with page citations and disabled-by-default
+  allowlisted log indexing with retention, size, binary, path, and secret checks.
+- Accepted encryption-flagged PDFs that decrypt with an empty password while
+  continuing to reject password-protected PDFs; added `fonttools` for reliable
+  CFF Type1 font decoding.
+- Declared `engineering_os` explicitly as the sole Python package so editable
+  installation does not mistake repository content directories for packages.
+- Added opt-in CLI/WebUI retrieval diagnostics and PDF upload/library support.
+- Added ADR-2026-09-13-04; the owner accepted it with the related ingestion,
+  shared-action, and WebUI decisions after final validation.
+
 ## Sprint 1
 
 - Initial repository
@@ -41,8 +59,8 @@
   development checkpoint and `docs/COMMAND_COVERAGE.md` as the coverage matrix.
 - Added `docs/KNOWLEDGE_INGESTION.md` as the canonical CLI/web user and recovery
   guide, then linked the relevant area READMEs to it.
-- Proposed, but did not mark accepted, ADRs for governed atomic ingestion and
-  the shared CLI/web application-service boundary; corrected ADR-0002 to show
+- Initially proposed ADRs for governed atomic ingestion and the shared CLI/web
+  application-service boundary; both were later owner-accepted. Corrected ADR-0002 to show
   that ADR-0003 supersedes it and refreshed the decision index.
 
 ## Five-workspace WebUI — 2026-09-13
@@ -56,4 +74,5 @@
   historical visual evidence; removed the temporary runtime demo-data mode so
   every shipped page uses the real local API and configured runtime.
 - Added the WebUI guide, proposed ADR-2026-09-13-03, and persistent
-  implementation log. Live deployment and ADR approval remain pending.
+  implementation log. Live deployment remains pending; the ADR was later
+  owner-accepted.

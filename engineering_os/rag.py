@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 import re
-from typing import Protocol
+from typing import Any, Protocol
 
 from engineering_os.knowledge import (
     KnowledgeChunk,
@@ -11,6 +11,7 @@ from engineering_os.knowledge import (
     search_index,
     select_retrieval_chunks,
 )
+from engineering_os.retrieval import RetrievedChunk, citation_source
 
 
 DEFAULT_MIN_RELEVANCE = 0.45
@@ -218,10 +219,29 @@ class GenerationRuntime(Protocol):
 class RetrievedContext:
     score: float
     chunk: KnowledgeChunk
+    dense_score: float | None = None
+    lexical_score: float | None = None
+    hybrid_score: float | None = None
+    rerank_score: float | None = None
+    candidate_rank: int = 0
+    final_rank: int = 0
 
     @property
     def source(self) -> str:
-        return f"{self.chunk.path}#{self.chunk.heading}"
+        return citation_source(self.chunk)
+
+    @classmethod
+    def from_candidate(cls, candidate: RetrievedChunk) -> "RetrievedContext":
+        return cls(
+            candidate.score,
+            candidate.chunk,
+            candidate.dense_score,
+            candidate.lexical_score,
+            candidate.hybrid_score,
+            candidate.rerank_score,
+            candidate.candidate_rank,
+            candidate.final_rank,
+        )
 
 
 @dataclass(frozen=True)
@@ -239,6 +259,7 @@ class RAGResponse:
     sources: tuple[str, ...]
     retrieved: tuple[RetrievedContext, ...]
     grounding: tuple[ClaimGrounding, ...] = ()
+    diagnostics: dict[str, Any] | None = None
 
 
 def _claim_tokens(text: str) -> set[str]:
@@ -405,6 +426,7 @@ def answer_question(
     grounding_policy: GroundingPolicy | None = None,
     include_memory: bool = False,
     memory_max_age_days: int = 90,
+    retrieved_candidates: list[RetrievedChunk] | None = None,
 ) -> RAGResponse:
     if not query.strip():
         raise RAGError("RAG query must not be empty.")
@@ -417,25 +439,31 @@ def answer_question(
     if overfetch_factor < 1:
         raise RAGError("RAG overfetch_factor must be positive.")
 
-    retrieval_chunks = select_retrieval_chunks(
-        chunks,
-        include_memory=include_memory,
-        memory_max_age_days=memory_max_age_days,
-    )
-    retrieval_limit = max(top_k, top_k * overfetch_factor)
-    matches = search_index(
-        retrieval_chunks, query, retrieval_runtime, limit=retrieval_limit
-    )
-    relevant_matches = [
-        (score, chunk)
-        for score, chunk in matches
-        if score >= min_relevance
-    ]
-    relevant_matches.sort(key=lambda item: item[0], reverse=True)
-    retrieved = tuple(
-        RetrievedContext(score, chunk)
-        for score, chunk in relevant_matches[:top_k]
-    )
+    if retrieved_candidates is None:
+        retrieval_chunks = select_retrieval_chunks(
+            chunks,
+            include_memory=include_memory,
+            memory_max_age_days=memory_max_age_days,
+        )
+        retrieval_limit = max(top_k, top_k * overfetch_factor)
+        matches = search_index(
+            retrieval_chunks, query, retrieval_runtime, limit=retrieval_limit
+        )
+        relevant_matches = [
+            (score, chunk)
+            for score, chunk in matches
+            if score >= min_relevance
+        ]
+        relevant_matches.sort(key=lambda item: item[0], reverse=True)
+        retrieved = tuple(
+            RetrievedContext(score, chunk)
+            for score, chunk in relevant_matches[:top_k]
+        )
+    else:
+        retrieved = tuple(
+            RetrievedContext.from_candidate(item)
+            for item in retrieved_candidates[:top_k]
+        )
     if not retrieved or retrieved[0].score < confidence_threshold:
         return RAGResponse(INSUFFICIENT_EVIDENCE, (), ())
 

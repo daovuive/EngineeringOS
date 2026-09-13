@@ -9,8 +9,7 @@ web adapters call the same services under `engineering_os/`.
 For user-facing ingestion commands, states, and recovery, use the canonical
 [Knowledge Ingestion Guide](KNOWLEDGE_INGESTION.md). The shared action boundary
 is recorded in a
-[Proposed ADR](../ADR/ADR-2026-09-13-02-shared-cli-web-application-actions.md)
-pending owner approval.
+[accepted ADR](../ADR/ADR-2026-09-13-02-shared-cli-web-application-actions.md).
 
 | Command or capability | Inputs and outputs | Shared application function | Web page/action | Execution | Status and evidence |
 | --- | --- | --- | --- | --- | --- |
@@ -23,11 +22,11 @@ pending owner approval.
 | `eng llm pull-plan` | Configuration; printable pull commands | `build_pull_commands` | Models → View plan | immediate, no mutation | implemented; action catalog |
 | `eng llm chat PROMPT [--role]` | Prompt and configured role; generated text | `LLMRuntime.generate` | Models → Chat with a model | potentially long | implemented; action tests |
 | `eng llm embed TEXT` | Text; dimensions and vector preview | `LLMRuntime.embed` | Models → Generate embeddings | potentially long | implemented; action tests |
-| `eng knowledge index` | Fixed knowledge/memory roots; chunk count and index path | `rebuild_index` | Knowledge → preview/confirm Rebuild index | long mutation | implemented synchronously; source snapshot is revalidated; atomic/writer-locked persistence tests |
-| `eng knowledge search QUERY [--limit] [--include-memory]` | Query/options; scored sources and previews | `load_index`, `select_retrieval_chunks`, `search_index` | Ask EOS → Search only | potentially long | implemented; action/service tests |
-| `eng knowledge ask QUERY` with retrieval thresholds, limit, role, and memory option | Question/options; grounded answer, citations, bounded excerpts | `query_knowledge` | Ask EOS → Ask with RAG and Retrieval settings | potentially long | implemented; query/web/action tests |
+| `eng knowledge index` | Markdown/PDF/memory plus explicitly enabled allowlisted logs; chunk count and index path | `rebuild_index` | Knowledge → preview/confirm Rebuild index | long mutation | implemented synchronously; source snapshot is revalidated; atomic/writer-locked persistence tests |
+| `eng knowledge search QUERY` with limit, memory, metadata filters, and debug | Hybrid scored sources and previews; optional stage diagnostics | `load_knowledge_index`, `retrieve_candidates` | Ask EOS → Search only + Advanced | potentially long | BM25/RRF/rerank/filter and action tests |
+| `eng knowledge ask QUERY` with retrieval thresholds, limit, role, memory, metadata filters, and debug | Grounded answer, citations, bounded excerpts; optional diagnostics | `query_knowledge` | Ask EOS → Ask with RAG + Retrieval settings | potentially long | query/web/action and confidence tests |
 | `eng knowledge organize --file [--dry-run] [--move]` | Explicit Markdown; classified existing destination | organization preview/apply services | Knowledge drawer → Suggest folder → choose approved folder → confirm | potentially long mutation | implemented; content/destination binding and organizer safety tests |
-| `eng add-knowledge PATH` / `--file` / `--text` / `--stdin`, title and index flags | One Markdown/text source; saved path, import/index status, chunk count | `ingest_path`, `ingest_text`, `update_document_index` | Add knowledge → device upload or pasted text, title, auto-index, retry/open | potentially long mutation | implemented; ingestion, CLI, web, concurrency and failure tests |
+| `eng add-knowledge PATH` / `--file` / `--text` / `--stdin`, title and index flags | One Markdown/TXT/text-PDF source; saved path, import/index status, chunk count | `ingest_path`, `ingest_text`, `update_document_index` | Add knowledge → device upload or pasted text, title, auto-index, retry/open | potentially long mutation | PDF page metadata/citations plus ingestion, CLI, web, concurrency and failure tests |
 | `eng workflow code-review` | Files/text, optional retrieval/query; validated review | `run_workflow` | Engineering → Code Review | potentially long | implemented; workflow/web tests and prior live smoke |
 | `eng workflow requirement-review` | Files/text, optional retrieval/query; validated review | `run_workflow` | Engineering → Requirement Review | potentially long | implemented; workflow/web tests and prior live smoke |
 | `eng workflow adr-assistant` | Files/text, optional retrieval/query; unapproved ADR draft | `run_workflow` | Engineering → ADR Draft | potentially long | implemented; workflow/web tests and prior live smoke |

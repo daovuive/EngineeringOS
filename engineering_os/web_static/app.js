@@ -288,8 +288,16 @@ async function readIngestionInput() {
   const pasted = $("ingest-text").value;
   const uploadMode = !$("upload-panel").hidden;
   if (uploadMode) {
-    if (!file) throw new Error("Choose one Markdown or text file.");
+    if (!file) throw new Error("Choose one Markdown, text, or PDF file.");
     if (file.size > 2 * 1024 * 1024) throw new Error("Upload exceeds the 2 MiB limit.");
+    if (file.name.toLowerCase().endsWith(".pdf")) {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+        binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
+      }
+      return { content_base64: btoa(binary), filename: file.name };
+    }
     return { content: new TextDecoder("utf-8", { fatal: true }).decode(await file.arrayBuffer()), filename: file.name };
   }
   if (!pasted.trim()) throw new Error("Paste knowledge text before saving.");
@@ -311,7 +319,7 @@ async function submitIngestion() {
       return payload;
     }, "knowledge.index-status");
     state.retryPath = result.document_path;
-    $("suggest-folder").disabled = false;
+    $("suggest-folder").disabled = result.document_path.toLowerCase().endsWith(".pdf");
     $("open-document").href = result.open_url;
     $("open-document").hidden = false;
     if (result.indexing_state === "failed") {
@@ -463,14 +471,22 @@ async function submitAsk() {
     if (!query) showError("Enter a question or search query.");
     return;
   }
+  $("ask-input").value = "";
   $("ask-submit").disabled = true;
   const conversation = $("ask-conversation");
   if (conversation.querySelector(".empty-conversation")) clear(conversation);
   addMessage(conversation, "user", "You", query);
   clear($("ask-sources"));
   try {
+    const filters = {};
+    if ($("ask-project").value.trim()) filters.project = $("ask-project").value.trim();
+    if ($("ask-document-type").value) filters.document_type = $("ask-document-type").value;
+    if ($("ask-language").value.trim()) filters.language = $("ask-language").value.trim();
+    const tags = $("ask-tags").value.split(",").map((item) => item.trim()).filter(Boolean);
+    if (tags.length) filters.tags = tags;
+    const debug = $("ask-debug").checked;
     if (state.askMode === "search") {
-      const result = await runOperation("knowledge.search", "Searching knowledge", () => action("knowledge.search", { query, limit: Number($("ask-limit").value), include_memory: $("ask-memory").checked }));
+      const result = await runOperation("knowledge.search", "Searching knowledge", () => action("knowledge.search", { query, limit: Number($("ask-limit").value), include_memory: $("ask-memory").checked, filters, debug }));
       addMessage(conversation, "eos", "EOS · Search results", result.results.length ? `${result.results.length} matching source(s)` : "No indexed evidence met the search request.");
       const details = result.results.map((item) => ({ ...item, path: item.source.split("#", 1)[0], heading: item.source.split("#").slice(1).join("#"), excerpt: item.preview, open_url: `/api/v1/knowledge/document?${new URLSearchParams({ path: item.source.split("#", 1)[0] })}` }));
       renderAskSources(details);
@@ -481,10 +497,13 @@ async function submitAsk() {
         confidence_threshold: Number($("ask-confidence").value),
         include_memory: $("ask-memory").checked,
         role: $("ask-role").value,
+        filters,
+        debug,
       };
       const response = await runOperation("knowledge.ask", "Asking EngineeringOS", async () => (await requestJson("/api/v1/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })).payload);
       addMessage(conversation, "eos", response.answer_status === "insufficient_evidence" ? "EOS · More evidence needed" : "EOS · Grounded answer", response.answer);
       renderAskSources(response.source_details || []);
+      if (response.diagnostics) addMessage(conversation, "eos", "Retrieval diagnostics", JSON.stringify(response.diagnostics, null, 2));
     }
   } catch (_) {
     addMessage(conversation, "eos", "EOS · No result", "The request did not complete. Review Activity before retrying a long operation.");
@@ -513,6 +532,7 @@ function previewSource(detail) {
   link.target = "_blank";
   link.rel = "noopener";
   target.append(link);
+  if (detail.diagnostics) target.append(element("pre", "mini-result", JSON.stringify(detail.diagnostics, null, 2)));
 }
 
 const workflowMeta = {

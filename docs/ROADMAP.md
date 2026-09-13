@@ -28,11 +28,13 @@ host services or Cloudflare Access policy.
 
 ## Sprint 3 — Knowledge Base and Grounded RAG
 
-**Status: implemented and verified for the current scale.** Markdown discovery,
-heading chunks, Ollama embeddings, a versioned JSON index, cosine retrieval,
-candidate filtering, confidence abstention, inline citations, claim grounding,
-opt-in freshness-filtered memory, Markdown/plain-text ingestion, deduplication,
-and atomic document-level index updates are implemented.
+**Status: implemented and verified for the current scale.** Markdown/PDF
+discovery, token-aware overlapping chunks, rich metadata, Ollama embeddings,
+persisted BM25, dense/BM25 RRF fusion, metadata filters, bounded local
+reranking, final-confidence abstention, page-aware citations, claim grounding,
+opt-in freshness-filtered memory, Markdown/plain-text/PDF ingestion,
+disabled-by-default allowlisted log indexing, deduplication, and atomic
+document-level index updates are implemented.
 
 A vector database is conditional future work, not a current defect. It should
 be considered only after measured corpus size, latency, update, or filtering
@@ -67,11 +69,10 @@ take roughly three minutes on the current host.
 GitHub Actions now runs governance validation, Python compilation, the
 service-independent test suite, and whitespace checks. Live Ollama and deployed
 service smoke checks remain explicit local operations and are not CI gates.
-The ingestion/index consistency and shared CLI/web action decisions are
-documented as proposed ADRs; owner approval remains pending and implementation
-does not change their status automatically.
+The ingestion/index consistency, shared CLI/web action, WebUI, and Hybrid RAG
+decisions were accepted by the owner on 2026-09-13.
 
 The five-workspace WebUI is implemented without a runtime demo-data mode: every
 session reads the real local API and configured runtime. Historical synthetic
 screenshots retain visual evidence from implementation. Its architecture ADR
-remains Proposed; remote CI and deployed-service verification remain pending.
+is accepted; remote CI and deployed-service verification remain pending.

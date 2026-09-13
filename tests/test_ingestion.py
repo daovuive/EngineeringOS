@@ -99,6 +99,48 @@ class IngestionTests(TestCase):
             contract = get_embedding_contract(load_runtime_config(paths))
             chunks = load_index(paths.root / "runtime/index/knowledge.json", embedding_contract=contract)
             self.assertEqual({chunk.path for chunk in chunks}, {first.document_path.removeprefix("knowledge/")})
+            self.assertTrue(chunks[0].document_id)
+            self.assertTrue(chunks[0].chunk_id)
+            self.assertEqual(chunks[0].heading_path, ("Ghi chú Unicode",))
+            payload = json.loads(
+                (paths.root / "runtime/index/knowledge.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(payload["schemaVersion"], "2.0")
+            self.assertEqual(payload["lexical"]["documentCount"], len(chunks))
+            self.assertEqual(payload["lexical"]["tokenizerVersion"], "1.0")
+
+    def test_schema_1_1_index_loads_with_optional_metadata_defaults(self) -> None:
+        with TemporaryDirectory() as temporary:
+            paths, _ = self._project(temporary)
+            contract = get_embedding_contract(load_runtime_config(paths))
+            index = paths.root / "runtime/index/knowledge.json"
+            index.write_text(
+                json.dumps(
+                    {
+                        "schemaVersion": "1.1",
+                        "embedding": contract,
+                        "chunks": [
+                            {
+                                "path": "legacy.md",
+                                "heading": "Legacy",
+                                "text": "Legacy evidence",
+                                "embedding": [1.0, 0.0],
+                                "source_type": "knowledge",
+                                "last_updated": None,
+                                "authority": "authoritative",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            chunks = load_index(index, embedding_contract=contract)
+
+            self.assertEqual(chunks[0].document_type, "markdown")
+            self.assertEqual(chunks[0].heading_path, ())
+            self.assertEqual(chunks[0].tags, ())
+            self.assertEqual(chunks[0].chunk_id, "")
 
     def test_filename_collision_is_deterministic_and_original_is_preserved(self) -> None:
         with TemporaryDirectory() as temporary:
@@ -165,7 +207,7 @@ class IngestionTests(TestCase):
     def test_rejects_unsupported_binary_oversized_and_unsafe_retry(self) -> None:
         with TemporaryDirectory() as temporary:
             paths, _ = self._project(temporary)
-            with self.assertRaisesRegex(KnowledgeIngestionError, "Unsupported file format"):
+            with self.assertRaisesRegex(KnowledgeIngestionError, "malformed"):
                 ingest_bytes(paths, b"%PDF", source_name="document.pdf")
             with self.assertRaisesRegex(KnowledgeIngestionError, "valid UTF-8"):
                 ingest_bytes(paths, b"\xff", source_name="document.txt")

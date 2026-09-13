@@ -1,7 +1,7 @@
 # ADR: Govern Knowledge Ingestion and Update the JSON Index Atomically
 
 - **Date:** 2026-09-13
-- **Status:** Proposed
+- **Status:** Accepted
 - **Scope:** Knowledge ingestion, document identity, and JSON index consistency
 
 ## Context
@@ -37,7 +37,7 @@ and scales poorly with corpus growth.
 Rejected at current scale because the existing JSON store and synchronous local
 runtime satisfy measured acceptance without new infrastructure.
 
-## Proposed decision
+## Decision
 
 1. Store external Markdown/plain text under fixed `knowledge/inbox/`; copy the
    source and never silently overwrite it.
@@ -70,7 +70,9 @@ runtime satisfy measured acceptance without new infrastructure.
 - The inbox is a staging taxonomy; users may later organize documents.
 - File locks use the current Linux/WSL execution environment.
 - A full rebuild remains necessary after embedding-contract changes.
-- Import does not parse PDF/DOCX or infer categories.
+- This decision originally covered Markdown/TXT only. PDF parsing is now an
+  implemented extension governed by accepted ADR-2026-09-13-04; DOCX and category
+  inference remain outside ingestion.
 
 ## Validation evidence
 
@@ -84,6 +86,5 @@ runtime satisfy measured acceptance without new infrastructure.
 
 ## Approval
 
-This ADR documents implemented behavior but remains **Proposed** until the
-project owner explicitly accepts it. Rejection requires revisiting the related
-implementation before treating another mechanism as canonical.
+Accepted by the project owner on 2026-09-13 together with the completed Hybrid
+RAG increment. A future replacement requires a superseding ADR.

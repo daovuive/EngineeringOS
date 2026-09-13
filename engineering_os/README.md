@@ -5,8 +5,9 @@
 ## Purpose and Scope
 
 EngineeringOS Python implementation: CLI, configuration loading, structure
-creation/validation, runtime abstraction, knowledge ingestion, incremental JSON
-indexing, Markdown search/RAG, bounded engineering workflows, explicit web
+creation/validation, runtime abstraction, Markdown/TXT/PDF ingestion,
+incremental schema-2.0 JSON indexing, Hybrid RAG, controlled log indexing,
+bounded engineering workflows, explicit web
 actions, governed knowledge-library reads, preview-bound mutations, and the
 loopback web adapter. The root `eng.py` is only an entry point.
 Runtime calls go through `LLMRuntime`/`create_runtime`; workflow intent remains

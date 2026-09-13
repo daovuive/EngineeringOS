@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from engineering_os import __version__
+from engineering_os.chunking import ChunkingConfig
 from engineering_os.config import (
     ProjectPaths,
     load_project_structure,
@@ -19,10 +20,10 @@ from engineering_os.config import (
 )
 from engineering_os.doctor import run_doctor
 from engineering_os.knowledge import (
-    discover_markdown,
+    discover_documents,
     load_index,
+    load_knowledge_index,
     rebuild_index,
-    search_index,
     select_retrieval_chunks,
 )
 from engineering_os.knowledge_organizer import (
@@ -37,7 +38,9 @@ from engineering_os.llm import (
     get_default_runtime_definition,
     get_embedding_contract,
 )
-from engineering_os.query import query_knowledge
+from engineering_os.log_ingestion import LogIngestionConfig, discover_allowed_logs
+from engineering_os.query import query_knowledge, retrieve_candidates
+from engineering_os.retrieval import retrieval_diagnostics
 from engineering_os.rag import render_response
 from engineering_os.structure import ensure_structure, validate_structure
 
@@ -70,11 +73,11 @@ ACTION_CATALOG = (
     ActionDefinition("knowledge.index-preview", "Preview a complete knowledge-index rebuild.", ()),
     ActionDefinition("knowledge.index-status", "Inspect the current knowledge index.", ()),
     ActionDefinition("knowledge.index", "Rebuild the complete JSON knowledge index.", ("confirmed", "preview_token"), True, True),
-    ActionDefinition("knowledge.search", "Search indexed knowledge.", ("query", "limit", "include_memory"), True),
+    ActionDefinition("knowledge.search", "Search indexed knowledge.", ("query", "limit", "include_memory", "filters", "debug"), True),
     ActionDefinition(
         "knowledge.ask",
         "Ask a grounded RAG question with retrieval controls.",
-        ("query", "limit", "min_score", "confidence_threshold", "include_memory"),
+        ("query", "limit", "min_score", "confidence_threshold", "include_memory", "filters", "debug"),
         True,
     ),
     ActionDefinition(
@@ -247,26 +250,52 @@ def execute_action(paths: ProjectPaths, action_id: str, values: dict[str, Any]) 
         if memory_root != root:
             sources.append((memory_root, "memory", paths.root))
         runtime = create_runtime(runtime_config)
-        chunks = rebuild_index(index_path, sources, runtime, embedding_contract=contract)
+        chunks = rebuild_index(
+            index_path,
+            sources,
+            runtime,
+            embedding_contract=contract,
+            chunking=ChunkingConfig.from_settings(settings),
+            default_language=settings.get("project", {}).get("language"),
+            pdf_enabled=settings.get("knowledge", {}).get("pdf", {}).get("enabled", True),
+            log_config=LogIngestionConfig.from_settings(settings),
+            project_root=paths.root,
+        )
         return {"ok": True, "chunk_count": len(chunks), "index_path": index_path.as_posix()}
     if action_id == "knowledge.search":
         runtime = create_runtime(runtime_config)
         query = _text(values, "query", maximum=4_000)
         limit = _integer(values, "limit", default=5, minimum=1, maximum=20)
         include_memory = _boolean(values, "include_memory", default=False)
+        filters = _metadata_filters(values.get("filters"))
+        debug = _boolean(values, "debug", default=False)
+        loaded_index = load_knowledge_index(index_path, embedding_contract=contract)
         chunks = select_retrieval_chunks(
-            load_index(index_path, embedding_contract=contract),
+            loaded_index.chunks,
             include_memory=include_memory,
             memory_max_age_days=settings.get("memory", {}).get("retrieval", {}).get("maxAgeDays", 90),
+        )
+        candidates = retrieve_candidates(
+            settings,
+            chunks,
+            loaded_index.lexical,
+            query,
+            runtime,
+            limit=limit,
+            min_score=None,
+            filters=filters,
         )
         return {
             "results": [
                 {
-                    "score": round(score, 4),
-                    "source": f"{chunk.path}#{chunk.heading}",
-                    "preview": chunk.text.splitlines()[0][:160],
+                    "score": round(item.score, 4),
+                    "source": item.source,
+                    "preview": item.chunk.text.splitlines()[0][:160],
+                    **({"diagnostics": diagnostics} if debug else {}),
                 }
-                for score, chunk in search_index(chunks, query, runtime, limit=limit)
+                for item, diagnostics in zip(
+                    candidates, retrieval_diagnostics(candidates), strict=True
+                )
             ]
         }
     if action_id == "knowledge.ask":
@@ -279,18 +308,25 @@ def execute_action(paths: ProjectPaths, action_id: str, values: dict[str, Any]) 
         ):
             if value is not None and not 0 <= value <= 1:
                 raise ActionError(f"{label} must be between 0 and 1.")
-        response = query_knowledge(
-            paths,
-            query,
-            limit=_integer(values, "limit", default=3, minimum=1, maximum=10),
-            min_score=min_score,
-            confidence_threshold=confidence_threshold,
-            include_memory=_boolean(values, "include_memory", default=False),
-        )
-        return {
+        options = {
+            "limit": _integer(values, "limit", default=3, minimum=1, maximum=10),
+            "min_score": min_score,
+            "confidence_threshold": confidence_threshold,
+            "include_memory": _boolean(values, "include_memory", default=False),
+        }
+        filters = _metadata_filters(values.get("filters"))
+        if filters:
+            options["filters"] = filters
+        if _boolean(values, "debug", default=False):
+            options["debug"] = True
+        response = query_knowledge(paths, query, **options)
+        result = {
             "answer": render_response(response),
             "sources": list(response.sources),
         }
+        if response.diagnostics is not None:
+            result["diagnostics"] = response.diagnostics
+        return result
     if action_id == "knowledge.organize":
         runtime = create_runtime(runtime_config)
         document = _inbox_document(paths, _text(values, "document_path", maximum=500))
@@ -413,6 +449,27 @@ def _optional_text(values: dict[str, Any], key: str, *, maximum: int) -> str | N
     return value.strip()
 
 
+def _metadata_filters(value: Any) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    allowed = {"source_type", "document_type", "project", "language", "tags"}
+    if not isinstance(value, dict) or not set(value).issubset(allowed):
+        raise ActionError("filters contain unsupported metadata fields.")
+    normalized: dict[str, Any] = {}
+    for key, item in value.items():
+        if key == "tags":
+            if not isinstance(item, list) or not all(
+                isinstance(tag, str) and tag.strip() and len(tag) <= 100 for tag in item
+            ):
+                raise ActionError("filters.tags must be a list of non-empty text values.")
+            normalized[key] = [tag.strip() for tag in item]
+        elif not isinstance(item, str) or not item.strip() or len(item) > 100:
+            raise ActionError(f"filters.{key} must be non-empty text up to 100 characters.")
+        else:
+            normalized[key] = item.strip()
+    return normalized or None
+
+
 def _project_preview(paths: ProjectPaths, operation: str) -> dict[str, Any]:
     result = validate_structure(
         paths.root,
@@ -461,9 +518,21 @@ def _index_preview(
                 "size": path.stat().st_size,
                 "modified_ns": path.stat().st_mtime_ns,
             }
-            for path in discover_markdown(source_root)
+            for path in discover_documents(source_root)
+            if path.suffix.lower() != ".pdf"
+            or knowledge.get("pdf", {}).get("enabled", True)
             if not path.is_symlink()
         )
+    log_config = LogIngestionConfig.from_settings(settings)
+    documents.extend(
+        {
+            "path": path.relative_to(paths.root).as_posix(),
+            "source_type": "log",
+            "size": path.stat().st_size,
+            "modified_ns": path.stat().st_mtime_ns,
+        }
+        for path in discover_allowed_logs(paths.root, log_config)
+    )
     documents.sort(key=lambda item: item["path"])
     plan = {"documents": documents, "embedding": contract}
     token = hashlib.sha256(

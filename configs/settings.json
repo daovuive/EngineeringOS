@@ -20,10 +20,42 @@
       "directory": "knowledge/inbox",
       "maxBytes": 2097152
     },
+    "pdf": {
+      "enabled": true,
+      "ocrEnabled": false
+    },
+    "logs": {
+      "enabled": false,
+      "allowlist": [
+        "runtime/logs/rag/*.log",
+        "runtime/logs/services/*.log"
+      ],
+      "maxFileSizeMB": 10,
+      "retentionDays": 14
+    },
+    "chunking": {
+      "maxTokens": 500,
+      "overlapTokens": 80,
+      "minTokens": 80
+    },
     "retrieval": {
       "candidateMinScore": 0.45,
       "confidenceThreshold": 0.62,
-      "overfetchFactor": 4
+      "overfetchFactor": 4,
+      "denseEnabled": true,
+      "lexicalEnabled": true,
+      "hybridCandidateCount": 30,
+      "denseWeight": 0.65,
+      "lexicalWeight": 0.35,
+      "rrfK": 60
+    },
+    "rerank": {
+      "enabled": true,
+      "candidateCount": 20,
+      "topK": 6,
+      "hybridWeight": 0.2,
+      "denseWeight": 0.25,
+      "lexicalAlignmentWeight": 0.55
     },
     "grounding": {
       "supportedClaimCoverage": 0.75,

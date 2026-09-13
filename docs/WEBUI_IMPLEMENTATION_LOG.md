@@ -189,3 +189,19 @@ the current handoff state belongs in the
 - **Next:** Start/verify Ollama and the EOS server, then run the documented
   real-data checks.
 - **Commit:** None.
+
+## 2026-09-13T19:25:00+07:00 — WEBUI-10 Hybrid RAG integration accepted
+
+- **Changed:** Added PDF upload/library behavior and advanced Hybrid RAG
+  metadata filters/debug diagnostics to the production-only WebUI.
+- **Why:** Web interactions must match the shared CLI retrieval and ingestion
+  behavior without a second implementation or demo path.
+- **Files:** Web adapter/static assets, canonical Hybrid RAG documentation,
+  ADR-2026-09-13-01 through ADR-2026-09-13-04, and the resume checkpoint.
+- **Verification:** 135/135 tests including 30 loopback web tests, compilation,
+  whitespace checks, and repository governance validation pass.
+- **Approval:** The project owner explicitly accepted all four related ADRs and
+  the protected README baseline on 2026-09-13.
+- **Remaining:** Remote CI and operator-owned deployment/runtime smoke remain
+  operational follow-up, not repository implementation blockers.
+- **Commit:** None.

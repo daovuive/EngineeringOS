@@ -25,10 +25,9 @@ final expanded suite passed 140 tests. Commit
 release run remains failed, but its defects are verified fixed by this green
 successor run.
 
-GitHub emitted a non-blocking warning that `actions/checkout@v4` and
-`actions/setup-python@v5` target deprecated Node 20 and are currently forced to
-Node 24 by the runner. Updating action majors is separate CI maintenance, not a
-failure of this run.
+Follow-up commit `a81803c` upgraded `actions/checkout` to v5 and
+`actions/setup-python` to v6. Remote run `34797235128` passed every step in 28
+seconds and emitted no Node 20 deprecation annotation.
 
 ## Realistic Hybrid RAG evaluation
 
@@ -188,9 +187,7 @@ The host systemd state is degraded, while EOS and its tunnel are healthy.
 3. Design verified streaming as a separate protocol decision; do not bypass
    claim verification for cosmetic token output.
 4. Re-run the capacity benchmark as the real corpus approaches 10,000 chunks.
-5. Review supported GitHub Action majors and remove the Node 20 deprecation
-   warning in a separate CI maintenance commit.
-6. Investigate the boot-time SSH port owner separately only if host operations
+5. Investigate the boot-time SSH port owner separately only if host operations
    require `ssh.service`; it is not an EOS repair.
 
 No new ADR was introduced: this increment keeps the accepted JSON/Hybrid RAG

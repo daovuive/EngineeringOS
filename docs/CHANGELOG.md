@@ -5,6 +5,8 @@
 - Verified the release GitHub Actions run remotely, reproduced its dependency
   and executable-mode failures, corrected both, and verified green successor
   run `34796787722` after push.
+- Upgraded checkout/setup-python actions to their Node 24 majors and verified
+  warning-free remote run `34797235128`.
 - Added a 12-category Hybrid RAG evaluation dataset plus repeatable retrieval,
   generation, grounding, citation, abstention, and latency reporting.
 - Added monotonic stage/TTFT and JSON-index capacity benchmarks; retained the

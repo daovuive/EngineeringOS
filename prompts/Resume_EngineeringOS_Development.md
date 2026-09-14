@@ -1,6 +1,6 @@
 # EngineeringOS RAG Upgrade Resume
 
-Last updated: 2026-09-14T08:43:26+07:00
+Last updated: 2026-09-14T08:51:47+07:00
 
 ## Task
 
@@ -87,6 +87,9 @@ release remains valid.
   every step: dependency installation, governance, compilation, the
   deterministic test suite, and whitespace checks. Job `validate` completed in
   30 seconds.
+- Upgraded `actions/checkout` from v4 to v5 and `actions/setup-python` from v5
+  to v6 in commit `a81803c` so both actions run natively on Node 24. Remote run
+  `34797235128` passed in 28 seconds with no Node 20 deprecation annotation.
 
 ### Measurements
 
@@ -119,6 +122,8 @@ release remains valid.
 - Final FAST health: EOS HTTP 2 ms, EOS and Cloudflare services/autostart OK,
   no recent EOS/tunnel warnings, public Access response HTTP 302 in 1.45 s.
 - Remote CI: run `34796787722`, commit `9c642f7`, conclusion `success`.
+- Node 24 action upgrade: run `34797235128`, commit `a81803c`, conclusion
+  `success`, no annotations.
 
 ### Modified files
 
@@ -168,14 +173,15 @@ release remains valid.
   reports the unrelated failed unit. Final `gh run list` confirms no new run.
 - `git commit`, `git push origin agent/python-cli-sdv-knowledge`, and
   `gh run watch 34796787722 --exit-status`: push succeeded and remote CI passed.
+- Local CI-equivalent validation before the action upgrade: governance,
+  compilation, 140/140 tests in 19.823 seconds, and whitespace passed.
+- `gh run watch 34797235128 --exit-status`: upgraded action majors and every CI
+  step passed with no deprecation warning.
 
 ### Known risks
 
 - Historical release run `34766061187` remains red, while its fixes are verified
   by green successor run `34796787722` on commit `9c642f7`.
-- GitHub emitted a non-blocking Node 20 deprecation warning for
-  `actions/checkout@v4` and `actions/setup-python@v5`; evaluate supported major
-  upgrades as a separate CI maintenance change.
 - End-to-end HTTP output is currently buffered. Direct Ollama TTFT and local
   HTTP first-byte timing are measured, but even the improved production query
   takes 27.44 s before the browser receives an answer.
@@ -197,7 +203,6 @@ release remains valid.
 - Improve the documented six weak RAG cases as a separate measured increment.
 - Define a verified streaming-event protocol before changing the HTTP contract.
 - Re-run capacity/concurrency measurements as the corpus approaches 10k chunks.
-- Upgrade GitHub actions after reviewing their current supported major versions.
 
 ### Next exact action
 

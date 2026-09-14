@@ -3,7 +3,8 @@
 ## Post-release measurement and hardening — 2026-09-13
 
 - Verified the release GitHub Actions run remotely, reproduced its dependency
-  and executable-mode failures, and corrected both locally.
+  and executable-mode failures, corrected both, and verified green successor
+  run `34796787722` after push.
 - Added a 12-category Hybrid RAG evaluation dataset plus repeatable retrieval,
   generation, grounding, citation, abstention, and latency reporting.
 - Added monotonic stage/TTFT and JSON-index capacity benchmarks; retained the

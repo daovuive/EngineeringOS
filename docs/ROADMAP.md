@@ -68,13 +68,12 @@ take roughly three minutes on the current host.
 
 ## Cross-cutting delivery status
 
-GitHub Actions defines governance validation, Python compilation, the
+GitHub Actions runs governance validation, Python compilation, the
 service-independent test suite, and whitespace checks. The accepted release
 commit's remote run failed because dependencies were not installed and the
-status script lacked executable mode; both fixes pass the exact CI sequence
-locally, while a new remote run remains pending commit/push. Live Ollama and
-deployed-service smoke checks remain explicit local operations and are not CI
-gates.
+status script lacked executable mode; both fixes passed locally and in remote
+run `34796787722` for successor commit `9c642f7`. Live Ollama and deployed-service
+smoke checks remain explicit local operations and are not CI gates.
 The ingestion/index consistency, shared CLI/web action, WebUI, and Hybrid RAG
 decisions were accepted by the owner on 2026-09-13.
 

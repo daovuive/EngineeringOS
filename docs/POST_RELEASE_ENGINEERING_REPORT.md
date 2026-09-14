@@ -17,10 +17,18 @@ run `34766061187`. The workflow runs for every push and pull request on Python
 job failed because dependencies were never installed and
 `scripts/eos-status` was committed as non-executable.
 
-The local fix installs `.[dev]` and records script mode `100755`. Its exact CI
-sequence passed in a fresh temporary virtual environment with 138 tests. The
-remote status remains red until these changes are committed and pushed; a green
-remote run is not claimed by this report.
+The fix installs `.[dev]` and records script mode `100755`. Its exact CI
+sequence passed in a fresh temporary virtual environment with 138 tests; the
+final expanded suite passed 140 tests. Commit
+`9c642f795aab4f46f20012513c799fe628e853c1` was pushed and remote run
+`34796787722` passed every step in the 30-second `validate` job. The historical
+release run remains failed, but its defects are verified fixed by this green
+successor run.
+
+GitHub emitted a non-blocking warning that `actions/checkout@v4` and
+`actions/setup-python@v5` target deprecated Node 20 and are currently forced to
+Node 24 by the runner. Updating action majors is separate CI maintenance, not a
+failure of this run.
 
 ## Realistic Hybrid RAG evaluation
 
@@ -173,15 +181,15 @@ The host systemd state is degraded, while EOS and its tunnel are healthy.
 
 ## Recommendations
 
-1. Commit/push the CI fixes and verify the next GitHub Actions run; do not call
-   the release SHA green retroactively.
-2. Prioritize ambiguity/insufficient-evidence routing and canonical-source
+1. Prioritize ambiguity/insufficient-evidence routing and canonical-source
    preference using the retained evaluation cases.
-3. Keep the 512-token ceiling and monitor answer truncation/grounding quality on
+2. Keep the 512-token ceiling and monitor answer truncation/grounding quality on
    owner-selected questions.
-4. Design verified streaming as a separate protocol decision; do not bypass
+3. Design verified streaming as a separate protocol decision; do not bypass
    claim verification for cosmetic token output.
-5. Re-run the capacity benchmark as the real corpus approaches 10,000 chunks.
+4. Re-run the capacity benchmark as the real corpus approaches 10,000 chunks.
+5. Review supported GitHub Action majors and remove the Node 20 deprecation
+   warning in a separate CI maintenance commit.
 6. Investigate the boot-time SSH port owner separately only if host operations
    require `ssh.service`; it is not an EOS repair.
 

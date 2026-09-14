@@ -27,16 +27,16 @@ means local checks passed; it does not mean remote GitHub Actions ran.
 | EOS-S4-02 | 4 | Review requirements for quality, constraints, and traceability | Reasoning model; optional index | implemented and verified | CLI and tested web Requirement Review paths; live CLI smoke passed |
 | EOS-S4-03 | 4 | Produce an explicitly unapproved ADR draft with options/trade-offs | Reasoning model; optional index | implemented and verified | CLI and tested web ADR Assistant paths; live CLI smoke passed; title/sections enforced by `engineering_os/workflows.py` |
 | EOS-S5-01 | 5 | Produce a bounded architecture proposal with explicit uncertainty | Requirement/ADR guidance, reasoning model, optional index | implemented and verified | CLI/web paths and deterministic tests pass; schema-constrained live runs returned validated proposals with and without optional retrieval. Mermaid, stages, ADR options, and source excerpts are assembled deterministically; observed buffered latency was roughly 2.5–3 minutes |
-| EOS-S5-02 | 5 | Run deterministic quality gates on GitHub | GitHub Actions | implemented; remote fix pending | Release run `34766061187` was verified failed: missing dependency install and executable mode. Both fixes pass the exact sequence in a clean local environment; commit/push and green remote rerun remain external work |
+| EOS-S5-02 | 5 | Run deterministic quality gates on GitHub | GitHub Actions | implemented and verified | Release run `34766061187` exposed missing dependency installation and executable mode; both fixes passed remote successor run `34796787722` on commit `9c642f7` |
 | EOS-S5-03 | 5 | Evaluate usefulness across representative real cases | Non-sensitive local dataset and review metrics | implemented with documented weak cases | 12-category Hybrid RAG dataset and live/retrieval reports measure source hit, confidence, abstention, citations, unsupported claims and latency; 6/12 meet all expectations and weak cases remain explicit |
 | EOS-WEB-01 | WebUI | Implement the five owner-approved Knowledge, Ask EOS, Engineering, Models, and Project workspaces | Existing shared services; approved mockups; ADR-2026-09-13-03 | implemented and verified locally | Real-data workspaces with no demo mode, PDF upload/library, Hybrid RAG filters/debug, bound previews, and loopback web regression tests |
 | EOS-RAG-01 | RAG | Upgrade dense-only retrieval to local Hybrid RAG without weakening grounding | schema 2.0, pypdf, ADR-2026-09-13-04 | implemented and verified locally | chunking, metadata, BM25, RRF, reranking, confidence, PDF/log safety, CLI/action/web tests |
 
 ## Current priorities
 
-1. Commit/push the locally verified CI fixes and confirm the next remote run is
-   green; deployment/restart stays operator-owned.
-2. Improve ambiguity/insufficient-evidence behavior, exact filenames, canonical
+1. Improve ambiguity/insufficient-evidence behavior, exact filenames, canonical
    source preference, and terminology variation against the retained dataset.
-3. Define a verified streaming-event contract before exposing incremental text;
+2. Define a verified streaming-event contract before exposing incremental text;
    keep JSON and re-run its capacity benchmark as the corpus approaches 10k.
+3. Upgrade GitHub Action majors after checking their supported versions; the
+   current green run reports a non-blocking Node 20 deprecation warning.

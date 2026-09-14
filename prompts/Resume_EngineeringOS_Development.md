@@ -1,6 +1,6 @@
 # EngineeringOS RAG Upgrade Resume
 
-Last updated: 2026-09-13T23:24:38+07:00
+Last updated: 2026-09-14T08:43:26+07:00
 
 ## Task
 
@@ -21,9 +21,9 @@ COMPLETE
 
 ### Current phase
 
-Phase 7 — Post-release inspection, safe implementation, documentation, and
-local verification complete. Remote CI rerun is an explicit external follow-up.
-The accepted release remains valid.
+Phase 7 — Post-release inspection, implementation, documentation, local
+verification, commit/push, and remote CI verification complete. The accepted
+release remains valid.
 
 ### Completed work
 
@@ -78,8 +78,15 @@ The accepted release remains valid.
 - Passed the final 140-test regression, Python compilation, governance
   validation, staged/unstaged whitespace checks, and a final deployed health
   check. The protected root README was not modified.
-- Rechecked GitHub Actions after local completion: no newer run exists; release
-  run `34766061187` remains the latest and remains failed as documented.
+- Rechecked GitHub Actions before push: release run `34766061187` was still the
+  latest and remained failed as documented.
+- Received owner authorization by instruction to run this resume, committed the
+  increment as `9c642f795aab4f46f20012513c799fe628e853c1`, and pushed branch
+  `agent/python-cli-sdv-knowledge`.
+- Verified remote GitHub Actions run `34796787722` for commit `9c642f7` passed
+  every step: dependency installation, governance, compilation, the
+  deterministic test suite, and whitespace checks. Job `validate` completed in
+  30 seconds.
 
 ### Measurements
 
@@ -111,6 +118,7 @@ The accepted release remains valid.
   BM25 (92 ms) and reranking (2 ms) remain small.
 - Final FAST health: EOS HTTP 2 ms, EOS and Cloudflare services/autostart OK,
   no recent EOS/tunnel warnings, public Access response HTTP 302 in 1.45 s.
+- Remote CI: run `34796787722`, commit `9c642f7`, conclusion `success`.
 
 ### Modified files
 
@@ -158,11 +166,16 @@ The accepted release remains valid.
   `git diff --cached --check`: passed.
 - Final `scripts/eos-status`: application/tunnel checks passed; host still
   reports the unrelated failed unit. Final `gh run list` confirms no new run.
+- `git commit`, `git push origin agent/python-cli-sdv-knowledge`, and
+  `gh run watch 34796787722 --exit-status`: push succeeded and remote CI passed.
 
 ### Known risks
 
-- Remote CI remains red for the release commit until the two local fixes are
-  committed/pushed and a new GitHub Actions run completes.
+- Historical release run `34766061187` remains red, while its fixes are verified
+  by green successor run `34796787722` on commit `9c642f7`.
+- GitHub emitted a non-blocking Node 20 deprecation warning for
+  `actions/checkout@v4` and `actions/setup-python@v5`; evaluate supported major
+  upgrades as a separate CI maintenance change.
 - End-to-end HTTP output is currently buffered. Direct Ollama TTFT and local
   HTTP first-byte timing are measured, but even the improved production query
   takes 27.44 s before the browser receives an answer.
@@ -179,18 +192,18 @@ The accepted release remains valid.
 - The SSH port collision is historical and recurring across boots, but does not
   affect EOS. Do not restart or disable SSH without separate owner intent.
 
-### Remaining operator/product follow-up
+### Optional product follow-up
 
-- Commit/push CI fixes and verify the resulting remote run (external write,
-  intentionally not performed without explicit release/push instruction).
 - Improve the documented six weak RAG cases as a separate measured increment.
 - Define a verified streaming-event protocol before changing the HTTP contract.
 - Re-run capacity/concurrency measurements as the corpus approaches 10k chunks.
+- Upgrade GitHub actions after reviewing their current supported major versions.
 
 ### Next exact action
 
-Review the diff, then—only with owner authorization—commit and push the local
-CI/runtime/evaluation increment and watch the resulting GitHub Actions run.
+No required post-release action remains. The next optional measured increment
+is to improve ambiguity/insufficient-evidence handling against the retained
+evaluation dataset without weakening its expectations.
 
 ## Baseline
 

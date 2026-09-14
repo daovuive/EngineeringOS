@@ -27,6 +27,10 @@
       "description": "Deterministic visual-regression evidence for the governed WebUI"
     },
     {
+      "path": "docs/webgui",
+      "description": "Canonical WebGUI architecture, operations, maintenance, and troubleshooting documentation"
+    },
+    {
       "path": "career",
       "description": "Career Planning and Job Market References"
     },

@@ -15,6 +15,8 @@ Operational, architectural, and governance documentation for EngineeringOS itsel
   web interactions and documents intentional exceptions.
 - [EngineeringOS WebUI Guide](WEBUI_GUIDE.md) documents the five workspaces,
   real-data behavior, Activity recovery, and responsive behavior.
+- [WebGUI Engineering Documentation](webgui/README.md) is the canonical entry
+  point for WebGUI architecture, operations, maintenance, and troubleshooting.
 - [Operations](OPERATIONS.md) covers local commands and host diagnostics.
 - [Post-release Engineering Report](POST_RELEASE_ENGINEERING_REPORT.md) records
   remote CI evidence, realistic RAG quality, latency/TTFT, JSON capacity, the

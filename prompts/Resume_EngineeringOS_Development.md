@@ -1,6 +1,83 @@
 # EngineeringOS RAG Upgrade Resume
 
-Last updated: 2026-09-14T08:43:26+07:00
+Last updated: 2026-09-14T09:34:26+07:00
+
+## WebGUI Documentation Work State
+
+### Current status
+
+COMPLETE — repository discovery, the canonical five-document WebGUI engineering
+set, navigation/manifest registration, validation, and consistency review are
+complete. No application behavior changed.
+
+### Discoveries
+
+- The browser is a dependency-free, five-workspace vanilla JavaScript client in
+  `engineering_os/web_static/`; it has no build step or demo-data mode.
+- `engineering_os.web` is both the HTTP entry point and route adapter. It uses
+  `ThreadingHTTPServer`, binds only `127.0.0.1`, defaults to port `8081`, and
+  serves three explicitly allowlisted static paths.
+- Browser actions call shared Python services in `actions.py`, `query.py`,
+  `ingestion.py`, `library.py`, and `workflows.py`; the server never executes
+  user-supplied shell commands.
+- Question submission is buffered end to end: `submitAsk()` sends one JSON
+  request to `/api/v1/query`; `query_knowledge()` performs Hybrid RAG and claim
+  verification; the browser receives one complete JSON response. Ollama NDJSON
+  is also fully read before parsing, despite `runtime.json` setting `stream`.
+- Browser-only state is in one in-memory object. Only eight bounded Activity
+  summaries persist in `localStorage`; there is no server session or stored
+  conversation history.
+- The only runtime endpoint override is `ENGINEERINGOS_OLLAMA_ENDPOINT`.
+  `EOS_STATUS_*` variables configure the diagnostic script, not the web server.
+- The repository contains no systemd unit, reverse-proxy configuration,
+  Cloudflare tunnel configuration, service installer, or lifecycle script.
+  `scripts/eos-status` records deployment defaults (`engineeringos-web`,
+  `cloudflared`, and `https://eos.dao-labs.org`) and performs read-only checks.
+- `configs/settings.json` has a logging section, but the web adapter does not
+  consume it and suppresses the default HTTP access log. Deployed stdout/stderr
+  visibility therefore depends on the external process supervisor.
+
+### Modified files
+
+- `docs/webgui/README.md`, `ARCHITECTURE.md`, `OPERATIONS.md`,
+  `MAINTENANCE.md`, and `TROUBLESHOOTING.md` (new canonical documentation).
+- `docs/README.md` (discoverability link).
+- `configs/project-structure.json` (registered maintained documentation area).
+- `prompts/Resume_EngineeringOS_Development.md`
+
+### Tests run
+
+- `python3 -m py_compile engineering_os/web.py engineering_os/actions.py` — passed.
+- `python3 -m unittest tests.test_web tests.test_actions` with loopback access —
+  38/38 passed. The first restricted-sandbox attempt was unable to create test
+  sockets; it was rerun successfully with the required permission.
+- `.venv/bin/python -m unittest discover -s tests -p 'test_*.py'` with loopback
+  access — 140/140 passed in 18.129 seconds. A preceding system-Python run
+  reached 136 tests but could not import `tests.test_pdf` because `pypdf` was
+  not installed outside the project virtual environment.
+- `python3 -m compileall -q engineering_os tests`, `python3 eng.py validate`,
+  `git diff --check`, protected-root diff check, JSON configuration parsing,
+  and Bash syntax checks for both operational scripts — passed.
+- `python3 -m engineering_os.web --help`, `python3 eng.py knowledge --help`, and
+  `python3 eng.py llm --help` confirmed documented commands/options.
+- All relative Markdown links and fences passed an automated check. Seven
+  Mermaid blocks passed structural/manual syntax review; no Mermaid CLI or
+  repository Markdown linter is installed.
+- Re-read the route adapter, frontend handlers, query/RAG/LLM chain, configs,
+  diagnostics, tests, and final documentation; documented routes, ports,
+  environment variables, service qualifiers, and ownership match source.
+
+### Unresolved questions
+
+- Exact systemd unit contents and Cloudflare tunnel ingress/Access policy are
+  external deployment state and cannot be confirmed from this repository.
+
+### Next exact action
+
+No required work remains. Optional owner action: review and commit the WebGUI
+documentation increment. Deployment owners may separately export the external
+systemd unit and Cloudflare ingress/Access design if reproducible deployment is
+later brought into repository scope.
 
 ## Task
 
@@ -87,6 +164,9 @@ release remains valid.
   every step: dependency installation, governance, compilation, the
   deterministic test suite, and whitespace checks. Job `validate` completed in
   30 seconds.
+- Upgraded `actions/checkout` from v4 to v5 and `actions/setup-python` from v5
+  to v6 in commit `a81803c` so both actions run natively on Node 24. Remote run
+  `34797235128` passed in 28 seconds with no Node 20 deprecation annotation.
 
 ### Measurements
 
@@ -119,6 +199,8 @@ release remains valid.
 - Final FAST health: EOS HTTP 2 ms, EOS and Cloudflare services/autostart OK,
   no recent EOS/tunnel warnings, public Access response HTTP 302 in 1.45 s.
 - Remote CI: run `34796787722`, commit `9c642f7`, conclusion `success`.
+- Node 24 action upgrade: run `34797235128`, commit `a81803c`, conclusion
+  `success`, no annotations.
 
 ### Modified files
 
@@ -168,14 +250,15 @@ release remains valid.
   reports the unrelated failed unit. Final `gh run list` confirms no new run.
 - `git commit`, `git push origin agent/python-cli-sdv-knowledge`, and
   `gh run watch 34796787722 --exit-status`: push succeeded and remote CI passed.
+- Local CI-equivalent validation before the action upgrade: governance,
+  compilation, 140/140 tests in 19.823 seconds, and whitespace passed.
+- `gh run watch 34797235128 --exit-status`: upgraded action majors and every CI
+  step passed with no deprecation warning.
 
 ### Known risks
 
 - Historical release run `34766061187` remains red, while its fixes are verified
   by green successor run `34796787722` on commit `9c642f7`.
-- GitHub emitted a non-blocking Node 20 deprecation warning for
-  `actions/checkout@v4` and `actions/setup-python@v5`; evaluate supported major
-  upgrades as a separate CI maintenance change.
 - End-to-end HTTP output is currently buffered. Direct Ollama TTFT and local
   HTTP first-byte timing are measured, but even the improved production query
   takes 27.44 s before the browser receives an answer.
@@ -197,7 +280,6 @@ release remains valid.
 - Improve the documented six weak RAG cases as a separate measured increment.
 - Define a verified streaming-event protocol before changing the HTTP contract.
 - Re-run capacity/concurrency measurements as the corpus approaches 10k chunks.
-- Upgrade GitHub actions after reviewing their current supported major versions.
 
 ### Next exact action
 

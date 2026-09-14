@@ -38,5 +38,3 @@ means local checks passed; it does not mean remote GitHub Actions ran.
    source preference, and terminology variation against the retained dataset.
 2. Define a verified streaming-event contract before exposing incremental text;
    keep JSON and re-run its capacity benchmark as the corpus approaches 10k.
-3. Upgrade GitHub Action majors after checking their supported versions; the
-   current green run reports a non-blocking Node 20 deprecation warning.

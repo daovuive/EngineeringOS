@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0",
+  "cases": [
+    {
+      "id": "exact-technical-identifier",
+      "category": "exact_identifier",
+      "query": "What does TELEMETRY_PROFILE_UPDATE allow and forbid?",
+      "expectedSources": ["automotive/EOS_SDV_Vehicle_Status_2026-09-08/current/03_TECHNICAL_ACCEPTANCE_REFERENCE.md"],
+      "expectedIdentifiers": ["TELEMETRY_PROFILE_UPDATE"],
+      "expectedAbstention": false,
+      "notes": "Exact command identifier should prefer the canonical current package."
+    },
+    {
+      "id": "architecture-runtime-boundary",
+      "category": "architecture_question",
+      "query": "Why does EngineeringOS use a runtime abstraction instead of depending directly on Ollama?",
+      "expectedSources": ["architect/asr/ASR-0001-llm-model-selection-for-ollama-personal-pc.md"],
+      "expectedIdentifiers": ["runtime"],
+      "expectedAbstention": false,
+      "notes": "Architecture answer must come from the model-selection decision."
+    },
+    {
+      "id": "cross-document-asr-boundary",
+      "category": "cross_document",
+      "query": "How do ASR-0001 and ASR-0002 divide local model selection from content monitoring orchestration?",
+      "expectedSources": ["architect/asr/ASR-0001-llm-model-selection-for-ollama-personal-pc.md", "architect/asr/ASR-0002-local-content-monitoring-with-n8n-and-ollama.md"],
+      "expectedIdentifiers": ["ASR-0001", "ASR-0002"],
+      "expectedAbstention": false,
+      "notes": "Both architecture decisions should be present in the retrieval shortlist."
+    },
+    {
+      "id": "citation-status-identity",
+      "category": "citation_required",
+      "query": "Which source defines how statusId must behave across queueing and retries?",
+      "expectedSources": ["automotive/EOS_SDV_Vehicle_Status_2026-09-08/current/03_TECHNICAL_ACCEPTANCE_REFERENCE.md"],
+      "expectedIdentifiers": ["statusId"],
+      "expectedAbstention": false,
+      "notes": "Canonical current evidence is preferred over duplicate historical copies."
+    },
+    {
+      "id": "ambiguous-status",
+      "category": "ambiguous",
+      "query": "What does status mean?",
+      "expectedSources": [],
+      "expectedIdentifiers": [],
+      "expectedAbstention": true,
+      "notes": "The question lacks enough domain context for a grounded EOS answer."
+    },
+    {
+      "id": "insufficient-revenue",
+      "category": "insufficient_evidence",
+      "query": "What is the exact quarterly revenue of EngineeringOS?",
+      "expectedSources": [],
+      "expectedIdentifiers": [],
+      "expectedAbstention": true,
+      "notes": "EOS has no authoritative financial evidence."
+    },
+    {
+      "id": "decision-id-d17",
+      "category": "requirement_or_decision_id",
+      "query": "Which document defines D17 controlled settings?",
+      "expectedSources": ["automotive/EOS_SDV_Vehicle_Status_2026-09-08/current/01_DECISION_REGISTER.md"],
+      "expectedIdentifiers": ["D17"],
+      "expectedAbstention": false,
+      "notes": "Decision IDs exercise identifier-preserving tokenization."
+    },
+    {
+      "id": "source-filename",
+      "category": "source_filename",
+      "query": "What is covered by Architecture_Notes_State_vs_Status_vs_Mode.md?",
+      "expectedSources": ["architect/lessions/Architecture_Notes_State_vs_Status_vs_Mode.md"],
+      "expectedIdentifiers": ["state", "status", "mode"],
+      "expectedAbstention": false,
+      "notes": "Exact filenames should be retrievable without relying on answer wording."
+    },
+    {
+      "id": "unknown-error-code",
+      "category": "error_or_log",
+      "query": "What happened around error code EOS-ERR-9472?",
+      "expectedSources": [],
+      "expectedIdentifiers": [],
+      "expectedAbstention": true,
+      "notes": "The invented error code must not produce a fabricated incident."
+    },
+    {
+      "id": "long-form-boundary",
+      "category": "long_form",
+      "query": "Explain how the vehicle-status core separates domain policy from AAOS and cloud providers, including the contracts and proof boundary.",
+      "expectedSources": ["automotive/EOS_SDV_Vehicle_Status_2026-09-08/source/SDV_Telematics_Vehicle_Status_AAOS_First_Plan_Revision_EN.md"],
+      "expectedIdentifiers": ["AAOS", "provider"],
+      "expectedAbstention": false,
+      "notes": "Long-form architecture retrieval should retain the source plan."
+    },
+    {
+      "id": "short-vague-provider",
+      "category": "short_vague",
+      "query": "provider?",
+      "expectedSources": [],
+      "expectedIdentifiers": [],
+      "expectedAbstention": true,
+      "notes": "One vague term should request clarification rather than choose a domain."
+    },
+    {
+      "id": "terminology-variation-retry",
+      "category": "terminology_variation",
+      "query": "How should queued telemetry preserve message identity across resend attempts?",
+      "expectedSources": ["automotive/EOS_SDV_Vehicle_Status_2026-09-08/current/03_TECHNICAL_ACCEPTANCE_REFERENCE.md"],
+      "expectedIdentifiers": ["statusId", "retry"],
+      "expectedAbstention": false,
+      "notes": "Natural synonyms should retrieve the canonical identity/retry contract."
+    }
+  ]
+}

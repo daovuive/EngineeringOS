@@ -425,9 +425,18 @@ def get_embedding_contract(config: dict[str, Any]) -> dict[str, Any]:
     return {
         "contractVersion": EMBEDDING_CONTRACT_VERSION,
         "provider": binding.provider,
-        "model": binding.model,
+        "model": _canonical_embedding_model(
+            definition.provider.type, binding.model
+        ),
         "dimensions": binding.dimensions,
     }
+
+
+def _canonical_embedding_model(provider_type: str, model: str) -> str:
+    """Normalize provider aliases that identify identical embedding weights."""
+    if provider_type == "ollama" and model.endswith(":latest"):
+        return model.removesuffix(":latest")
+    return model
 
 
 def build_pull_commands(config: dict[str, Any]) -> list[str]:

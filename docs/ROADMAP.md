@@ -36,9 +36,11 @@ opt-in freshness-filtered memory, Markdown/plain-text/PDF ingestion,
 disabled-by-default allowlisted log indexing, deduplication, and atomic
 document-level index updates are implemented.
 
-A vector database is conditional future work, not a current defect. It should
-be considered only after measured corpus size, latency, update, or filtering
-requirements exceed the JSON index.
+A vector database is conditional future work, not a current defect. The
+post-release benchmark retained JSON at the current 1,732-chunk scale and found
+the first prospective interactive-limit breach at 25,000 representative
+chunks. The evidence and re-evaluation thresholds are recorded in the
+[Post-release Engineering Report](POST_RELEASE_ENGINEERING_REPORT.md).
 
 ## Sprint 4 — Engineering Workflows
 
@@ -66,13 +68,20 @@ take roughly three minutes on the current host.
 
 ## Cross-cutting delivery status
 
-GitHub Actions now runs governance validation, Python compilation, the
-service-independent test suite, and whitespace checks. Live Ollama and deployed
-service smoke checks remain explicit local operations and are not CI gates.
+GitHub Actions defines governance validation, Python compilation, the
+service-independent test suite, and whitespace checks. The accepted release
+commit's remote run failed because dependencies were not installed and the
+status script lacked executable mode; both fixes pass the exact CI sequence
+locally, while a new remote run remains pending commit/push. Live Ollama and
+deployed-service smoke checks remain explicit local operations and are not CI
+gates.
 The ingestion/index consistency, shared CLI/web action, WebUI, and Hybrid RAG
 decisions were accepted by the owner on 2026-09-13.
 
 The five-workspace WebUI is implemented without a runtime demo-data mode: every
 session reads the real local API and configured runtime. Historical synthetic
 screenshots retain visual evidence from implementation. Its architecture ADR
-is accepted; remote CI and deployed-service verification remain pending.
+is accepted. Deployed EOS and Cloudflare health were independently verified;
+authenticated remote query streaming was not available through Cloudflare
+Access. Realistic Hybrid RAG evaluation now exists and its weak cases remain
+post-release quality work.

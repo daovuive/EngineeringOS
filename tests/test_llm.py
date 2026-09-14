@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 from pathlib import Path
 from unittest import TestCase
@@ -27,7 +28,10 @@ class LLMConfigurationTests(TestCase):
         self.assertEqual(definition.provider.type, "ollama")
         self.assertEqual(definition.provider.host, "http://localhost:11434")
         self.assertEqual(definition.model_for("chat"), "phi3.5:3.8b-mini-instruct-q4_K_M")
-        self.assertEqual(definition.model_for("embedding"), "nomic-embed-text")
+        self.assertEqual(
+            definition.model_for("embedding"), "nomic-embed-text:latest"
+        )
+        self.assertEqual(definition.options.max_tokens, 512)
         self.assertIsInstance(create_runtime(self.config), OllamaRuntime)
 
     def test_endpoint_can_be_overridden_for_windows_ollama_from_wsl(self) -> None:
@@ -43,8 +47,19 @@ class LLMConfigurationTests(TestCase):
         commands = build_pull_commands(self.config)
 
         self.assertIn("ollama pull granite3.1-moe:3b", commands)
-        self.assertIn("ollama pull nomic-embed-text", commands)
+        self.assertIn("ollama pull nomic-embed-text:latest", commands)
         self.assertEqual(len(commands), 4)
+
+    def test_embedding_contract_normalizes_only_ollama_latest_alias(self) -> None:
+        from engineering_os.llm import get_embedding_contract
+
+        config = deepcopy(self.config)
+        config["models"]["embedding"]["model"] = "nomic-embed-text:latest"
+
+        self.assertEqual(
+            get_embedding_contract(config)["model"],
+            "nomic-embed-text",
+        )
 
     def test_generation_can_bound_tokens_for_one_workflow_stage(self) -> None:
         class RecordingHttpClient:

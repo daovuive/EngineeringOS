@@ -18,8 +18,8 @@ means local checks passed; it does not mean remote GitHub Actions ran.
 | EOS-S3-01 | 3 | Build a local Markdown/PDF index with optional safe logs | Ollama embedding model; pypdf | implemented and verified | token-aware/page-aware chunks, schema 2.0 lexical state, and log controls tested |
 | EOS-S3-02 | 3 | Hybrid dense/BM25 retrieval, filtering, and reranking | Compatible JSON index | implemented and verified | `eng.py knowledge search`; identifier/RRF/filter/rerank/debug tests |
 | EOS-S3-03 | 3 | Grounded answers with abstention and inline sources | Retrieval and generation models | implemented and verified | `eng.py knowledge ask`; confidence and grounding regressions in `tests/test_rag.py` |
-| EOS-S3-04 | 3 | Storage adequate for current corpus scale | JSON index | implemented and verified | Versioned JSON load/save contract is tested and operational |
-| EOS-S3-05 | 3 | Optional vector DB for scale/filtering demands | Measured limitation and approved storage decision | planned | Accept only after a benchmark shows the JSON index misses an explicit latency, scale, update, or filtering target |
+| EOS-S3-04 | 3 | Storage adequate for current corpus scale | JSON index | implemented and verified | Current 1,732 chunks load below 0.7 s and live retrieval p95 is below 0.64 s; capacity benchmark and thresholds are in `docs/POST_RELEASE_ENGINEERING_REPORT.md` |
+| EOS-S3-05 | 3 | Optional vector DB for scale/filtering demands | Measured limitation and approved storage decision | conditional; not justified | `KEEP_JSON_INDEX`; representative 25k chunks cross the prospective 2 s retrieval/5 s load targets, so re-evaluate before that scale rather than migrate now |
 | EOS-S3-06 | 3+ | Import Markdown/plain text/text PDF and make it available to RAG automatically | Existing JSON index, embedding role, pypdf | implemented and verified locally | file/text/stdin/PDF, page citations, automatic/skipped indexing, dedupe, retry and truthful states; ingestion/PDF/web tests |
 | EOS-S3-07 | 3+ | Incrementally and safely update one document in the JSON index | Compatible embedding contract | implemented and verified locally | Atomic persistence, writer coordination, stale-chunk replacement, unrelated-chunk preservation and failure recovery tests pass in `tests/test_ingestion.py` |
 | EOS-S2-05 | 2+ | Use supported EOS commands through task-oriented protected web controls | Shared application services and action catalog | implemented and verified locally | Upload/paste/retry/open, explicit allowlisted actions, confirmations and workflow controls pass `tests/test_actions.py` and `tests/test_web.py`; coverage and host-level exception in `docs/COMMAND_COVERAGE.md` |
@@ -27,16 +27,16 @@ means local checks passed; it does not mean remote GitHub Actions ran.
 | EOS-S4-02 | 4 | Review requirements for quality, constraints, and traceability | Reasoning model; optional index | implemented and verified | CLI and tested web Requirement Review paths; live CLI smoke passed |
 | EOS-S4-03 | 4 | Produce an explicitly unapproved ADR draft with options/trade-offs | Reasoning model; optional index | implemented and verified | CLI and tested web ADR Assistant paths; live CLI smoke passed; title/sections enforced by `engineering_os/workflows.py` |
 | EOS-S5-01 | 5 | Produce a bounded architecture proposal with explicit uncertainty | Requirement/ADR guidance, reasoning model, optional index | implemented and verified | CLI/web paths and deterministic tests pass; schema-constrained live runs returned validated proposals with and without optional retrieval. Mermaid, stages, ADR options, and source excerpts are assembled deterministically; observed buffered latency was roughly 2.5–3 minutes |
-| EOS-S5-02 | 5 | Run deterministic quality gates on GitHub | GitHub Actions | implemented but unverified | `.github/workflows/ci.yml` defines governance, compile, test, and diff gates; no remote run was observed |
-| EOS-S5-03 | 5 | Evaluate usefulness across representative real cases | Owner-selected non-sensitive scenarios and review rubric | planned | Record false findings, missing risks, evidence quality, latency, and owner acceptance without copying private inputs into tests/logs |
+| EOS-S5-02 | 5 | Run deterministic quality gates on GitHub | GitHub Actions | implemented; remote fix pending | Release run `34766061187` was verified failed: missing dependency install and executable mode. Both fixes pass the exact sequence in a clean local environment; commit/push and green remote rerun remain external work |
+| EOS-S5-03 | 5 | Evaluate usefulness across representative real cases | Non-sensitive local dataset and review metrics | implemented with documented weak cases | 12-category Hybrid RAG dataset and live/retrieval reports measure source hit, confidence, abstention, citations, unsupported claims and latency; 6/12 meet all expectations and weak cases remain explicit |
 | EOS-WEB-01 | WebUI | Implement the five owner-approved Knowledge, Ask EOS, Engineering, Models, and Project workspaces | Existing shared services; approved mockups; ADR-2026-09-13-03 | implemented and verified locally | Real-data workspaces with no demo mode, PDF upload/library, Hybrid RAG filters/debug, bound previews, and loopback web regression tests |
 | EOS-RAG-01 | RAG | Upgrade dense-only retrieval to local Hybrid RAG without weakening grounding | schema 2.0, pypdf, ADR-2026-09-13-04 | implemented and verified locally | chunking, metadata, BM25, RRF, reranking, confidence, PDF/log safety, CLI/action/web tests |
 
 ## Current priorities
 
-1. Run the GitHub Actions workflow remotely and resolve only reproducible gate
-   failures; deploy/restart the web service only through the operator-owned
-   process.
-2. Evaluate Solution Architect and Hybrid RAG on owner-selected representative cases and
-   measure end-to-end streaming and latency.
-3. Add a vector store or cross-encoder only if measurements establish a concrete need.
+1. Commit/push the locally verified CI fixes and confirm the next remote run is
+   green; deployment/restart stays operator-owned.
+2. Improve ambiguity/insufficient-evidence behavior, exact filenames, canonical
+   source preference, and terminology variation against the retained dataset.
+3. Define a verified streaming-event contract before exposing incremental text;
+   keep JSON and re-run its capacity benchmark as the corpus approaches 10k.

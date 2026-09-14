@@ -13,7 +13,7 @@ from engineering_os.ingestion import (
     ingest_text,
     retry_document_index,
 )
-from engineering_os.knowledge import load_index
+from engineering_os.knowledge import KnowledgeIndexError, load_index
 from engineering_os.llm import LLMError, get_embedding_contract
 
 
@@ -141,6 +141,29 @@ class IngestionTests(TestCase):
             self.assertEqual(chunks[0].heading_path, ())
             self.assertEqual(chunks[0].tags, ())
             self.assertEqual(chunks[0].chunk_id, "")
+
+    def test_index_load_accepts_legacy_latest_model_alias_only(self) -> None:
+        with TemporaryDirectory() as temporary:
+            paths, _ = self._project(temporary)
+            runtime = FakeEmbeddingRuntime()
+            ingest_text(paths, "Alias compatibility.", title="Alias", runtime=runtime)
+            index = paths.root / "runtime/index/knowledge.json"
+            payload = json.loads(index.read_text(encoding="utf-8"))
+            contract = get_embedding_contract(load_runtime_config(paths))
+            payload["embedding"]["model"] = f'{contract["model"]}:latest'
+            index.write_text(json.dumps(payload), encoding="utf-8")
+
+            self.assertEqual(len(load_index(index, embedding_contract=contract)), 1)
+
+            for incompatible in (
+                dict(contract, dimensions=3),
+                dict(contract, model="different-embedding-model"),
+            ):
+                with self.subTest(contract=incompatible):
+                    with self.assertRaisesRegex(
+                        KnowledgeIndexError, "embedding contract mismatch"
+                    ):
+                        load_index(index, embedding_contract=incompatible)
 
     def test_filename_collision_is_deterministic_and_original_is_preserved(self) -> None:
         with TemporaryDirectory() as temporary:

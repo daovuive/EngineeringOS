@@ -182,6 +182,35 @@ bash scripts/setup-wsl-webui-testing.sh http://127.0.0.1:8081
 tooling vào `~/.local/share/eos-webui-testing/`. Đây không phải CI gate và không
 được chạy tự động khi khởi động EngineeringOS.
 
+## Post-release evaluation and performance checks
+
+Các benchmark dùng Ollama là kiểm tra vận hành có chủ đích, không phải CI gate.
+Output machine-readable chỉ được ghi dưới `tmp/` và không thuộc source control:
+
+```bash
+python scripts/evaluate_rag.py \
+  --output tmp/post-release-rag-retrieval.json
+python scripts/evaluate_rag.py --live \
+  --output tmp/post-release-rag-live.json
+python -u scripts/benchmark_rag_latency.py \
+  --iterations 2 --max-tokens 128 \
+  --output tmp/post-release-rag-latency.json
+python -u scripts/benchmark_index_capacity.py \
+  --scales 1000,5000,10000,25000 --iterations 3 \
+  --output tmp/post-release-index-capacity.json
+```
+
+Hai lệnh đầu và latency benchmark cần Ollama local. Capacity benchmark không
+gọi model: nó tái sử dụng vector hiện có để cô lập chi phí JSON/dense/BM25/
+hybrid/rerank, xóa file index lớn sau từng scale, và không đo thời gian tạo
+embedding. Kết quả chuẩn cùng tiêu chí đánh giá lại vector store nằm trong
+[Post-release Engineering Report](POST_RELEASE_ENGINEERING_REPORT.md).
+
+`configs/ai/runtime.json` giới hạn generation ở 512 token dựa trên phép đo HTTP
+before/after. Thay đổi working tree không reload module Python, nhưng runtime
+configuration được đọc lại cho mỗi query hiện tại. Sau deployment vẫn nên
+restart service theo quy trình operator và chạy `scripts/eos-status --deep`.
+
 ## Observed host issue
 
 Read-only diagnostics on 2026-09-12 found `ssh.service` failed, which makes

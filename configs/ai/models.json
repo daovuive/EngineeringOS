@@ -19,7 +19,7 @@
     },
     "embedding": {
       "provider": "ollama-local",
-      "model": "nomic-embed-text",
+      "model": "nomic-embed-text:latest",
       "dimensions": 768
     }
   }

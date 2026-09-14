@@ -485,7 +485,8 @@ def load_knowledge_index(
             "Knowledge index is missing embedding compatibility metadata; "
             "rebuild the index."
         )
-    if stored_contract != embedding_contract:
+    _validate_embedding_contract(stored_contract)
+    if not _embedding_contracts_match(stored_contract, embedding_contract):
         raise KnowledgeIndexError(
             "Knowledge index embedding contract mismatch: "
             f"stored={stored_contract!r}, expected={embedding_contract!r}. "
@@ -558,3 +559,27 @@ def _validate_embedding_contract(contract: EmbeddingContract) -> None:
         or contract["dimensions"] < 1
     ):
         raise KnowledgeIndexError("Embedding contract dimensions must be a positive integer.")
+
+
+def _embedding_contracts_match(
+    stored: EmbeddingContract,
+    expected: EmbeddingContract,
+) -> bool:
+    """Compare v1 contracts while accepting the legacy Ollama ``:latest`` alias.
+
+    Older indexes may persist ``model:latest`` while current runtime contracts
+    canonicalize the same Ollama reference to ``model``. All other contract
+    fields remain exact compatibility boundaries.
+    """
+    if stored == expected:
+        return True
+    if any(
+        stored[key] != expected[key]
+        for key in ("contractVersion", "provider", "dimensions")
+    ):
+        return False
+    stored_model = stored["model"]
+    expected_model = expected["model"]
+    return stored_model.removesuffix(":latest") == expected_model.removesuffix(
+        ":latest"
+    )

@@ -16,6 +16,9 @@ Operational, architectural, and governance documentation for EngineeringOS itsel
 - [EngineeringOS WebUI Guide](WEBUI_GUIDE.md) documents the five workspaces,
   real-data behavior, Activity recovery, and responsive behavior.
 - [Operations](OPERATIONS.md) covers local commands and host diagnostics.
+- [Post-release Engineering Report](POST_RELEASE_ENGINEERING_REPORT.md) records
+  remote CI evidence, realistic RAG quality, latency/TTFT, JSON capacity, the
+  vector-store decision, and deployed health findings.
 - [Architecture Decisions](DECISIONS.md) indexes accepted, superseded, and
   proposed ADRs when any remain under review.
 - [WebUI Implementation Log](WEBUI_IMPLEMENTATION_LOG.md) records chronological

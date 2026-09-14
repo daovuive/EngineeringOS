@@ -1,6 +1,6 @@
 # EngineeringOS RAG Upgrade Resume
 
-Last updated: 2026-09-13
+Last updated: 2026-09-13T23:24:38+07:00
 
 ## Task
 
@@ -16,6 +16,181 @@ Phase 7 — Documentation, final regression, governance, and approval complete.
 ## Overall Status
 
 COMPLETE
+
+## Post-release work state
+
+### Current phase
+
+Phase 7 — Post-release inspection, safe implementation, documentation, and
+local verification complete. Remote CI rerun is an explicit external follow-up.
+The accepted release remains valid.
+
+### Completed work
+
+- Reconciled the clean `agent/python-cli-sdv-knowledge` worktree at release
+  commit `350afe9f578b6620e29c46312b2fa388ece5e363`.
+- Ran the complete local baseline: 138/138 tests, compilation, governance, and
+  whitespace checks passed.
+- Inspected `.github/workflows/ci.yml`: one Python 3.12 workflow runs on every
+  push and pull request, with no branch restriction and no required secrets.
+- Verified remote run `34766061187` for release commit `350afe9` failed in the
+  deterministic test step. Governance and compilation passed.
+- Identified both remote-only failures: project dependencies were not installed
+  (`pypdf` missing), and `scripts/eos-status` was committed as mode `100644` so
+  three subprocess tests received `PermissionError`.
+- Added the project dependency installation step and recorded executable mode
+  `100755` for `scripts/eos-status`.
+- Reproduced the updated CI sequence in a clean `/tmp` virtual environment;
+  138/138 tests and every local CI gate passed.
+- Independently verified EOS production health with `scripts/eos-status --deep`.
+- Diagnosed degraded systemd state as `ssh.service` repeatedly failing to bind
+  port 22 during boot. It is unrelated to EOS/Cloudflare; no service or OS
+  configuration was changed. No port-22 listener was present at inspection
+  time, so the historical conflicting owner is not currently observable.
+- Replaced the stale dense-only evaluation script with a repeatable 12-case
+  Hybrid RAG harness covering exact IDs, architecture, cross-document queries,
+  citations, ambiguity, insufficient evidence, decision IDs, filenames,
+  unknown errors, long-form questions, vague input, and terminology variation.
+- Added retrieval-only and live generation/grounding modes with machine-readable
+  output, source/citation/abstention/unsupported-claim metrics, and p50/p95 stage
+  timings. Reports are intentionally written only under ignored `tmp/` state.
+- Preserved the concurrent `nomic-embed-text:latest` configuration change and
+  made embedding contract identity canonical across the Ollama bare/`:latest`
+  aliases. Legacy index metadata remains loadable; provider, dimensions, and
+  any materially different model continue to fail compatibility checks.
+- Added a repeatable five-query/two-iteration stage benchmark using monotonic
+  timing and the real RAG prompt. It consumes Ollama NDJSON directly to measure
+  first non-empty token without changing production response semantics.
+- Confirmed that internal Ollama tokens are available quickly but the EOS HTTP
+  endpoint and browser receive one JSON body only after generation and claim
+  verification. End-to-end token streaming is therefore not implemented.
+- Reduced the configured generation ceiling from 4,096 to 512 tokens. The same
+  production HTTP query remained answered with one grounded source while TTFB
+  and total latency fell by 62.4%; the optimization is kept.
+- Added and ran a repeatable capacity benchmark against representative current
+  chunks and real 768-dimensional vectors at 1k, 5k, 10k, and 25k chunks. Large
+  temporary indexes were deleted after each scale.
+- Decision: `KEEP_JSON_INDEX`. Current measured scale is healthy; 25k results
+  define a future re-evaluation boundary rather than justify a migration now.
+- Created the canonical post-release engineering report and synchronized
+  architecture, operations, configuration notes, roadmap, backlog, changelog,
+  documentation navigation, and local test/script READMEs.
+- Passed the final 140-test regression, Python compilation, governance
+  validation, staged/unstaged whitespace checks, and a final deployed health
+  check. The protected root README was not modified.
+- Rechecked GitHub Actions after local completion: no newer run exists; release
+  run `34766061187` remains the latest and remains failed as documented.
+
+### Measurements
+
+- Knowledge index: schema 2.0, 1,732 chunks, 36,301,379 bytes, persisted lexical
+  index, 768-dimensional `nomic-embed-text` vectors.
+- EOS local health: HTTP OK, 4 ms.
+- Real deep RAG smoke: answered, 2 sources, 25,421 ms total.
+- Cloudflare endpoint: Access-protected HTTP 302, 274 ms reachability check.
+- Host: WSL2, 12 CPU cores, 23 GiB RAM, 8.4% RAM used during health check.
+- Retrieval evaluation: 12 cases, 6 fully passed, positive source hit 87.5%,
+  confidence behavior 58.3%, index load 642 ms, retrieval p50 359 ms and p95
+  381 ms.
+- Live evaluation: citation correctness 100%, final abstention accuracy 58.3%,
+  mean unsupported-claim rate 2.9%, total p50 37.3 s, p95 101.0 s, and maximum
+  115.7 s. Weak cases are canonical citation/status identity, insufficient
+  revenue, exact filename, long-form boundary, vague provider, and retry
+  terminology variation.
+- Stage benchmark (10 samples, generation capped at 128 for controlled timing):
+  embedding p50/p95 67/87 ms, Hybrid total 413/463 ms, rerank 6.2/7.2 ms,
+  Ollama TTFT 170/246 ms, stream-complete 6.60/8.22 s, grounding 1.3/2.7 ms,
+  and total 6.72/8.64 s. Confidence-gated cases avoid generation.
+- Local production HTTP before/after on the same exact-identifier query:
+  73.04/73.04 s TTFB/total at 4,096 tokens versus 27.44/27.44 s at 512 tokens;
+  both answered with one source. TTFB remains equal to total because the API is
+  intentionally buffered until verification.
+- Capacity at 1k/5k/10k/25k chunks: file 12.4/61.9/123.9/309.7 MiB; load
+  0.25/1.41/2.86/7.19 s; RSS delta 31/148/271/774 MiB; hybrid p95
+  0.14/0.71/1.39/3.70 s. At 25k, dense scan (3.62 s) is the bottleneck while
+  BM25 (92 ms) and reranking (2 ms) remain small.
+- Final FAST health: EOS HTTP 2 ms, EOS and Cloudflare services/autostart OK,
+  no recent EOS/tunnel warnings, public Access response HTTP 302 in 1.45 s.
+
+### Modified files
+
+- `.github/workflows/ci.yml`: install `.[dev]` before deterministic gates.
+- `scripts/eos-status`: Git executable mode corrected from `100644` to `100755`.
+- `scripts/evaluate_rag.py`, `tests/evaluation_cases.json`: realistic Hybrid RAG
+  evaluation dataset, metrics, timings, and optional live generation.
+- `engineering_os/llm.py`, `engineering_os/knowledge.py`, `tests/test_llm.py`,
+  `tests/test_ingestion.py`: stable Ollama embedding alias contract and tests.
+- `configs/ai/models.json`: concurrent user-owned model alias change preserved.
+- `configs/ai/runtime.json`: measured production generation ceiling of 512.
+- `scripts/benchmark_rag_latency.py`: retrieval/rerank/prompt/TTFT/stream/
+  grounding/total benchmark.
+- `scripts/benchmark_index_capacity.py`: scalable JSON build/load/memory and
+  dense/BM25/hybrid/rerank benchmark.
+- `docs/POST_RELEASE_ENGINEERING_REPORT.md` and linked canonical docs/READMEs:
+  CI, evaluation, performance, streaming, capacity, decision, host, health,
+  operations, and delivery-state consistency.
+- `prompts/Resume_EngineeringOS_Development.md`: post-release evidence and next
+  actions.
+
+### Commands executed and tests run
+
+- `gh auth status`, `gh workflow list`, `gh run list --commit 350afe9...`, and
+  `gh run view 34766061187 --log-failed`.
+- Clean-venv equivalent of dependency install, `eng.py validate`, compileall,
+  unittest discovery, and `git diff --check`: all passed; 138 tests in 18.297 s.
+- `scripts/eos-status --deep`, `systemctl --failed`, `systemctl status
+  ssh.service`, `journalctl -u ssh.service`, and read-only port/socket checks.
+- `python -m unittest tests.test_llm tests.test_ingestion`: 16/16 passed.
+- `scripts/evaluate_rag.py` retrieval-only and `--live`: completed all 12 cases;
+  reports at `tmp/post-release-rag-retrieval.json` and
+  `tmp/post-release-rag-live.json`.
+- `scripts/benchmark_rag_latency.py --iterations 2 --max-tokens 128`: 10 samples
+  completed; report at `tmp/post-release-rag-latency.json`.
+- Two equivalent local HTTP queries measured via curl before/after the 512-token
+  cap; both HTTP 200, answered, and cited one source.
+- `scripts/benchmark_index_capacity.py --scales 1000,5000,10000,25000
+  --iterations 3`: all scales completed; report at
+  `tmp/post-release-index-capacity.json` and scale files removed.
+- Final `.venv/bin/python -m unittest discover -s tests -p 'test_*.py'`:
+  140/140 passed in 18.135 s. The first sandboxed attempt could not create
+  loopback sockets; the authorized rerun passed all 31 WebUI tests.
+- Final compileall, `python eng.py validate`, `git diff --check`, and
+  `git diff --cached --check`: passed.
+- Final `scripts/eos-status`: application/tunnel checks passed; host still
+  reports the unrelated failed unit. Final `gh run list` confirms no new run.
+
+### Known risks
+
+- Remote CI remains red for the release commit until the two local fixes are
+  committed/pushed and a new GitHub Actions run completes.
+- End-to-end HTTP output is currently buffered. Direct Ollama TTFT and local
+  HTTP first-byte timing are measured, but even the improved production query
+  takes 27.44 s before the browser receives an answer.
+- Current confidence behavior accepts unsupported revenue and one-word provider
+  queries. Exact-filename and terminology-variation retrieval are also weak.
+  Do not hide these quality gaps by weakening the evaluation expectations.
+- Browser-visible streaming cannot safely expose raw tokens under the current
+  post-generation claim-verification contract. A future streaming design needs
+  a verified-event protocol; proxy testing through Cloudflare Access also
+  requires authenticated credentials unavailable to this benchmark.
+- At roughly 25k representative chunks, dense/hybrid p95 exceeds the proposed
+  2 s interactive target and load exceeds 5 s. Re-run before that scale and
+  evaluate a vector store only if actual production measurements also breach.
+- The SSH port collision is historical and recurring across boots, but does not
+  affect EOS. Do not restart or disable SSH without separate owner intent.
+
+### Remaining operator/product follow-up
+
+- Commit/push CI fixes and verify the resulting remote run (external write,
+  intentionally not performed without explicit release/push instruction).
+- Improve the documented six weak RAG cases as a separate measured increment.
+- Define a verified streaming-event protocol before changing the HTTP contract.
+- Re-run capacity/concurrency measurements as the corpus approaches 10k chunks.
+
+### Next exact action
+
+Review the diff, then—only with owner authorization—commit and push the local
+CI/runtime/evaluation increment and watch the resulting GitHub Actions run.
 
 ## Baseline
 

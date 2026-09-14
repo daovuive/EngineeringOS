@@ -1,5 +1,22 @@
 # Changelog
 
+## Post-release measurement and hardening — 2026-09-13
+
+- Verified the release GitHub Actions run remotely, reproduced its dependency
+  and executable-mode failures, and corrected both locally.
+- Added a 12-category Hybrid RAG evaluation dataset plus repeatable retrieval,
+  generation, grounding, citation, abstention, and latency reporting.
+- Added monotonic stage/TTFT and JSON-index capacity benchmarks; retained the
+  JSON index at current scale with explicit future migration thresholds.
+- Reduced the measured generation ceiling from 4,096 to 512 tokens, cutting the
+  same local HTTP query from 73.04 to 27.44 seconds while retaining its grounded
+  answer and source.
+- Canonicalized the Ollama bare/`:latest` embedding-model alias so existing
+  compatible indexes do not require a false rebuild.
+- Confirmed the web response remains buffered until claim verification,
+  documented why raw-token streaming was not introduced, and separated the
+  unrelated failed SSH unit from healthy EOS/Cloudflare services.
+
 ## Local Hybrid RAG — 2026-09-13
 
 - Replaced heading-only/dense-only retrieval with token-aware overlapping

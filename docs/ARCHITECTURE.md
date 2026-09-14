@@ -33,8 +33,10 @@ Web adapter ----/          |
 `engineering_os.llm` exposes `generate`, `embed`, and `list_models`. Callers use
 logical roles (`rag`, `chat`, `reasoning`, `coding`) and never call provider
 endpoints directly. Ollama is the current adapter. Streaming transport may be
-enabled internally, while the public generation contract returns one buffered
-string.
+enabled in configuration, while the current Ollama client, public generation
+contract, and HTTP query API return buffered complete values. This preserves
+post-generation claim verification before any answer is exposed. The browser
+does not currently receive token streaming.
 
 ## Knowledge and RAG pipeline
 
@@ -99,9 +101,19 @@ Markdown / TXT / text PDF / Memory / explicitly allowed Logs
    and neither memory nor log-only text can establish authoritative claims.
 
 The JSON index is intentionally retained at current scale. It is not a vector
-database, but the application retrieval layer supports metadata filters. Imported documents support
-document-level incremental updates; a full rebuild remains available and is
-required after embedding-contract changes.
+database, but the application retrieval layer supports metadata filters.
+Imported documents support document-level incremental updates; a full rebuild
+remains available and is required after a material embedding-contract change.
+For Ollama, bare model names and the equivalent `:latest` alias are canonicalized
+so spelling alone does not force a rebuild. Provider, vector dimensions, and a
+different model identity remain strict compatibility boundaries.
+
+At 1,732 real chunks, measured load is below 0.7 seconds and live Hybrid
+retrieval p95 is below 0.64 seconds. Representative 25,000-chunk data reaches
+7.19-second load and 3.70-second Hybrid p95, driven by the linear dense scan.
+These results support `KEEP_JSON_INDEX` now and define a re-evaluation boundary,
+not an approved vector-store migration. The canonical measurements and targets
+are in the [Post-release Engineering Report](POST_RELEASE_ENGINEERING_REPORT.md).
 
 ## Executable workflows
 
@@ -178,5 +190,7 @@ The lightweight lexical grounding check is conservative but is not a formal
 fact verifier. Generated engineering and architecture outputs always require
 human review. The configured reasoning model passed live Sprint 4 smoke tests
 and schema-constrained Sprint 5 acceptance runs. Its buffered runs still take
-several minutes, so incremental streaming and broader owner-reviewed evaluation
-remain maturation work rather than completion gates.
+several minutes. RAG generation now has a measured 512-token ceiling; the same
+production query improved by 62.4%, but HTTP first byte still arrives only after
+the full verified result. A verified streaming protocol and the documented RAG
+weak cases remain maturation work rather than completion gates.

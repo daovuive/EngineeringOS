@@ -27,6 +27,11 @@ python3 -m unittest tests.test_actions tests.test_web
 
 Live Ollama, deployed-service, and browser-visual smoke checks are separate
 operator steps. They must use synthetic inputs and are not required CI gates.
+`evaluation_cases.json` is the non-sensitive realistic Hybrid RAG dataset used
+by `scripts/evaluate_rag.py` and `scripts/benchmark_rag_latency.py`; expectations
+target retrieval, abstention, and citations rather than exact answer wording.
+Canonical commands and measured results are in the
+[Post-release Engineering Report](../docs/POST_RELEASE_ENGINEERING_REPORT.md).
 The shipped WebUI has no demo-data mode: browser smoke tests connect to the
 real local API. Historical captured evidence is documented in the
 [WebUI Guide](../docs/WEBUI_GUIDE.md) and verifies rendering/layout at the time

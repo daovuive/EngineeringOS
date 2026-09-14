@@ -1,275 +1,383 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
+import argparse
+import json
+import os
+import platform
+import statistics
 import sys
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from time import perf_counter
+from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from engineering_os.config import ProjectPaths, load_runtime_config, load_settings
-from engineering_os.knowledge import KnowledgeChunk, load_index, search_index
-from engineering_os.llm import create_runtime, get_embedding_contract
+from engineering_os.knowledge import (
+    KnowledgeIndexError,
+    load_knowledge_index,
+    select_retrieval_chunks,
+)
+from engineering_os.llm import LLMError, create_runtime, get_embedding_contract
+from engineering_os.query import retrieve_candidates
 from engineering_os.rag import (
-    GroundingStatus,
     GroundingPolicy,
-    RetrievalPolicy,
+    GroundingStatus,
     INSUFFICIENT_EVIDENCE,
+    RetrievalPolicy,
     answer_question,
 )
 
 
+DEFAULT_CASES = ROOT / "tests/evaluation_cases.json"
+
+
 @dataclass(frozen=True)
 class EvaluationCase:
-    name: str
-    question: str
-    expected_sources: tuple[str, ...] = ()
-    expects_insufficient_evidence: bool = False
+    id: str
+    category: str
+    query: str
+    expected_sources: tuple[str, ...]
+    expected_identifiers: tuple[str, ...]
+    expected_abstention: bool
+    notes: str
 
 
-CASES = (
-    EvaluationCase(
-        "direct-factual",
-        "What is the difference between state, status, and mode?",
-        ("architect/lessions/Architecture_Notes_State_vs_Status_vs_Mode.md",),
-    ),
-    EvaluationCase(
-        "multi-note-synthesis",
-        "How do the EngineeringOS local AI architecture and runtime design keep "
-        "providers replaceable while keeping model storage outside EngineeringOS?",
-        (
-            "architect/asr/ASR-0001-llm-model-selection-for-ollama-personal-pc.md",
-            "architect/asr/ASR-0002-local-content-monitoring-with-n8n-and-ollama.md",
-        ),
-    ),
-    EvaluationCase(
-        "insufficient-evidence",
-        "What is the exact quarterly revenue of EngineeringOS?",
-        expects_insufficient_evidence=True,
-    ),
-    EvaluationCase(
-        "insufficient-weather",
-        "What is the current weather in Bangkok?",
-        expects_insufficient_evidence=True,
-    ),
-    EvaluationCase(
-        "insufficient-stock",
-        "What is the current stock price of Tesla?",
-        expects_insufficient_evidence=True,
-    ),
-    EvaluationCase(
-        "insufficient-personal-fact",
-        "What is my blood type?",
-        expects_insufficient_evidence=True,
-    ),
-    EvaluationCase(
-        "architecture-reasoning",
-        "Why should EngineeringOS use a runtime abstraction instead of depending "
-        "directly on Ollama HTTP?",
-        ("architect/asr/ASR-0001-llm-model-selection-for-ollama-personal-pc.md",),
-    ),
-)
+@dataclass(frozen=True)
+class CaseResult:
+    id: str
+    category: str
+    query: str
+    expected_sources: tuple[str, ...]
+    expected_abstention: bool
+    retrieved_sources: tuple[str, ...]
+    response_sources: tuple[str, ...]
+    top_score: float
+    retrieval_ms: float
+    generation_grounding_ms: float | None
+    total_ms: float
+    source_hit: bool
+    identifier_hit: bool
+    confidence_behavior_correct: bool
+    abstention_correct: bool | None
+    citation_correct: bool | None
+    unsupported_claim_rate: float | None
+    passed: bool
+    notes: str
 
 
-class FixedRuntime:
-    def __init__(self, query_vector: list[float], generated: str) -> None:
-        self.query_vector = query_vector
-        self.generated = generated
-        self.generation_calls = 0
-
-    def embed(self, text: str) -> list[float]:
-        return self.query_vector
-
-    def generate(self, prompt: str, *, role: str = "rag") -> str:
-        self.generation_calls += 1
-        return self.generated
-
-
-def run_grounding_evaluation() -> int:
-    source = "knowledge/design.md#Decision"
-    chunks = [
-        KnowledgeChunk(
-            "knowledge/design.md",
-            "Decision",
-            "The authoritative design decision.",
-            [1.0, 0.0],
-        )
-    ]
-    cases = (
-        (
-            "fully-supported",
-            [1.0, 0.0],
-            f"The authoritative design decision. [Source: {source}]",
-            (GroundingStatus.SUPPORTED,),
-            False,
-        ),
-        (
-            "partially-supported",
-            [1.0, 0.0],
-            (
-                f"The authoritative design decision. [Source: {source}]\n"
-                f"The authoritative design decision improves security. [Source: {source}]"
-            ),
-            (GroundingStatus.SUPPORTED, GroundingStatus.PARTIALLY_SUPPORTED),
-            False,
-        ),
-        (
-            "tempting-unsupported-inference",
-            [1.0, 0.0],
-            f"EngineeringOS provides authentication. [Source: {source}]",
-            (GroundingStatus.UNSUPPORTED,),
-            True,
-        ),
-        (
-            "insufficient-evidence",
-            [0.0, 0.0],
-            f"EngineeringOS provides authentication. [Source: {source}]",
-            (),
-            True,
-        ),
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Evaluate the current EngineeringOS Hybrid RAG pipeline."
     )
+    parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Also run generation and post-generation grounding for every case.",
+    )
+    parser.add_argument("--limit", type=int, default=6)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit nonzero when a quality expectation is missed.",
+    )
+    return parser.parse_args()
 
-    failures = 0
-    for name, vector, generated, expected_statuses, expects_no_answer in cases:
-        runtime = FixedRuntime(vector, generated)
-        response = answer_question(
+
+def load_cases(path: Path) -> tuple[EvaluationCase, ...]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("schemaVersion") != "1.0" or not isinstance(data.get("cases"), list):
+        raise ValueError("Evaluation dataset must use schemaVersion 1.0 and a cases array.")
+    cases: list[EvaluationCase] = []
+    seen: set[str] = set()
+    for raw in data["cases"]:
+        if not isinstance(raw, dict):
+            raise ValueError("Every evaluation case must be an object.")
+        identifier = raw.get("id")
+        if not isinstance(identifier, str) or not identifier or identifier in seen:
+            raise ValueError("Evaluation case IDs must be unique non-empty strings.")
+        seen.add(identifier)
+        query = raw.get("query")
+        category = raw.get("category")
+        sources = raw.get("expectedSources", [])
+        expected_identifiers = raw.get("expectedIdentifiers", [])
+        expected_abstention = raw.get("expectedAbstention")
+        notes = raw.get("notes", "")
+        if not isinstance(query, str) or not query.strip():
+            raise ValueError(f"Evaluation case {identifier} has no query.")
+        if not isinstance(category, str) or not category:
+            raise ValueError(f"Evaluation case {identifier} has no category.")
+        if not isinstance(sources, list) or not all(isinstance(item, str) for item in sources):
+            raise ValueError(f"Evaluation case {identifier} has invalid expectedSources.")
+        if not isinstance(expected_identifiers, list) or not all(
+            isinstance(item, str) for item in expected_identifiers
+        ):
+            raise ValueError(f"Evaluation case {identifier} has invalid expectedIdentifiers.")
+        if not isinstance(expected_abstention, bool) or not isinstance(notes, str):
+            raise ValueError(f"Evaluation case {identifier} has invalid expectations.")
+        cases.append(
+            EvaluationCase(
+                identifier,
+                category,
+                query.strip(),
+                tuple(sources),
+                tuple(expected_identifiers),
+                expected_abstention,
+                notes,
+            )
+        )
+    return tuple(cases)
+
+
+def _source_paths(sources: tuple[str, ...]) -> tuple[str, ...]:
+    return tuple(source.split("#", 1)[0] for source in sources)
+
+
+def _all_expected_sources_present(
+    expected: tuple[str, ...], actual_sources: tuple[str, ...]
+) -> bool:
+    actual_paths = set(_source_paths(actual_sources))
+    return all(source in actual_paths for source in expected)
+
+
+def _all_identifiers_present(expected: tuple[str, ...], candidates) -> bool:
+    if not expected:
+        return True
+    evidence = "\n".join(
+        f"{item.source}\n{item.chunk.heading}\n{item.chunk.text}" for item in candidates
+    ).casefold()
+    return all(identifier.casefold() in evidence for identifier in expected)
+
+
+def _percentile(values: list[float], percentile: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    index = max(0, min(len(ordered) - 1, round((len(ordered) - 1) * percentile)))
+    return ordered[index]
+
+
+def _latency_summary(values: list[float]) -> dict[str, float | int | None]:
+    return {
+        "count": len(values),
+        "min_ms": min(values) if values else None,
+        "p50_ms": statistics.median(values) if values else None,
+        "p95_ms": _percentile(values, 0.95),
+        "max_ms": max(values) if values else None,
+    }
+
+
+def evaluate(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.limit < 1:
+        raise ValueError("--limit must be positive.")
+    cases = load_cases(args.cases.resolve())
+    paths = ProjectPaths(root=ROOT)
+    settings = load_settings(paths)
+    runtime_config = load_runtime_config(paths)
+    runtime = create_runtime(runtime_config)
+    contract = get_embedding_contract(runtime_config)
+
+    index_path = ROOT / "runtime/index/knowledge.json"
+    load_started = perf_counter()
+    index = load_knowledge_index(index_path, embedding_contract=contract)
+    index_load_ms = (perf_counter() - load_started) * 1000
+    chunks = select_retrieval_chunks(index.chunks)
+    retrieval_policy = RetrievalPolicy.from_settings(settings)
+    grounding_policy = GroundingPolicy.from_settings(settings)
+    results: list[CaseResult] = []
+
+    for case in cases:
+        retrieval_started = perf_counter()
+        candidates = retrieve_candidates(
+            settings,
             chunks,
-            "What is the design decision?",
+            index.lexical,
+            case.query,
             runtime,
-            runtime,
-            top_k=1,
-            min_relevance=0.5,
-            confidence_threshold=0.5,
+            limit=args.limit,
+            min_score=None,
         )
-        actual_statuses = tuple(claim.status for claim in response.grounding)
-        status_ok = actual_statuses == expected_statuses
-        answer_ok = (
-            response.answer == INSUFFICIENT_EVIDENCE
-            if expects_no_answer
-            else bool(response.sources)
+        retrieval_ms = (perf_counter() - retrieval_started) * 1000
+        retrieved_sources = tuple(item.source for item in candidates)
+        top_score = candidates[0].score if candidates else 0.0
+        source_hit = _all_expected_sources_present(
+            case.expected_sources, retrieved_sources
         )
-        if name == "partially-supported":
-            answer_ok = answer_ok and "security" not in response.answer
-        generation_ok = (
-            runtime.generation_calls == 0
-            if name == "insufficient-evidence"
-            else runtime.generation_calls == 1
+        identifier_hit = _all_identifiers_present(
+            case.expected_identifiers, candidates
         )
-        failures += sum(not check for check in (status_ok, answer_ok, generation_ok))
-        print(f"GROUNDING CASE {name}")
-        for claim, expected in zip(response.grounding, expected_statuses):
-            print(
-                f"claim: {claim.claim} | evidence: {claim.sources} | "
-                f"expected: {expected.value} | result: {claim.status.value}"
+        accepted = bool(candidates) and top_score >= retrieval_policy.confidence_threshold
+        confidence_correct = accepted != case.expected_abstention
+
+        response_sources: tuple[str, ...] = ()
+        generation_ms: float | None = None
+        abstention_correct: bool | None = None
+        citation_correct: bool | None = None
+        unsupported_rate: float | None = None
+        if args.live:
+            generation_started = perf_counter()
+            response = answer_question(
+                index.chunks,
+                case.query,
+                runtime,
+                runtime,
+                top_k=args.limit,
+                min_relevance=retrieval_policy.candidate_min_score,
+                confidence_threshold=retrieval_policy.confidence_threshold,
+                overfetch_factor=retrieval_policy.overfetch_factor,
+                role="rag",
+                grounding_policy=grounding_policy,
+                retrieved_candidates=candidates,
             )
-        if not response.grounding:
-            print(
-                "claim: (none; retrieval rejected) | evidence: () | "
-                "expected: INSUFFICIENT_EVIDENCE | result: "
-                f"{response.answer}"
+            generation_ms = (perf_counter() - generation_started) * 1000
+            response_sources = response.sources
+            abstained = response.answer == INSUFFICIENT_EVIDENCE
+            abstention_correct = abstained == case.expected_abstention
+            retrieved_set = set(retrieved_sources)
+            citation_correct = (
+                not response_sources
+                if abstained
+                else bool(response_sources)
+                and all(source in retrieved_set for source in response_sources)
             )
+            unsupported = sum(
+                claim.status is GroundingStatus.UNSUPPORTED
+                for claim in response.grounding
+            )
+            unsupported_rate = (
+                unsupported / len(response.grounding) if response.grounding else 0.0
+            )
+
+        checks = [source_hit, identifier_hit, confidence_correct]
+        if args.live:
+            checks.extend([bool(abstention_correct), bool(citation_correct)])
+        total_ms = retrieval_ms + (generation_ms or 0.0)
+        result = CaseResult(
+            case.id,
+            case.category,
+            case.query,
+            case.expected_sources,
+            case.expected_abstention,
+            retrieved_sources,
+            response_sources,
+            top_score,
+            retrieval_ms,
+            generation_ms,
+            total_ms,
+            source_hit,
+            identifier_hit,
+            confidence_correct,
+            abstention_correct,
+            citation_correct,
+            unsupported_rate,
+            all(checks),
+            case.notes,
+        )
+        results.append(result)
         print(
-            f"checks: statuses={status_ok}, answer={answer_ok}, "
-            f"generation_calls={runtime.generation_calls}"
+            f"CASE {result.id}: {'PASS' if result.passed else 'WEAK'} "
+            f"score={result.top_score:.4f} retrieval={result.retrieval_ms:.1f}ms "
+            f"total={result.total_ms:.1f}ms"
         )
-        print()
-    return failures
+        print(f"  retrieved={result.retrieved_sources}")
+        if args.live:
+            print(
+                f"  response_sources={result.response_sources} "
+                f"abstention_correct={result.abstention_correct} "
+                f"unsupported_rate={result.unsupported_claim_rate:.1%}"
+            )
+
+    positive = [result for result in results if not result.expected_abstention]
+    abstention = [result for result in results if result.expected_abstention]
+    live_results = [result for result in results if result.generation_grounding_ms is not None]
+    report: dict[str, Any] = {
+        "schemaVersion": "1.0",
+        "mode": "live" if args.live else "retrieval-only",
+        "environment": {
+            "platform": platform.platform(),
+            "python": platform.python_version(),
+            "cpu_count": os.cpu_count(),
+            "index_schema": index.schema_version,
+            "index_chunks": len(index.chunks),
+            "index_bytes": index_path.stat().st_size,
+            "embedding_contract": contract,
+        },
+        "summary": {
+            "cases": len(results),
+            "passed": sum(result.passed for result in results),
+            "weak": sum(not result.passed for result in results),
+            "positive_source_hit_rate": (
+                sum(result.source_hit for result in positive) / len(positive)
+                if positive
+                else None
+            ),
+            "retrieval_confidence_behavior_rate": sum(
+                result.confidence_behavior_correct for result in results
+            )
+            / len(results),
+            "final_abstention_accuracy": (
+                sum(bool(result.abstention_correct) for result in live_results)
+                / len(live_results)
+                if live_results
+                else None
+            ),
+            "citation_correctness_rate": (
+                sum(bool(result.citation_correct) for result in live_results)
+                / len(live_results)
+                if live_results
+                else None
+            ),
+            "unsupported_claim_rate": (
+                statistics.mean(
+                    result.unsupported_claim_rate or 0.0 for result in live_results
+                )
+                if live_results
+                else None
+            ),
+            "index_load_ms": index_load_ms,
+            "retrieval_latency": _latency_summary(
+                [result.retrieval_ms for result in results]
+            ),
+            "generation_grounding_latency": _latency_summary(
+                [
+                    result.generation_grounding_ms
+                    for result in live_results
+                    if result.generation_grounding_ms is not None
+                ]
+            ),
+            "total_latency": _latency_summary(
+                [result.total_ms for result in live_results]
+            ),
+            "weak_case_ids": [result.id for result in results if not result.passed],
+            "abstention_case_ids": [result.id for result in abstention],
+        },
+        "results": [asdict(result) for result in results],
+    }
+    if args.output:
+        output = args.output.resolve()
+        if not output.is_relative_to((ROOT / "tmp").resolve()):
+            raise ValueError("Evaluation output must stay under the repository tmp directory.")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(f"report={output.relative_to(ROOT)}")
+    print(json.dumps(report["summary"], indent=2))
+    exit_code = 1 if args.strict and report["summary"]["weak"] else 0
+    return report, exit_code
 
 
 def main() -> int:
-    root = ROOT
-    config = load_runtime_config(ProjectPaths(root=root))
-    settings = load_settings(ProjectPaths(root=root))
-    policy = RetrievalPolicy.from_settings(settings)
-    grounding_policy = GroundingPolicy.from_settings(settings)
-    runtime = create_runtime(config)
-    index = load_index(
-        root / "runtime/index/knowledge.json",
-        embedding_contract=get_embedding_contract(config),
-    )
-
-    failures = 0
-    negative_cases = [case for case in CASES if case.expects_insufficient_evidence]
-    negative_false_accepts = 0
-    for case in CASES:
-        retrieval_limit = 3 * policy.overfetch_factor
-        matches = search_index(index, case.question, runtime, limit=retrieval_limit)
-        retrieved_paths = tuple(chunk.path for _, chunk in matches)
-        retrieved_sources = tuple(
-            f"{chunk.path}#{chunk.heading}" for _, chunk in matches
-        )
-        top_score = matches[0][0] if matches else 0.0
-        response = answer_question(
-            index,
-            case.question,
-            runtime,
-            runtime,
-            top_k=3,
-            min_relevance=policy.candidate_min_score,
-            confidence_threshold=policy.confidence_threshold,
-            overfetch_factor=policy.overfetch_factor,
-            role="rag",
-            grounding_policy=grounding_policy,
-        )
-        response_paths = tuple(source.split("#", 1)[0] for source in response.sources)
-        response_source_ids = response.sources
-
-        if case.expects_insufficient_evidence:
-            if response.sources or response.answer != INSUFFICIENT_EVIDENCE:
-                negative_false_accepts += 1
-            retrieval_relevant = top_score < policy.confidence_threshold
-            answer_behavior = response.answer == INSUFFICIENT_EVIDENCE
-            source_correct = not response.sources
-        else:
-            retrieval_relevant = all(
-                source in retrieved_paths for source in case.expected_sources
-            )
-            answer_behavior = bool(response.answer.strip())
-            source_correct = bool(response.sources) and all(
-                source in retrieved_sources for source in response_source_ids
-            ) and all(
-                claim.status is GroundingStatus.SUPPORTED
-                and claim.sources
-                and all(source in retrieved_sources for source in claim.sources)
-                for claim in response.grounding
-                if claim.status is GroundingStatus.SUPPORTED
-            )
-
-        checks = {
-            "retrieval_relevance": retrieval_relevant,
-            "source_correctness": source_correct,
-            "answer_behavior": answer_behavior,
-        }
-        failures += sum(not passed for passed in checks.values())
-
-        print(f"CASE {case.name}")
-        print(f"question: {case.question}")
-        print(f"retrieved: {retrieved_paths}")
-        print(f"scores: {[round(score, 4) for score, _ in matches]}")
-        print(f"sources: {response.sources}")
-        print(
-            "grounding: "
-            f"{[(claim.status.value, claim.sources) for claim in response.grounding]}"
-        )
-        print(f"checks: {checks}")
-        print(f"answer: {response.answer}")
-        print("manual_review: assess factual fidelity and unsupported claims")
-        print()
-
-    print(f"baseline_failures={failures}")
-    false_accept_rate = (
-        negative_false_accepts / len(negative_cases) if negative_cases else 0.0
-    )
-    print(
-        "negative_false_accept_rate="
-        f"{negative_false_accepts}/{len(negative_cases)} "
-        f"({false_accept_rate:.1%})"
-    )
-    grounding_failures = run_grounding_evaluation()
-    print(f"grounding_failures={grounding_failures}")
-    print("evaluation_status=COMPLETE")
-    return 1 if failures or grounding_failures else 0
+    args = parse_args()
+    try:
+        _, exit_code = evaluate(args)
+    except (OSError, ValueError, KnowledgeIndexError, LLMError) as error:
+        print(f"evaluation_error={error}", file=sys.stderr)
+        return 2
+    return exit_code
 
 
 if __name__ == "__main__":

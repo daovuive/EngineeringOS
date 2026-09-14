@@ -29,6 +29,12 @@ User behavior and recovery are documented in the canonical
 provider endpoints and model assignments remain under `configs/ai/`; do not
 place them in ingestion policy.
 
+`configs/ai/runtime.json` owns generation sampling and output bounds. The
+current 512-token ceiling is a measured production latency safeguard; increase
+it only with before/after latency and grounding evidence. The `stream` option
+controls Ollama transport behavior, not browser-visible streaming: the current
+public API returns a verified complete JSON response.
+
 ## Extension Rules
 
 Add files within the scope above. This README is a local guide, not a complete
